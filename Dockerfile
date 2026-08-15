@@ -18,6 +18,28 @@
 
 FROM composer:2 AS vendor
 
+# Install PHP extensions needed by phpoffice/phpspreadsheet for composer install
+# composer:2 is based on php:8.3-cli, so we use docker-php-ext-install
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpq-dev \
+        libpng-dev \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libwebp-dev \
+        libzip-dev \
+        libonig-dev \
+        libicu-dev \
+        unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j"$(nproc)" \
+        pdo_pgsql \
+        gd \
+        zip \
+        mbstring \
+        intl \
+        bcmath \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy only the dependency manifests first so this layer is cached until

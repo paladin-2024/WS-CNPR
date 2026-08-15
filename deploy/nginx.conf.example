@@ -1,0 +1,223 @@
+# ============================================================================
+# Nginx server block — Portail Numérique du Ministère des Transports
+# ============================================================================
+#
+# This is an EXAMPLE config. Replace every CHANGE_ME placeholder, then copy
+# (or symlink) into /etc/nginx/sites-available/ and enable it. See
+# deploy/README.md in this same directory for the full drop-in procedure.
+#
+# Assumptions verified against this codebase before writing this file:
+#   - Front controller: index.php lives at the PROJECT ROOT (not under
+#     public/). `root` below therefore points at the project root itself,
+#     which is why the explicit deny blocks further down (app/, config/,
+#     database/, vendor/, storage/, .env, .git, composer.*) matter — nothing
+#     stops Nginx from serving those as static files otherwise.
+#   - .htaccess (Apache) and router.php (`php -S` dev server) both implement
+#     the same rule: serve the request path directly if it resolves to an
+#     existing *file*; otherwise route to index.php with the ORIGINAL path
+#     (leading slash optional — index.php normalizes it) placed into
+#     $_GET['url']. router.php:
+#         $_GET['url'] = ltrim($path, '/');
+#         require __DIR__ . '/index.php';
+#     index.php then does: $url = '/' . ltrim(trim($url, '/'), '/');
+#     So the exact string nginx puts into `url=` doesn't need to be
+#     pre-trimmed of its leading slash — index.php normalizes either way.
+#     `try_files $uri $uri/ /index.php?url=$uri&$args;` reproduces this:
+#     $uri is the normalized request path (leading slash included), and
+#     `&$args` re-attaches any other original query-string params (e.g.
+#     ?page=2 on a listing route) so they still land in $_GET as they would
+#     under Apache/router.php, which never clear $_GET before adding 'url'.
+#   - Static assets: public/assets/{css,js}. User uploads:
+#     public/uploads/{conducteurs,signatures,logos}. Both are referenced by
+#     views via BASE_PATH/ASSETS_PATH (see index.php), i.e. as
+#     /public/assets/... and /public/uploads/... URLs — so the locations
+#     below match those exact prefixes under the project-root document root.
+#   - PHP 8.4 locally (`php -v`); config below references the FPM socket
+#     generically so it keeps working across a PHP minor/major upgrade —
+#     just confirm the actual socket path/name for whatever PHP-FPM version
+#     is installed on the VPS (see the fastcgi_pass line below).
+#
+# ----------------------------------------------------------------------------
+# Upstream (PHP-FPM)
+# ----------------------------------------------------------------------------
+# Prefer a unix socket (lower overhead than TCP for local FPM). The exact
+# socket filename is version-parameterized by most distro packaging
+# (e.g. Debian/Ubuntu: /run/php/php8.4-fpm.sock). Update to match whatever
+# `php-fpm` version.pool you actually install; do not hardcode "8.4" if the
+# VPS may later be upgraded without also editing this file — consider a
+# stable symlink (e.g. /run/php/portail-transport.sock) configured in the
+# pool file's `listen` directive instead (see deploy/php-fpm-pool.conf.example).
+upstream php_fpm_portail_transport {
+    server unix:/run/php/CHANGE_ME-fpm.sock;
+    # TCP alternative (e.g. PHP-FPM running in a separate container/host):
+    # server 127.0.0.1:9000;
+}
+
+# ----------------------------------------------------------------------------
+# Port 80 — HTTP: ACME challenge passthrough + redirect everything else to HTTPS
+# ----------------------------------------------------------------------------
+server {
+    listen 80;
+    listen [::]:80;
+    server_name CHANGE_ME_DOMAIN;
+
+    # Needed for certbot's webroot HTTP-01 validation. Only this path is
+    # served over plain HTTP; keep it reachable even after the site is
+    # otherwise fully redirecting to HTTPS, so certificate renewals keep
+    # working unattended.
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/CHANGE_ME_project_root;
+        default_type "text/plain";
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# ----------------------------------------------------------------------------
+# Port 443 — HTTPS: the real application server block
+# ----------------------------------------------------------------------------
+# Commented out on purpose: uncomment once certbot has actually issued a
+# certificate for CHANGE_ME_DOMAIN (via the webroot location above, e.g.
+# `certbot certonly --webroot -w /var/www/CHANGE_ME_project_root -d CHANGE_ME_DOMAIN`).
+# Until then, nginx will fail to start if this block is active and the
+# certificate files don't exist yet.
+
+# server {
+#     listen 443 ssl;
+#     listen [::]:443 ssl;
+#     http2 on;
+#     server_name CHANGE_ME_DOMAIN;
+#
+#     # --- TLS ---------------------------------------------------------
+#     ssl_certificate     /etc/letsencrypt/live/CHANGE_ME_DOMAIN/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/CHANGE_ME_DOMAIN/privkey.pem;
+#     # Optional but recommended once certbot has run:
+#     # include /etc/letsencrypt/options-ssl-nginx.conf;
+#     # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+#     ssl_protocols TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers off;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 1d;
+#
+#     # --- Document root -------------------------------------------------
+#     # Root-level deployment (app lives at https://CHANGE_ME_DOMAIN/).
+#     # For a SUBDIRECTORY deployment (e.g. https://CHANGE_ME_DOMAIN/portail/)
+#     # instead: wrap every `location` below in an outer
+#     # `location /portail/ { alias /var/www/CHANGE_ME_project_root/; ... }`
+#     # (or use nginx's `location` + `rewrite` combo), change the try_files
+#     # fallback to `/portail/index.php?url=$uri&$args`, and make sure the
+#     # fastcgi_param SCRIPT_NAME sent to PHP-FPM is `/portail/index.php` —
+#     # index.php derives BASE_PATH from dirname($_SERVER['SCRIPT_NAME']), so
+#     # SCRIPT_NAME must carry the subdirectory prefix or asset/redirect URLs
+#     # break. Root-level deployment (this file, as written) needs none of
+#     # that: SCRIPT_NAME is naturally "/index.php" and BASE_PATH resolves
+#     # to "" automatically.
+#     root /var/www/CHANGE_ME_project_root;
+#     index index.php;
+#     charset utf-8;
+#
+#     # --- Security headers ------------------------------------------------
+#     add_header X-Content-Type-Options "nosniff" always;
+#     add_header X-Frame-Options "SAMEORIGIN" always;
+#     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+#
+#     # --- Upload size ------------------------------------------------
+#     # No hard limit exists in application code today: only
+#     # VerificationController::signalerFraude() checks $_FILES[...]['size']
+#     # (5 MB, citizen fraud-report photos). AdminController's conducteur
+#     # photo/ID-scan upload and ConfigController's logo/signature upload
+#     # have NO server-side size check at all — they're gated only by
+#     # whatever php.ini/Nginx allow. 10M is a judgment-call default that
+#     # comfortably covers a driver photo + an ID document scan in one
+#     # multipart form submit; raise it here (and in upload_max_filesize /
+#     # post_max_size in deploy/php-fpm-pool.conf.example, which MUST stay
+#     # >= this value) if real-world scans run larger. Confirm with whoever
+#     # owns the upload UX before shipping.
+#     client_max_body_size 10M;
+#
+#     # BrevetController's downloadQrcodes()/downloadPhotos()/downloadExcel()
+#     # run unbounded queries (no LIMIT) and downloadQrcodes() makes one
+#     # serial outbound HTTP call per conducteur (~10s timeout each) — a
+#     # wide date-range export can legitimately take minutes. Give PHP-FPM
+#     # (see php-fpm-pool.conf.example: request_terminate_timeout,
+#     # max_execution_time) room to actually finish instead of nginx cutting
+#     # it off first.
+#     fastcgi_read_timeout 300s;
+#
+#     # --- Deny sensitive paths (defense in depth) ------------------------
+#     # ^~ stops nginx from falling through to the regex `\.php$` location
+#     # below for anything under these prefixes, even if a deny rule here
+#     # had a bug — belt and suspenders, as requested.
+#     location ~ /\.env { deny all; return 404; }
+#     location ~ /\.git { deny all; return 404; }
+#     location ~ /\. { deny all; return 404; } # catch-all: any other dotfile (.gitignore, .htaccess, etc.) — this vhost has no /.well-known/ use, so no exception needed
+#     location ~ /(composer\.json|composer\.lock)$ { deny all; return 404; }
+#     location ^~ /vendor/   { deny all; return 404; }
+#     location ^~ /storage/  { deny all; return 404; } # storage/logs/sms_debug.log etc. — never public
+#     location ^~ /database/ { deny all; return 404; } # schema.sql, seed.php, _hash_once.php
+#     location ^~ /app/      { deny all; return 404; } # controllers/views/Core — PHP source, never static
+#     location ^~ /config/   { deny all; return 404; } # config/database.php
+#
+#     # --- Static assets: long cache, immutable (filenames don't rotate,
+#     # so this is safe; bump a query string / rename the file if you ever
+#     # need to force-bust a cached asset) ---------------------------------
+#     location ^~ /public/assets/ {
+#         try_files $uri =404;
+#         access_log off;
+#         expires 1y;
+#         add_header Cache-Control "public, immutable";
+#     }
+#
+#     # --- User uploads: served directly, but with NO PHP execution and
+#     # NO aggressive caching (content is user-supplied and can be replaced,
+#     # e.g. a re-uploaded photo, so avoid immutable caching here) --------
+#     location ^~ /public/uploads/ {
+#         location ~ \.php$ { deny all; return 404; } # never execute an uploaded file as PHP, whatever its extension
+#         try_files $uri =404;
+#         access_log off;
+#         add_header X-Content-Type-Options "nosniff" always;
+#     }
+#
+#     # --- Everything else: serve existing files/dirs as-is, otherwise
+#     # route to the single front controller with the path captured as
+#     # $_GET['url'], mirroring .htaccess / router.php exactly (see the
+#     # header comment above for why this specific pattern is correct here,
+#     # as opposed to a PATH_INFO-based rewrite). ---------------------------
+#     location / {
+#         try_files $uri $uri/ /index.php?url=$uri&$args;
+#     }
+#
+#     # --- PHP-FPM ---------------------------------------------------------
+#     # Deliberately narrow: only /index.php is ever allowed to execute.
+#     # Every real request lands here via the try_files fallback above; this
+#     # also means even if one of the directory denies above had a typo,
+#     # e.g. database/seed.php could still never be *executed* through this
+#     # vhost because it isn't literally "/index.php".
+#     location = /index.php {
+#         include fastcgi_params;
+#         fastcgi_pass php_fpm_portail_transport;
+#         fastcgi_index index.php;
+#         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+#         fastcgi_param DOCUMENT_ROOT $document_root;
+#     }
+#
+#     # Any other *.php request (there shouldn't be any legitimate ones —
+#     # all app PHP lives under app/ or database/, both denied above, and
+#     # there is no public/ PHP) is refused rather than executed.
+#     location ~ \.php$ {
+#         deny all;
+#         return 404;
+#     }
+#
+#     # --- Misc hardening ----------------------------------------------
+#     location = /favicon.ico { access_log off; log_not_found off; }
+#     location = /robots.txt  { access_log off; log_not_found off; }
+#
+#     # Optional: gzip for text-ish responses (safe default, not required
+#     # by the app but cheap to enable).
+#     gzip on;
+#     gzip_vary on;
+#     gzip_types text/css application/javascript application/json image/svg+xml;
+# }

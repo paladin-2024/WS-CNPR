@@ -1,0 +1,114 @@
+; ============================================================================
+; PHP-FPM pool — Portail Numérique du Ministère des Transports
+; ============================================================================
+;
+; EXAMPLE pool file. Copy to your PHP-FPM pool directory (typically
+; /etc/php/CHANGE_ME_VERSION/fpm/pool.d/portail-transport.conf on
+; Debian/Ubuntu — check the installed version's actual path, e.g.
+; /etc/php/8.4/fpm/pool.d/) and adjust user/group/paths for your VPS.
+; This intentionally does NOT try to be a complete pool file — only the
+; directives that matter for this app are called out below. Merge them into
+; whatever base pool template your distro's PHP-FPM package ships (usually
+; a copy of www.conf is the easiest starting point).
+;
+; See deploy/README.md for how this ties into the Nginx config
+; (deploy/nginx.conf.example) — in particular the fastcgi_pass socket path
+; must match this file's `listen` directive.
+
+[portail-transport]
+
+user  = CHANGE_ME_php_fpm_user   ; e.g. www-data — should own NOTHING it doesn't need to write to
+group = CHANGE_ME_php_fpm_group
+
+; Match this to the fastcgi_pass in deploy/nginx.conf.example. A
+; version-stable *name* (not baked-in PHP version number) makes future PHP
+; upgrades a one-line change instead of an Nginx-and-FPM two-file edit.
+listen = /run/php/CHANGE_ME-fpm.sock
+listen.owner = CHANGE_ME_php_fpm_user
+listen.group = www-data   ; or whichever group Nginx runs as, so it can reach the socket
+listen.mode  = 0660
+
+pm = dynamic
+pm.max_children = 10       ; tune to VPS RAM / memory_limit below; this is a starting point, not a measured value
+pm.start_servers = 2
+pm.min_spare_servers = 2
+pm.max_spare_servers = 6
+
+; ----------------------------------------------------------------------------
+; Hard timeout: kills a worker that runs longer than this even if
+; max_execution_time (below) somehow doesn't catch it (e.g. time spent in a
+; blocking outbound HTTP call inside BrevetController::downloadQrcodes(),
+; which makes one serial request per conducteur to api.qrserver.com with a
+; 10s timeout each — a wide date-range export can run for minutes). Keep
+; this >= php_admin_value[max_execution_time] below, and keep Nginx's
+; fastcgi_read_timeout in nginx.conf.example >= this value too, or Nginx
+; will 504 before FPM even gets a chance to finish/kill the request itself.
+; ----------------------------------------------------------------------------
+request_terminate_timeout = 300s
+
+; ----------------------------------------------------------------------------
+; Per-pool php.ini overrides
+; ----------------------------------------------------------------------------
+; Upload limits — MUST stay in sync with `client_max_body_size` in
+; deploy/nginx.conf.example (10M there, as of this writing). Nginx rejects
+; oversized request bodies before they ever reach PHP, so if you raise one
+; you must raise the other, or uploads will fail with a mismatched error
+; (413 from Nginx vs. a silent empty $_FILES from PHP) depending on which
+; limit is smaller.
+;
+; Context: no controller in this codebase enforces a server-side upload
+; size limit except VerificationController::signalerFraude() (5MB, for
+; citizen-submitted fraud report photos). AdminController's conducteur
+; photo/ID-scan upload and ConfigController's logo/signature upload rely
+; entirely on these php.ini values — there's no code-side ceiling. 10M is a
+; reasonable default for "one photo + one scanned ID document" but is a
+; judgment call, not something read out of the code; confirm real-world
+; scan sizes before shipping.
+php_admin_value[upload_max_filesize] = 10M
+php_admin_value[post_max_size] = 12M    ; must be >= upload_max_filesize (it bounds the WHOLE multipart body, not just the file)
+
+; Memory — PhpSpreadsheet's Excel export (BrevetController::downloadExcel())
+; fetches ALL matching conducteurs for the selected date range in one
+; fetchAll (no LIMIT/pagination) and styles every cell individually before
+; writing to php://output; the ZIP exports (downloadPhotos/downloadQrcodes)
+; similarly loop over an unbounded result set. Default php.ini
+; memory_limit (often 128M) is a realistic risk for a wide date range.
+; 256M is a conservative bump given nothing in the code caps row count —
+; raise further if exports start hitting "Allowed memory size exhausted"
+; in storage/logs or PHP-FPM's error log.
+php_admin_value[memory_limit] = 256M
+
+; Execution time — no set_time_limit()/ini_set() call exists anywhere in
+; AdminController.php or BrevetController.php, so this php.ini value is the
+; ONLY thing bounding a request's runtime. downloadQrcodes() is the known
+; worst case (serial outbound HTTP call per row, ~10s timeout each); the
+; PHP default of 30s will not be enough for more than a couple of rows.
+; 300s (5 min) gives real headroom; if exports regularly exceed that, the
+; better fix is making the app code batch/background that work — out of
+; scope here since app code is being changed by other engineers, but worth
+; flagging to them.
+php_admin_value[max_execution_time] = 300
+
+; Session cookie hardening — belongs primarily in application code
+; (session_set_cookie_params() / ini_set() called before session_start()
+; in index.php, or via php.ini session.* below); this pool file sets safe
+; defaults at the php.ini layer as a backstop. NOTE: this is being handled
+; in app code separately (index.php's session_start() call) — these
+; directives here are a safety net in case that code path is ever skipped,
+; not a substitute for it. Only cookie_secure requires HTTPS to actually be
+; live (see the commented 443 block in nginx.conf.example) — don't enable
+; it while the app is still being served over plain HTTP or every session
+; cookie will be silently dropped by the browser.
+php_admin_flag[session.cookie_httponly] = On
+php_admin_flag[session.cookie_secure]   = On   ; only once HTTPS (443 block) is actually live — see note above
+php_admin_value[session.cookie_samesite] = Lax
+
+; Don't leak PHP version/errors to responses in production (display_errors
+; is currently hardcoded On in index.php for local dev — app code, not
+; touched here; this pool-level override is the production-safe backstop
+; since Nginx/FPM config takes effect regardless of what index.php sets,
+; as PHP_ADMIN_VALUE cannot be overridden at runtime by ini_set()).
+php_admin_flag[display_errors] = Off
+php_admin_flag[log_errors] = On
+php_admin_value[error_log] = /var/log/php-fpm/portail-transport-error.log
+expose_php = Off

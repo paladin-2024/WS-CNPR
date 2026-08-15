@@ -293,6 +293,15 @@ class BrevetController extends Controller
 
             $zip->close();
 
+            // ZipArchive::close() deletes the temp file instead of writing a
+            // valid empty archive when zero entries were added (e.g. no
+            // conducteur in range still has its photo on disk) - write a
+            // minimal empty ZIP by hand so the response stays a well-formed
+            // archive instead of a missing file / broken Content-Length.
+            if (!file_exists($tmpFile)) {
+                file_put_contents($tmpFile, "PK\x05\x06" . str_repeat("\x00", 18));
+            }
+
             header('Content-Type: application/zip');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             header('Content-Length: ' . filesize($tmpFile));
@@ -363,6 +372,13 @@ class BrevetController extends Controller
             }
 
             $zip->close();
+
+            // Same empty-archive quirk as downloadPhotos(): close() removes
+            // the temp file rather than writing a valid empty ZIP when no
+            // QR code was successfully generated for any conducteur in range.
+            if (!file_exists($tmpFile)) {
+                file_put_contents($tmpFile, "PK\x05\x06" . str_repeat("\x00", 18));
+            }
 
             header('Content-Type: application/zip');
             header('Content-Disposition: attachment; filename="' . $filename . '"');

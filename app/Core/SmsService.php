@@ -3,7 +3,7 @@ namespace App\Core;
 
 class SmsService
 {
-    private const BASE_URL = 'https://api2.dream-digital.info/api/SendSMS';
+    private const BASE_URL = 'https://api2.smsala.com/SendSmsV2';
 
     private static function isDebug(): bool
     {
@@ -39,7 +39,7 @@ class SmsService
     }
 
     /**
-     * Envoie un SMS via l'API Dream Digital.
+     * Envoie un SMS via l'API Africala (SendSmsV2, api2.smsala.com).
      *
      * @param string $phoneNational  Les 9 chiffres nationaux (sans 243 ni 0)
      * @param string $message        Le contenu du SMS
@@ -48,32 +48,35 @@ class SmsService
     public static function envoyer(string $phoneNational, string $message): bool
     {
         self::log('Tentative SMS', ['phone' => $phoneNational, 'msg' => $message, 'len' => strlen($phoneNational)]);
-        
+
         if (strlen($phoneNational) !== 9) {
             self::log('ERREUR: longueur invalide', ['phone' => $phoneNational]);
             return false;
         }
 
-        $apiId = Env::get('SMS_API_ID', '');
-        $apiPassword = Env::get('SMS_API_PASSWORD', '');
-        if ($apiId === '' || $apiPassword === '') {
-            self::log('ERREUR: SMS_API_ID / SMS_API_PASSWORD non configurés (.env)');
+        $apiToken = Env::get('SMS_API_TOKEN', '');
+        if ($apiToken === '') {
+            self::log('ERREUR: SMS_API_TOKEN non configuré (.env)');
             return false;
         }
 
-        $query = http_build_query([
-            'api_id'       => $apiId,
-            'api_password' => $apiPassword,
-            'sms_type'     => 'T',
-            'encoding'     => 'T',
-            'sender_id'    => Env::get('SMS_SENDER_ID', 'CNPR-TSHOPO'),
-            'phonenumber'  => '243' . $phoneNational,
-            'textmessage'  => $message,
-        ]);
+        // SendSmsV2 deserializes the body as a List<SendSmsRequestModelV2> -
+        // it expects a JSON array of message objects, not a single object.
+        $payload = [[
+            'apiToken'          => $apiToken,
+            'messageType'       => '1',
+            'messageEncoding'   => '1',
+            'destinationAddress' => '243' . $phoneNational,
+            'sourceAddress'     => Env::get('SMS_SENDER_ID', 'CNPR-TSHOPO'),
+            'messageText'       => $message,
+        ]];
 
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL            => self::BASE_URL . '?' . $query,
+            CURLOPT_URL            => self::BASE_URL,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CONNECTTIMEOUT => 10,
@@ -87,8 +90,30 @@ class SmsService
         $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
 
-        self::log('Réponse API', ['status' => $status, 'error' => $error, 'res' => substr($res, 0, 200)]);
+        self::log('Réponse API', ['status' => $status, 'error' => $error, 'res' => substr((string)$res, 0, 200)]);
 
-        return $res !== false && $status < 400;
+        if ($res === false || $status >= 400) {
+            return false;
+        }
+
+        // Réponse attendue : {"Status":"Success","Remarks":"...", ...}, ou un
+        // tableau du même objet (l'endpoint accepte un lot de messages, donc
+        // peut répondre avec un résultat par message). Statut différent
+        // ("Failed", etc.) en cas d'échec.
+        $data = json_decode($res, true);
+        if (is_array($data) && array_is_list($data) && isset($data[0])) {
+            $data = $data[0];
+        }
+        if (!is_array($data) || !isset($data['Status'])) {
+            self::log('ERREUR: réponse API inattendue', ['res' => substr($res, 0, 200)]);
+            return false;
+        }
+
+        if (strcasecmp((string)$data['Status'], 'Success') !== 0) {
+            self::log('ERREUR: échec API', ['status' => $data['Status'], 'remarks' => $data['Remarks'] ?? null]);
+            return false;
+        }
+
+        return true;
     }
 }

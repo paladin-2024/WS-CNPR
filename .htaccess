@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Allow direct access to existing files/dirs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything to index.php (root)
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

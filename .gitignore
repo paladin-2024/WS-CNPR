@@ -1,0 +1,13 @@
+/vendor/
+/.env
+/storage/logs/*.log
+/public/uploads/*
+!/public/uploads/logos/
+!/public/uploads/conducteurs/
+!/public/uploads/signatures/
+/public/uploads/logos/*
+/public/uploads/conducteurs/*
+/public/uploads/signatures/*
+!/public/uploads/logos/.gitkeep
+!/public/uploads/conducteurs/.gitkeep
+!/public/uploads/signatures/.gitkeep

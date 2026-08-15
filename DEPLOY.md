@@ -7,50 +7,24 @@
 - Domain `cnpr.wscsarl.info` pointing to VPS IP (A record)
 - Ports 80 & 443 open on firewall
 
-## Deployment Options
-
-### Option A: Pre-built Image from GHCR (Recommended — faster deploys)
-
-**One-time setup (local/CI):**
-```bash
-# Build & push to GHCR
-docker build -t cnpr-app .
-docker tag cnpr-app ghcr.io/YOUR_GITHUB_USER/cnpr-app:latest
-echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USER --password-stdin
-docker push ghcr.io/YOUR_GITHUB_USER/cnpr-app:latest
-```
-
-**On VPS:**
-```bash
-# 1. Clone repo
-git clone https://github.com/paladin-2024/WS-CNPR.git /opt/cnpr
-cd /opt/cnpr
-
-# 2. Configure environment
-cp .env.production .env
-nano .env  # Set DB_PASSWORD, GHCR_OWNER, SMS credentials
-
-# 3. Pull & start (no build!)
-docker compose pull app
-docker compose up -d
-```
-
-### Option B: Build on VPS (Simpler, slower first deploy)
+## Quick Start
 
 ```bash
 # 1. Clone repo
 git clone https://github.com/paladin-2024/WS-CNPR.git /opt/cnpr
 cd /opt/cnpr
 
-# 2. Configure environment
+# 2. Create production .env from template
 cp .env.production .env
 nano .env  # Set DB_PASSWORD, SMS credentials
 
-# 3. Build & start (takes 2-3 min first time)
+# 3. Build & start (first run takes 2-3 min)
 docker compose up -d --build
-```
 
----
+# 4. Verify
+docker compose logs -f app
+docker compose logs -f nginx
+```
 
 ## Initial SSL Certificate
 
@@ -71,18 +45,14 @@ Then reload nginx:
 docker compose exec nginx nginx -s reload
 ```
 
----
-
 ## Services
 
 | Service | Port | Description |
 |---------|------|-------------|
 | nginx | 80, 443 | Reverse proxy, SSL termination, static files |
-| app | 9000 | PHP-FPM application server (pre-built or local build) |
+| app | 9000 | PHP-FPM application server (built on VPS) |
 | postgres | 5432 | PostgreSQL database (internal only) |
 | certbot | - | Auto-renewal of Let's Encrypt certs |
-
----
 
 ## Data Persistence
 
@@ -95,8 +65,6 @@ Docker volumes (survive container recreation):
 - `storage_logs` — Application logs
 - `certbot_etc` — SSL certificates
 - `certbot_www` — ACME challenge files
-
----
 
 ## Common Commands
 
@@ -116,34 +84,24 @@ docker compose exec postgres pg_dump -U transport_app min_transport > backup_$(d
 # Restore database
 docker compose exec -T postgres psql -U transport_app min_transport < backup.sql
 
-# Update app (Option A: pre-built)
-git pull
-docker compose pull app
-docker compose up -d
-
-# Update app (Option B: build on VPS)
+# Update app
 git pull
 docker compose up -d --build
 
 # Full reset (⚠️ destroys data)
 docker compose down -v
-docker compose up -d
+docker compose up -d --build
 ```
-
----
 
 ## Environment Variables (.env)
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `DB_PASSWORD` | Yes | Strong PostgreSQL password |
-| `GHCR_OWNER` | No | GitHub user/org for GHCR image (default: paladin-2024) |
 | `SMS_API_ID` | No | Dream Digital SMS API ID |
 | `SMS_API_PASSWORD` | No | Dream Digital SMS API password |
 | `SMS_SENDER_ID` | No | Sender ID (default: CNPR-TSHOPO) |
 | `SMS_DEBUG` | No | Enable SMS debug logging (true/false) |
-
----
 
 ## Troubleshooting
 
@@ -166,13 +124,6 @@ docker compose exec app chown -R www-data:www-data /var/www/html/public/uploads 
 docker compose logs app
 ```
 
-**Image pull fails (Option A):**
-- Verify `GHCR_OWNER` in `.env` matches your GitHub username/org
-- Ensure image exists: `docker pull ghcr.io/YOUR_GITHUB_USER/cnpr-app:latest`
-- If private repo: `docker login ghcr.io` with PAT (packages:read)
-
----
-
 ## Security Notes
 
 - Change default admin password after first login (`admin@transport.dev` / `admin123`)
@@ -180,14 +131,13 @@ docker compose logs app
 - Keep `.env` out of git (already in .gitignore)
 - Regularly update: `docker compose pull && docker compose up -d`
 
----
-
 ## File Structure on VPS
 
 ```
 /opt/cnpr/
 ├── .env                    # Production secrets (gitignored)
 ├── docker-compose.yml
+├── Dockerfile
 ├── docker-entrypoint.sh
 ├── nginx/
 │   ├── conf.d/cnpr.wscsarl.info.conf

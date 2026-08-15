@@ -78,6 +78,7 @@ services:
       - uploads_conducteurs:/var/www/html/public/uploads/conducteurs
       - uploads_signatures:/var/www/html/public/uploads/signatures
       - uploads_logos:/var/www/html/public/uploads/logos
+      - uploads_signalements:/var/www/html/public/uploads/signalements
       - storage_logs:/var/www/html/storage/logs
     depends_on:
       postgres:
@@ -99,6 +100,7 @@ services:
       - uploads_conducteurs:/var/www/html/public/uploads/conducteurs:ro
       - uploads_signatures:/var/www/html/public/uploads/signatures:ro
       - uploads_logos:/var/www/html/public/uploads/logos:ro
+      - uploads_signalements:/var/www/html/public/uploads/signalements:ro
     depends_on:
       - app
     networks:
@@ -109,6 +111,7 @@ volumes:
   uploads_conducteurs:
   uploads_signatures:
   uploads_logos:
+  uploads_signalements:
   storage_logs:
 
 networks:

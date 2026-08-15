@@ -56,6 +56,7 @@ class BrevetController extends Controller
             $sqlImprimes .= " ORDER BY date_enregistrement DESC";
             $conducteursImprimes = $db->fetchAll($sqlImprimes, $paramsImprimes);
         } catch (\Exception $e) {
+            error_log('[BrevetController::imprimeur] ' . $e->getMessage());
             $conducteurs = [];
             $conducteursEnCours = [];
             $conducteursImprimes = [];
@@ -378,6 +379,7 @@ class BrevetController extends Controller
             $conducteurs = $db->fetchAll($sql, $params);
             $this->json($conducteurs);
         } catch (\Exception $e) {
+            error_log('[BrevetController::apiImprimeur] ' . $e->getMessage());
             $this->json([]);
         }
     }
@@ -413,6 +415,7 @@ class BrevetController extends Controller
             $sqlImprimes .= " ORDER BY date_enregistrement DESC";
             $conducteursImprimes = $db->fetchAll($sqlImprimes, $paramsImprimes);
         } catch (\Exception $e) {
+            error_log('[BrevetController::receptionnaire] ' . $e->getMessage());
             $conducteurs = [];
             $conducteursImprimes = [];
         }
@@ -449,6 +452,7 @@ class BrevetController extends Controller
             $conducteurs = $db->fetchAll($sql, $params);
             $this->json($conducteurs);
         } catch (\Exception $e) {
+            error_log('[BrevetController::apiReceptionnaire] ' . $e->getMessage());
             $this->json([]);
         }
     }
@@ -470,6 +474,7 @@ class BrevetController extends Controller
             );
             $this->json(['success' => true]);
         } catch (\Exception $e) {
+            error_log('[BrevetController::confirmerImpression] ' . $e->getMessage());
             $this->json(['error' => 'Erreur lors de la confirmation.'], 500);
         }
     }
@@ -501,6 +506,7 @@ class BrevetController extends Controller
 
             $this->json(['success' => true]);
         } catch (\Exception $e) {
+            error_log('[BrevetController::confirmerImpressionLot] ' . $e->getMessage());
             $this->json(['error' => 'Erreur lors de la confirmation en lot.'], 500);
         }
     }

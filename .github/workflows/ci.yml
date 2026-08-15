@@ -2,8 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: [dev]
   pull_request:
+    branches: [dev, main]
 
 jobs:
   lint:
@@ -48,4 +49,10 @@ jobs:
           tags: cnpr-app:ci
 
       - name: docker compose config validation
-        run: docker compose config -q
+        run: |
+          # docker-compose.yml references env_file: .env, which is gitignored
+          # and never present in CI - .env.example has the same variable
+          # names with non-secret placeholder values, enough to validate
+          # compose file structure without needing real credentials.
+          cp .env.example .env
+          docker compose config -q

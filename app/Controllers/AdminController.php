@@ -27,9 +27,26 @@ class AdminController extends Controller
         }
 
         $file = $_FILES[$fileKey];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        if (!in_array($file['type'], $allowedTypes)) {
+        // Don't trust the client-supplied MIME type ($file['type']) or filename
+        // extension - both are request fields the client fully controls.
+        // getimagesize() parses the file's real header bytes, so a non-image
+        // (or a polyglot) is rejected instead of trusted.
+        if ($file['size'] > 5 * 1024 * 1024) {
+            return null;
+        }
+
+        $allowedMimes = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+        ];
+
+        $info = @getimagesize($file['tmp_name']);
+        $detectedMime = $info['mime'] ?? null;
+
+        if (!$detectedMime || !isset($allowedMimes[$detectedMime])) {
             return null;
         }
 
@@ -39,7 +56,7 @@ class AdminController extends Controller
             mkdir($fullPath, 0755, true);
         }
 
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $extension = $allowedMimes[$detectedMime];
         $filename = uniqid() . '_' . time() . '.' . $extension;
         $destination = $fullPath . '/' . $filename;
 

@@ -99,37 +99,50 @@ not optional.
 
 ### 6. TLS
 
-`docker-compose.yml` ships with `nginx` bound to `80:80` only; `443:443` is
-commented out, and the container's Nginx config
-(`deploy/nginx.conf.example`, bind-mounted read-only into the `nginx`
-service) has its HTTPS server block commented out too, since there's no cert
-yet at build time. Two ways to get real TLS, pick whichever matches how the
-VPS is otherwise managed — neither is objectively "correct":
+This app's actual production VPS also hosts other sites (`wscsarl.info`,
+`dgpspt.wscsarl.info`) behind a **system-level Nginx that already owns host
+ports 80/443** — running this stack's own `nginx` there directly would just
+fail to bind the port. So on a co-hosted box, TLS terminates at the system
+Nginx, not inside this stack:
 
-- **Terminate TLS inside the stack.** Run certbot on the host (webroot mode
-  against the `nginx` container's `/.well-known/acme-challenge/` location,
-  which is already wired to a bind-mounted webroot in the shipped config),
-  then bind-mount `/etc/letsencrypt/live/<domain>/` into the `nginx`
-  container (see the commented example under `services.nginx.volumes` in
-  `docker-compose.yml`), uncomment the `443:443` port mapping and the HTTPS
-  server block in `deploy/nginx.conf.example`, and `docker compose up -d`
-  again to apply. Keeps everything in one compose file; certbot renewal
-  needs a cron/systemd timer on the host that also restarts/reloads the
-  `nginx` container.
-- **Terminate TLS in front of the stack** (a host-level Nginx/Caddy/Traefik,
-  or the VPS provider's load balancer) and leave this stack's `nginx`
-  service on plain HTTP behind it, reachable only on localhost or an
-  internal network. Simpler if the VPS already runs a reverse proxy for
-  other services and you don't want to manage two sets of TLS config. Make
-  sure the proxy forwards `X-Forwarded-Proto: https` — `index.php` checks
-  that header (see "Configuration notes" below) to decide whether to mark
-  the session cookie `secure`.
+- `docker-compose.yml`'s `nginx` service binds `127.0.0.1:8081:80` only —
+  plain HTTP, not reachable from outside the VPS.
+- Add a new system-Nginx server block (e.g.
+  `/etc/nginx/conf.d/cnpr.conf`) that reverse-proxies the real domain to
+  `127.0.0.1:8081`, mirroring whatever pattern the box's other sites already
+  use:
+  ```nginx
+  server {
+      listen 80;
+      server_name cnpr.wscsarl.info;
 
-Either way, don't enable `session.cookie_secure`-dependent behavior (it's
-automatic based on the HTTPS/`X-Forwarded-Proto` detection in `index.php`)
-until HTTPS is actually terminating somewhere in the chain — logging in over
-plain HTTP with that flag effectively on would have the browser silently
-drop the session cookie.
+      location / {
+          proxy_pass http://127.0.0.1:8081;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+      }
+  }
+  ```
+  Then `sudo nginx -t && sudo systemctl reload nginx`, and
+  `sudo certbot --nginx -d cnpr.wscsarl.info` — certbot rewrites this file
+  in place to add the HTTPS block/redirect and start managing renewal,
+  exactly like it already does for the box's other domains.
+- `nginx/conf.d/cnpr.wscsarl.info.conf` (this stack's own, internal-only
+  Nginx config) explicitly re-forwards `X-Forwarded-Proto`/`X-Forwarded-For`
+  into PHP via `fastcgi_param` — the stock `fastcgi_params` file nginx ships
+  with does **not** pass through arbitrary incoming headers on its own, and
+  `index.php` reads `HTTP_X_FORWARDED_PROTO` to decide whether to mark the
+  session cookie `secure`. Without that explicit forwarding, PHP would never
+  see it and the cookie would never get `secure` even over real HTTPS.
+
+If this app ever runs on a VPS **dedicated only to it** (no other sites),
+the simpler path is to let this stack's own `nginx` own 80/443 directly
+instead — see `deploy/nginx.conf.example` for that variant, and swap the
+`ports:`/TLS setup back accordingly. Don't run both approaches on the same
+domain at once (system Nginx trying to obtain a cert while a container also
+tries to bind 80/443 will fight each other).
 
 ### Redeploying
 

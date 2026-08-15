@@ -1,6 +1,16 @@
 # Portail Numérique du Ministère des Transports — Docker Compose stack for cnpr.wscsarl.info
 #
-# Services: nginx (edge/SSL) -> app (php-fpm) -> db (postgres) + certbot (auto-renew)
+# Services: nginx (plain HTTP, LOCAL ONLY) -> app (php-fpm) -> db (postgres)
+#
+# This VPS also hosts other sites (wscsarl.info, dgpspt.wscsarl.info) behind
+# a system-level Nginx that already owns host ports 80/443. So this stack's
+# own nginx does NOT bind to 80/443 - it listens on 127.0.0.1:8081 only, and
+# the SYSTEM Nginx reverse-proxies cnpr.wscsarl.info to it (same pattern
+# already used for dgpspt.wscsarl.info -> 127.0.0.1:8000, see
+# /etc/nginx/conf.d/taxe-kisangani.conf on the VPS). TLS terminates at the
+# system Nginx via the box's existing certbot setup - there is no built-in
+# certbot service in this stack, it would just fight the system one over the
+# same domain.
 #
 # ────────────────────────────────────────────────────────────────────────────
 # ONE-TIME SETUP (fresh install)
@@ -13,10 +23,12 @@
 #
 #   2. docker compose up -d --build
 #      - postgres starts, runs schema.sql from /docker-entrypoint-initdb.d/
-#      - certbot auto-obtains Let's Encrypt cert for cnpr.wscsarl.info (port 80)
+#      - nginx listens on 127.0.0.1:8081 only (not exposed outside the VPS)
 #      - app runs docker-entrypoint.sh: waits for DB, runs seed.php
 #
-#   3. Visit https://cnpr.wscsarl.info
+#   3. Add a system-Nginx server block proxying cnpr.wscsarl.info to
+#      127.0.0.1:8081, then `certbot --nginx -d cnpr.wscsarl.info` for TLS -
+#      see DEPLOYMENT.md.
 #
 # Re-running `docker compose up -d` afterwards (e.g. after a `git pull` +
 # rebuild) does NOT need manual seed — entrypoint handles it idempotently.
@@ -78,29 +90,17 @@ services:
     container_name: cnpr_nginx
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      # Local only - the system Nginx on this VPS owns 80/443 for the other
+      # sites it hosts and reverse-proxies cnpr.wscsarl.info here.
+      - "127.0.0.1:8081:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./public:/var/www/html/public:ro
       - uploads_conducteurs:/var/www/html/public/uploads/conducteurs:ro
       - uploads_signatures:/var/www/html/public/uploads/signatures:ro
       - uploads_logos:/var/www/html/public/uploads/logos:ro
-      - certbot_www:/var/www/certbot
-      - certbot_etc:/etc/letsencrypt
     depends_on:
       - app
-    networks:
-      - cnpr_network
-
-  certbot:
-    image: certbot/certbot:latest
-    container_name: cnpr_certbot
-    restart: unless-stopped
-    volumes:
-      - certbot_etc:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet || true; sleep 12h & wait $${!}; done'"
     networks:
       - cnpr_network
 
@@ -110,8 +110,6 @@ volumes:
   uploads_signatures:
   uploads_logos:
   storage_logs:
-  certbot_www:
-  certbot_etc:
 
 networks:
   cnpr_network:

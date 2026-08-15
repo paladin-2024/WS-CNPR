@@ -49,6 +49,9 @@ spl_autoload_register(function ($class) {
     }
 });
 
+// Charger les variables d'environnement (.env, non versionné)
+App\Core\Env::load(ROOT_PATH . '/.env');
+
 // Charger la configuration
 $config = require ROOT_PATH . '/config/database.php';
 

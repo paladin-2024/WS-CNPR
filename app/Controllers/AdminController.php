@@ -143,7 +143,7 @@ class AdminController extends Controller
                     // Validateur: paiements only
                     $conducteursPayes = $db->fetchOne("SELECT COUNT(*) as total FROM paiements_brevets")['total'] ?? 0;
                     $totalPaiementsBrevet = $db->fetchOne("SELECT COALESCE(SUM(montant), 0) as total FROM paiements_brevets")['total'] ?? 0;
-                    $paiementsAujourdhui = $db->fetchOne("SELECT COUNT(*) as total FROM paiements_brevets WHERE date_paiement = CURDATE()")['total'] ?? 0;
+                    $paiementsAujourdhui = $db->fetchOne("SELECT COUNT(*) as total FROM paiements_brevets WHERE date_paiement = CURRENT_DATE")['total'] ?? 0;
 
                     $dashboardSubtitle = 'Validation des paiements de brevets';
 
@@ -502,13 +502,13 @@ class AdminController extends Controller
             if ($existing) {
                 // Mettre à jour
                 $db->query(
-                    "UPDATE paiements_brevets SET montant = ?, reference_paiement = ?, date_paiement = CURDATE() WHERE id = ?",
+                    "UPDATE paiements_brevets SET montant = ?, reference_paiement = ?, date_paiement = CURRENT_DATE WHERE id = ?",
                     [$montant, $reference, $existing['id']]
                 );
             } else {
                 // Créer nouveau
                 $db->query(
-                    "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURDATE())",
+                    "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURRENT_DATE)",
                     [$conducteur_id, $montant, $reference]
                 );
             }
@@ -842,7 +842,7 @@ class AdminController extends Controller
                 // Création
                 $db->query(
                     "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'actif')",
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
                     [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $numero_permis, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat]
                 );
                 $message = 'Conducteur créé avec succès!';
@@ -895,7 +895,7 @@ class AdminController extends Controller
                 "SELECT type_vehicule, COUNT(*) as total FROM vehicules GROUP BY type_vehicule"
             );
             $paiementsByMonth = $db->fetchAll(
-                "SELECT DATE_FORMAT(date_paiement, '%Y-%m') as mois, SUM(montant) as total 
+                "SELECT TO_CHAR(date_paiement, 'YYYY-MM') as mois, SUM(montant) as total 
                  FROM paiements WHERE statut = 'valide' 
                  GROUP BY mois ORDER BY mois DESC LIMIT 12"
             );
@@ -976,7 +976,7 @@ class AdminController extends Controller
                     }
                     $db->query(
                         "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicats, date_enregistrement, date_expiration, statut)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'actif')",
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
                         [
                             $data['nom'] ?? '', $data['prenom'] ?? '', $data['date_naissance'] ?? null,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',
@@ -1174,7 +1174,7 @@ class AdminController extends Controller
                 try {
                     $db->query(
                         "INSERT INTO vehicules (numero_plaque, type_vehicule, marque, modele, annee, capacite, proprietaire_nom, societe_transport, date_immatriculation, date_expiration, statut)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 'actif')",
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
                         [
                             $data['numero_plaque'] ?? '', $data['type_vehicule'] ?? 'taxi',
                             $data['marque'] ?? '', $data['modele'] ?? '',

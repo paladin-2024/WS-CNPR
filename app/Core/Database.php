@@ -9,7 +9,7 @@ class Database
     private function __construct()
     {
         $config = require ROOT_DIR . '/config/database.php';
-        $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
+        $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
         $this->pdo = new \PDO($dsn, $config['username'], $config['password'], [
             \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,

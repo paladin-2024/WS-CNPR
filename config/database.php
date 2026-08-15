@@ -1,57 +1,19 @@
 <?php
 /**
- * Détection local vs production pour choisir les identifiants MySQL.
+ * Connexion PostgreSQL — configuration exclusivement via variables d'environnement.
  *
- * Forcer explicitement (Apache SetEnv, .env chargé avant ce fichier, etc.) :
- *   APP_ENV=local  ou  USE_LOCAL_DB=1   → config XAMPP
- *   APP_ENV=production  ou  USE_PRODUCTION_DB=1  → config hébergeur
+ * En local, copier .env.example vers .env et ajuster les valeurs (voir App\Core\Env,
+ * chargé depuis index.php). Les valeurs par défaut ci-dessous ne sont que des
+ * conventions de développement local, jamais de vrais identifiants de production.
  */
-$appEnv = strtolower((string) getenv('APP_ENV'));
-if ($appEnv === 'local' || getenv('USE_LOCAL_DB') === '1') {
-    $isLocal = true;
-} elseif ($appEnv === 'production' || getenv('USE_PRODUCTION_DB') === '1') {
-    $isLocal = false;
-} else {
-    $rawHost = (string) ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '');
-    $httpHost = strtolower(trim($rawHost));
-    if ($httpHost !== '') {
-        $httpHost = explode(':', $httpHost, 2)[0];
-    }
+use App\Core\Env;
 
-    $isLocal = false;
-
-    if ($httpHost !== '') {
-        $isLocal = in_array($httpHost, ['localhost', '127.0.0.1', '::1'], true)
-            || preg_match('/\.(?:local|test|localhost)$/', $httpHost) === 1;
-    }
-
-    if (!$isLocal) {
-        $serverAddr = (string) ($_SERVER['SERVER_ADDR'] ?? '');
-        $isLocal = ($serverAddr === '127.0.0.1' || $serverAddr === '::1');
-    }
-
-    if (!$isLocal) {
-        $remoteAddr = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
-        $isLocal = ($remoteAddr === '127.0.0.1' || $remoteAddr === '::1');
-    }
-}
-
-if ($isLocal) {
-    // Configuration locale (XAMPP)
-    return [
-        'host'     => 'localhost',
-        'dbname'   => 'min_transport',
-        'username' => 'root',
-        'password' => '',
-        'charset'  => 'utf8mb4',
-    ];
-}
-
-// Configuration en ligne (Production)
 return [
-    'host'     => 'localhost',
-    'dbname'   => 'u421683743_transport',
-    'username' => 'u421683743_transport',
-    'password' => 'GRACEsoliste1234@!!',
-    'charset'  => 'utf8mb4',
+    'driver'   => Env::get('DB_CONNECTION', 'pgsql'),
+    'host'     => Env::get('DB_HOST', '127.0.0.1'),
+    'port'     => Env::get('DB_PORT', '5432'),
+    'dbname'   => Env::get('DB_DATABASE', 'min_transport'),
+    'username' => Env::get('DB_USERNAME', 'postgres'),
+    'password' => Env::get('DB_PASSWORD', ''),
+    'charset'  => Env::get('DB_CHARSET', 'utf8'),
 ];

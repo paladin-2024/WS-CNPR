@@ -3,14 +3,15 @@ namespace App\Core;
 
 class SmsService
 {
-    private const API_ID       = 'API4604816615';
-    private const API_PASSWORD = '28iF7i2aAZ';
-    private const SENDER_ID    = 'CNPR-TSHOPO';
-    private const BASE_URL     = 'https://api2.dream-digital.info/api/SendSMS';
-    private const DEBUG = true;
+    private const BASE_URL = 'https://api2.dream-digital.info/api/SendSMS';
+
+    private static function isDebug(): bool
+    {
+        return filter_var(Env::get('SMS_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN);
+    }
 
     private static function log(string $msg, array $ctx = []): void {
-        if (self::DEBUG) {
+        if (self::isDebug()) {
             $s = '[SMS] ' . $msg . ' ' . json_encode($ctx);
             error_log($s);
             $logFile = defined('ROOT_PATH') ? ROOT_PATH . '/storage/logs/sms_debug.log' : __DIR__ . '/../../storage/logs/sms_debug.log';
@@ -53,12 +54,19 @@ class SmsService
             return false;
         }
 
+        $apiId = Env::get('SMS_API_ID', '');
+        $apiPassword = Env::get('SMS_API_PASSWORD', '');
+        if ($apiId === '' || $apiPassword === '') {
+            self::log('ERREUR: SMS_API_ID / SMS_API_PASSWORD non configurés (.env)');
+            return false;
+        }
+
         $query = http_build_query([
-            'api_id'       => self::API_ID,
-            'api_password' => self::API_PASSWORD,
+            'api_id'       => $apiId,
+            'api_password' => $apiPassword,
             'sms_type'     => 'T',
             'encoding'     => 'T',
-            'sender_id'    => self::SENDER_ID,
+            'sender_id'    => Env::get('SMS_SENDER_ID', 'CNPR-TSHOPO'),
             'phonenumber'  => '243' . $phoneNational,
             'textmessage'  => $message,
         ]);

@@ -1,3 +1,7 @@
+-- SUPERSEDED: schéma MySQL historique. La base tourne désormais sur PostgreSQL ;
+-- statut_brevet et les rôles imprimeur/receptionnaire sont déjà inclus dans
+-- database/schema.sql. Conservé pour l'historique uniquement, ne pas exécuter.
+--
 -- =====================================================
 -- Migration: Gestion des brevets de conducteurs
 -- Date: 2026-03-23

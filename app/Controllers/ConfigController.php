@@ -112,34 +112,34 @@ class ConfigController extends Controller
         }
 
         try {
-            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_name', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$app_name, $app_name]);
-            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_slogan', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$app_slogan, $app_slogan]);
+            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_name', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$app_name, $app_name]);
+            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_slogan', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$app_slogan, $app_slogan]);
 
             $logoUpload = $this->handleLogoUpload($_FILES['app_logo'] ?? null);
             if ($logoUpload) {
-                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_logo', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$logoUpload, $logoUpload]);
+                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('app_logo', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$logoUpload, $logoUpload]);
             }
 
             $carteLogoGauche = $this->handleLogoUpload($_FILES['carte_logo_gauche'] ?? null, 'carte_gauche');
             if ($carteLogoGauche) {
-                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_logo_gauche', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$carteLogoGauche, $carteLogoGauche]);
+                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_logo_gauche', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$carteLogoGauche, $carteLogoGauche]);
             }
 
             $carteLogoDroite = $this->handleLogoUpload($_FILES['carte_logo_droite'] ?? null, 'carte_droite');
             if ($carteLogoDroite) {
-                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_logo_droite', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$carteLogoDroite, $carteLogoDroite]);
+                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_logo_droite', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$carteLogoDroite, $carteLogoDroite]);
             }
 
             $carteSignature = $this->handleSignatureUpload($_FILES['carte_signature'] ?? null);
             if ($carteSignature) {
-                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_signature', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$carteSignature, $carteSignature]);
+                $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_signature', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$carteSignature, $carteSignature]);
             }
 
             $carteTitreGauche = trim($_POST['carte_titre_gauche'] ?? '');
-            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_titre_gauche', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$carteTitreGauche, $carteTitreGauche]);
+            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_titre_gauche', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$carteTitreGauche, $carteTitreGauche]);
 
             $carteTitreDroite = trim($_POST['carte_titre_droite'] ?? '');
-            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_titre_droite', ?) ON DUPLICATE KEY UPDATE valeur = ?", [$carteTitreDroite, $carteTitreDroite]);
+            $db->query("INSERT INTO configuration (cle, valeur) VALUES ('carte_titre_droite', ?) ON CONFLICT (cle) DO UPDATE SET valeur = ?", [$carteTitreDroite, $carteTitreDroite]);
 
             header('Location: ' . BASE_PATH . '/admin/config?success=Configuration enregistrée avec succès');
             exit;

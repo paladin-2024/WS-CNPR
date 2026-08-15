@@ -1,3 +1,7 @@
+-- SUPERSEDED: schéma MySQL historique. La base tourne désormais sur PostgreSQL ;
+-- la table configuration et ses valeurs par défaut sont déjà incluses dans
+-- database/schema.sql. Conservé pour l'historique uniquement, ne pas exécuter.
+
 -- =====================================================
 -- TABLE: configuration
 -- =====================================================

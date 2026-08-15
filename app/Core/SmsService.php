@@ -3,20 +3,38 @@ namespace App\Core;
 
 class SmsService
 {
-    private const BASE_URL = 'https://api2.dream-digital.info/api/SendSMS';
+    private const BASE_URL = 'https://api2.smsala.com/SendSmsV2';
 
     private static function isDebug(): bool
     {
         return filter_var(Env::get('SMS_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN);
     }
 
+    /**
+     * Trace verbeuse (chaque tentative, requête/réponse) - seulement quand
+     * SMS_DEBUG=true, pour éviter de journaliser le contenu des messages
+     * en continu en production.
+     */
     private static function log(string $msg, array $ctx = []): void {
         if (self::isDebug()) {
-            $s = '[SMS] ' . $msg . ' ' . json_encode($ctx);
-            error_log($s);
-            $logFile = defined('ROOT_PATH') ? ROOT_PATH . '/storage/logs/sms_debug.log' : __DIR__ . '/../../storage/logs/sms_debug.log';
-            @file_put_contents($logFile, date('Y-m-d H:i:s') . ' - ' . $s . "\n", FILE_APPEND);
+            self::writeLog($msg, $ctx);
         }
+    }
+
+    /**
+     * Échec réel (réseau, API, config) - toujours journalisé, indépendamment
+     * de SMS_DEBUG, sinon un échec d'envoi devient invisible en production
+     * dès que le mode debug est désactivé (le réglage recommandé en prod).
+     */
+    private static function logFailure(string $msg, array $ctx = []): void {
+        self::writeLog($msg, $ctx);
+    }
+
+    private static function writeLog(string $msg, array $ctx = []): void {
+        $s = '[SMS] ' . $msg . ' ' . json_encode($ctx);
+        error_log($s);
+        $logFile = defined('ROOT_PATH') ? ROOT_PATH . '/storage/logs/sms_debug.log' : __DIR__ . '/../../storage/logs/sms_debug.log';
+        @file_put_contents($logFile, date('Y-m-d H:i:s') . ' - ' . $s . "\n", FILE_APPEND);
     }
 
     /**
@@ -39,7 +57,7 @@ class SmsService
     }
 
     /**
-     * Envoie un SMS via l'API Dream Digital.
+     * Envoie un SMS via l'API Africala (SendSmsV2, api2.smsala.com).
      *
      * @param string $phoneNational  Les 9 chiffres nationaux (sans 243 ni 0)
      * @param string $message        Le contenu du SMS
@@ -48,32 +66,71 @@ class SmsService
     public static function envoyer(string $phoneNational, string $message): bool
     {
         self::log('Tentative SMS', ['phone' => $phoneNational, 'msg' => $message, 'len' => strlen($phoneNational)]);
-        
+
         if (strlen($phoneNational) !== 9) {
-            self::log('ERREUR: longueur invalide', ['phone' => $phoneNational]);
+            self::logFailure('ERREUR: longueur invalide', ['phone' => $phoneNational]);
             return false;
         }
 
-        $apiId = Env::get('SMS_API_ID', '');
-        $apiPassword = Env::get('SMS_API_PASSWORD', '');
-        if ($apiId === '' || $apiPassword === '') {
-            self::log('ERREUR: SMS_API_ID / SMS_API_PASSWORD non configurés (.env)');
+        $apiToken = Env::get('SMS_API_TOKEN', '');
+        if ($apiToken === '') {
+            self::logFailure('ERREUR: SMS_API_TOKEN non configuré (.env)');
             return false;
         }
 
-        $query = http_build_query([
-            'api_id'       => $apiId,
-            'api_password' => $apiPassword,
-            'sms_type'     => 'T',
-            'encoding'     => 'T',
-            'sender_id'    => Env::get('SMS_SENDER_ID', 'CNPR-TSHOPO'),
-            'phonenumber'  => '243' . $phoneNational,
-            'textmessage'  => $message,
-        ]);
+        // SendSmsV2 deserializes the body as a List<SendSmsRequestModelV2> -
+        // it expects a JSON array of message objects, not a single object.
+        $payload = [[
+            'apiToken'          => $apiToken,
+            'messageType'       => '1',
+            'messageEncoding'   => '1',
+            'destinationAddress' => '243' . $phoneNational,
+            'sourceAddress'     => Env::get('SMS_SENDER_ID', 'CNPR-TSHOPO'),
+            'messageText'       => $message,
+        ]];
 
+        $body = json_encode($payload);
+        if ($body === false) {
+            self::logFailure('ERREUR: échec encodage JSON de la requête', ['json_error' => json_last_error_msg()]);
+            return false;
+        }
+
+        // Un seul essai supplémentaire, uniquement pour un échec réseau
+        // (timeout, DNS, connexion refusée) - jamais pour un rejet de l'API
+        // (identifiants invalides, IP non autorisée, etc.), qui échouera de
+        // la même façon à chaque tentative.
+        $maxAttempts = 2;
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            $result = self::attemptSend($body);
+
+            if ($result === 'network-error') {
+                if ($attempt < $maxAttempts) {
+                    self::log('Nouvel essai après erreur réseau', ['attempt' => $attempt]);
+                    continue;
+                }
+                self::logFailure('ERREUR: échec réseau après ' . $maxAttempts . ' tentative(s)');
+                return false;
+            }
+
+            return $result === true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return true|'network-error'|false  true en cas de succès, la chaîne
+     *         'network-error' si l'échec est probablement transitoire
+     *         (réessayable), false pour tout autre échec (config, rejet API).
+     */
+    private static function attemptSend(string $body)
+    {
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL            => self::BASE_URL . '?' . $query,
+            CURLOPT_URL            => self::BASE_URL,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $body,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CONNECTTIMEOUT => 10,
@@ -89,21 +146,37 @@ class SmsService
 
         self::log('Réponse API', ['status' => $status, 'error' => $error, 'res' => substr((string)$res, 0, 200)]);
 
-        if ($res === false || $status >= 400) {
+        if ($res === false) {
+            self::logFailure('ERREUR: échec réseau', ['error' => $error]);
+            return 'network-error';
+        }
+
+        if ($status >= 500) {
+            // Erreur côté serveur du fournisseur - vaut la peine de réessayer.
+            self::logFailure('ERREUR: statut serveur API', ['status' => $status]);
+            return 'network-error';
+        }
+
+        if ($status >= 400) {
+            self::logFailure('ERREUR: statut HTTP API', ['status' => $status, 'res' => substr($res, 0, 200)]);
             return false;
         }
 
-        // Dream Digital returns HTTP 200 even on a logical failure (e.g. bad
-        // credentials, insufficient balance) - the real outcome is in the
-        // JSON body's "status" field ("S" = sent, "F" = failed).
+        // Réponse attendue : {"Status":"Success","Remarks":"...", ...}, ou un
+        // tableau du même objet (l'endpoint accepte un lot de messages, donc
+        // peut répondre avec un résultat par message). Statut différent
+        // ("Failed", etc.) en cas d'échec.
         $data = json_decode($res, true);
-        if (!is_array($data) || !isset($data['status'])) {
-            self::log('ERREUR: réponse API inattendue', ['res' => substr($res, 0, 200)]);
+        if (is_array($data) && array_is_list($data) && isset($data[0])) {
+            $data = $data[0];
+        }
+        if (!is_array($data) || !isset($data['Status'])) {
+            self::logFailure('ERREUR: réponse API inattendue', ['res' => substr($res, 0, 200)]);
             return false;
         }
 
-        if ($data['status'] !== 'S') {
-            self::log('ERREUR: échec API', ['status' => $data['status'], 'remarks' => $data['remarks'] ?? null]);
+        if (strcasecmp((string)$data['Status'], 'Success') !== 0) {
+            self::logFailure('ERREUR: échec API', ['status' => $data['Status'], 'remarks' => $data['Remarks'] ?? null]);
             return false;
         }
 

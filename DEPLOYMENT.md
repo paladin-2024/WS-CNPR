@@ -2,7 +2,7 @@
 
 This is a hand-rolled PHP MVC app (no framework), a single front controller
 (`index.php`) at the repo root, PDO/PostgreSQL for data, and one external
-dependency at runtime (the Dream Digital SMS API). There is no build step and
+dependency at runtime (the Africala SMS API). There is no build step and
 no migration framework — deploying means: get the PHP code + `vendor/` onto a
 server, point a web server at it, have a Postgres database with the schema
 applied, and set the right environment variables.
@@ -44,9 +44,9 @@ Edit `.env` and fill in real values. At minimum:
   *internal* port, not a host-facing address — `docker-compose.yml` also uses
   this same `.env` for `${DB_DATABASE}`/`${DB_USERNAME}`/`${DB_PASSWORD}` to
   configure the `db` service itself, so there's a single source of truth.
-- `SMS_API_ID`, `SMS_API_PASSWORD`, `SMS_SENDER_ID` — Dream Digital SMS API
-  credentials (`app/Core/SmsService.php`). Leaving `SMS_API_ID`/
-  `SMS_API_PASSWORD` blank is a valid choice for launch: `SmsService::envoyer()`
+- `SMS_API_TOKEN`, `SMS_SENDER_ID` — Africala SMS API credentials
+  (`app/Core/SmsService.php`). Leaving `SMS_API_TOKEN` blank is a valid
+  choice for launch: `SmsService::envoyer()`
   fails closed (logs and returns `false`) rather than silently sending through
   a placeholder account — SMS just won't go out.
 - `APP_ENV=production` — already set in `.env.docker.example`; keep it.
@@ -214,7 +214,7 @@ cp .env.example .env
 
 Fill in real values — see `.env.example` for the authoritative variable
 list: `APP_ENV` (`production`), `DB_HOST`/`DB_PORT`/`DB_DATABASE`/
-`DB_USERNAME`/`DB_PASSWORD`, `SMS_API_ID`/`SMS_API_PASSWORD`/`SMS_SENDER_ID`/
+`DB_USERNAME`/`DB_PASSWORD`, `SMS_API_TOKEN`/`SMS_SENDER_ID`/
 `SMS_DEBUG`. `.env` is git-ignored; never put real credentials into
 `config/database.php` or `app/Core/SmsService.php` — both only read from
 `App\Core\Env`, with non-secret local-dev fallbacks baked in as defaults
@@ -354,8 +354,8 @@ sudo chmod -R 775 storage/logs public/uploads
       defaults to `local` — this must be changed). Confirm by checking that
       a deliberately broken request doesn't leak a PHP stack trace, and that
       `storage/logs/php-error.log` is being written to instead.
-- [ ] SMS credentials are either real (`SMS_API_ID`/`SMS_API_PASSWORD` set
-      to actual Dream Digital account values) or the decision to launch
+- [ ] SMS credentials are either real (`SMS_API_TOKEN` set to an actual
+      Africala account value) or the decision to launch
       without SMS is explicit and documented — `SmsService::envoyer()` fails
       closed and logs to `storage/logs/sms_debug.log` (if `SMS_DEBUG=true`)
       rather than erroring loudly, so a missing SMS feature can otherwise go

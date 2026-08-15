@@ -237,6 +237,7 @@ function formatDateBrevet($date) {
                 QR Codes ZIP
             </a>
             <form id="formMarquerImpression" method="POST" action="<?= BASE_PATH ?>/admin/imprimeur/marquer-impression" style="display:inline;">
+                <?= \App\Core\Csrf::field() ?>
                 <input type="hidden" name="date_debut" value="<?= htmlspecialchars($date_debut) ?>">
                 <input type="hidden" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
                 <button type="button" class="btn btn-warning" onclick="confirmerMarquerImpression(<?= count($conducteurs) ?>)">

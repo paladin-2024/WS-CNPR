@@ -350,6 +350,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
 
     <div class="form-card">
         <form method="POST" action="<?= BASE_PATH ?>/admin/conducteurs/save" enctype="multipart/form-data" id="conducteurForm">
+                <?= \App\Core\Csrf::field() ?>
             <?php if ($isEdit): ?>
                 <input type="hidden" name="id" value="<?= $conducteur['id'] ?>">
             <?php endif; ?>

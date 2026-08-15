@@ -479,7 +479,7 @@ function marquerConfirme(id) {
 async function confirmerUn(id) {
     try {
         const r = await fetch(BASE_PATH + '/admin/receptionnaire/confirmer', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
             body: JSON.stringify({ conducteur_id: id })
         });
         const res = await r.json();
@@ -492,7 +492,7 @@ async function confirmerSelectionnes() {
     if (!ids.length) return showToast('Sélectionnez au moins un conducteur', 'error');
     try {
         const r = await fetch(BASE_PATH + '/admin/receptionnaire/confirmer-lot', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
             body: JSON.stringify({ conducteur_ids: ids })
         });
         const res = await r.json();
@@ -506,7 +506,7 @@ async function confirmerTous() {
     if (!ids.length) return;
     try {
         const r = await fetch(BASE_PATH + '/admin/receptionnaire/confirmer-lot', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
             body: JSON.stringify({ conducteur_ids: ids })
         });
         const res = await r.json();

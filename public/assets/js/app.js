@@ -3,6 +3,9 @@
  * JavaScript principal
  */
 
+// CSRF token for AJAX requests (see <meta name="csrf-token"> in layouts)
+const CSRF_TOKEN = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
 // Mobile menu toggle
 document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.getElementById('mobile-menu-btn');

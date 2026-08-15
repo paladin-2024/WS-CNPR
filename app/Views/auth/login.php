@@ -193,6 +193,7 @@
       </div>
 
       <form method="POST" action="<?= BASE_PATH ?>/login">
+                <?= \App\Core\Csrf::field() ?>
         <!-- Email -->
         <div class="float-input-wrap">
           <span class="input-icon">

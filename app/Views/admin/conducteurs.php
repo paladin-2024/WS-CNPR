@@ -610,6 +610,7 @@ function formatDate($date) {
             </button>
         </div>
         <form id="conducteurForm" style="padding:24px;">
+            <?= \App\Core\Csrf::field() ?>
             <input type="hidden" name="id" id="conducteurId">
             <div class="form-grid">
                 <div class="form-group">
@@ -732,7 +733,7 @@ document.getElementById('conducteurForm').addEventListener('submit', async funct
         
         const response = await fetch(url, {
             method: method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
             body: JSON.stringify(data)
         });
         
@@ -813,6 +814,7 @@ async function deleteConducteur(id) {
             
             const response = await fetch(`${BASE_PATH}/admin/api/conducteurs?id=${id}`, {
                 method: 'POST',
+                headers: { 'X-CSRF-Token': CSRF_TOKEN },
                 body: formData
             });
             const data = await response.json();

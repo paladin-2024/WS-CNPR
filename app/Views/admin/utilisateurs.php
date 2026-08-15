@@ -487,6 +487,7 @@ function formatDateTime($date) {
             </button>
         </div>
         <form id="userForm">
+            <?= \App\Core\Csrf::field() ?>
             <div class="modal-body">
                 <div id="formMessage" class="form-message"></div>
                 <input type="hidden" id="userId" name="id">
@@ -625,7 +626,7 @@ async function editUser(id) {
 async function deleteUser(id) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return;
     try {
-        const response = await fetch(`${BASE_PATH}/admin/api/utilisateurs?id=${id}`, { method: 'DELETE' });
+        const response = await fetch(`${BASE_PATH}/admin/api/utilisateurs?id=${id}`, { method: 'DELETE', headers: { 'X-CSRF-Token': CSRF_TOKEN } });
         const result = await response.json();
         if (result.success) {
             showToast('Utilisateur supprimé avec succès');
@@ -683,7 +684,7 @@ document.getElementById('userForm').addEventListener('submit', async function(e)
     try {
         const response = await fetch(`${BASE_PATH}/admin/api/utilisateurs`, {
             method: isEdit ? 'PUT' : 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
             body: JSON.stringify(data)
         });
         const result = await response.json();

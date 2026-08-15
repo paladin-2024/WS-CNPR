@@ -801,7 +801,8 @@ class AdminController extends Controller
         $telephone = trim($_POST['telephone'] ?? '');
         $numero_permis = trim($_POST['numero_permis'] ?? '');
         $categorie_permis = $_POST['categorie_permis'] ?? 'B';
-        $date_expiration_permis = $_POST['date_expiration_permis'] ?? null;
+        $date_expiration_permis = trim($_POST['date_expiration_permis'] ?? '');
+        $date_expiration_permis = $date_expiration_permis !== '' ? $date_expiration_permis : null;
         $association = trim($_POST['association'] ?? '');
         $syndicat = trim($_POST['syndicat'] ?? '');
         $statut = $_POST['statut'] ?? 'actif';
@@ -1004,14 +1005,22 @@ class AdminController extends Controller
                     if ($numeroPermis === '') {
                         $numeroPermis = null;
                     }
+                    $dateNaissance = $data['date_naissance'] ?? '';
+                    if ($dateNaissance === '') {
+                        $dateNaissance = null;
+                    }
+                    $dateExpirationPermis = $data['date_expiration_permis'] ?? '';
+                    if ($dateExpirationPermis === '') {
+                        $dateExpirationPermis = null;
+                    }
                     $db->query(
                         "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicat, date_enregistrement, date_expiration, statut)
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
                         [
-                            $data['nom'] ?? '', $data['prenom'] ?? '', $data['date_naissance'] ?? null,
+                            $data['nom'] ?? '', $data['prenom'] ?? '', $dateNaissance,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',
                             $numeroPermis, $data['categorie_permis'] ?? 'B',
-                            $data['date_expiration_permis'] ?? null, $data['association'] ?? '',
+                            $dateExpirationPermis, $data['association'] ?? '',
                             $data['syndicat'] ?? '',
                         ]
                     );

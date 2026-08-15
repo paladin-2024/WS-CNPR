@@ -138,8 +138,13 @@ class AuthController extends Controller
             return;
         }
 
-        $allowedRoles = ['citoyen', 'conducteur', 'agent', 'operateur_saisie', 'validateur', 'receveur', 'instructeur'];
-        if (!in_array($role, $allowedRoles)) {
+        // Public self-registration must never grant a privileged role. 'agent'
+        // and the other administrative roles (operateur_saisie, validateur,
+        // receveur, instructeur, admin, minister_admin, ...) are provisioned
+        // by an existing admin (/admin/utilisateurs), not chosen by an
+        // anonymous visitor - this used to accept all of them here.
+        $allowedRoles = ['citoyen', 'conducteur'];
+        if (!in_array($role, $allowedRoles, true)) {
             $role = 'citoyen';
         }
 

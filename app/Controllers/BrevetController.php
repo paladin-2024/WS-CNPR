@@ -337,13 +337,23 @@ class BrevetController extends Controller
         $dateDebut = $data['date_debut'] ?? '';
         $dateFin = $data['date_fin'] ?? '';
 
-        $db->query(
-            "UPDATE conducteurs SET statut_brevet = 'en_cours_impression' WHERE statut_brevet = 'nouveau' AND date_enregistrement BETWEEN ? AND ?",
-            [$dateDebut, $dateFin]
-        );
+        try {
+            $sql = "UPDATE conducteurs SET statut_brevet = 'en_cours_impression' WHERE statut_brevet = 'nouveau'";
+            $params = [];
+            if ($dateDebut !== '' && $dateFin !== '') {
+                $sql .= " AND date_enregistrement BETWEEN ? AND ?";
+                $params[] = $dateDebut;
+                $params[] = $dateFin;
+            }
+            $db->query($sql, $params);
 
-        header('Location: ' . BASE_PATH . '/admin/imprimeur?date_debut=' . urlencode($dateDebut) . '&date_fin=' . urlencode($dateFin) . '&success=' . urlencode('Conducteurs marqués en cours d\'impression avec succès.'));
-        exit;
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?date_debut=' . urlencode($dateDebut) . '&date_fin=' . urlencode($dateFin) . '&success=' . urlencode('Conducteurs marqués en cours d\'impression avec succès.'));
+            exit;
+        } catch (\Exception $e) {
+            error_log('[BrevetController::marquerEnCoursImpression] ' . $e->getMessage());
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors du marquage des brevets.'));
+            exit;
+        }
     }
 
     public function apiImprimeur()

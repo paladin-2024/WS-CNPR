@@ -438,7 +438,7 @@ class AdminController extends Controller
                     "SELECT c.*, pb.montant as paiement_montant, pb.reference_paiement as paiement_reference, pb.date_paiement as paiement_date
                      FROM conducteurs c
                      LEFT JOIN paiements_brevets pb ON c.id = pb.conducteur_id
-                     WHERE c.nom LIKE ? OR c.prenom LIKE ? OR c.telephone LIKE ? OR c.numero_permis LIKE ?
+                     WHERE c.nom ILIKE ? OR c.prenom ILIKE ? OR c.telephone ILIKE ? OR c.numero_permis ILIKE ?
                      ORDER BY c.date_creation DESC
                      LIMIT 20",
                     ["%$search%", "%$search%", "%$search%", "%$search%"]

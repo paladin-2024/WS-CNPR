@@ -878,7 +878,7 @@ class AdminController extends Controller
                 // Envoi SMS de confirmation au conducteur
                 if (!empty($telephone)) {
                     $phoneNational = SmsService::normaliserTelephone($telephone);
-                    $smsText = "Boyeyi bolamu na recyclage ndeko conducteur  {$nom} {$prenom}. merci na bofuti, brevet nayo okozwa na suka ya formation. Matondo mingi";
+                    $smsText = "Bienvenue au recyclage, conducteur {$nom} {$prenom}. Merci pour votre paiement, votre brevet vous sera remis à la fin de la formation. Merci beaucoup.";
                     if (!SmsService::envoyer($phoneNational, $smsText)) {
                         $message .= ' (SMS non envoyé)';
                     }

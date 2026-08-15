@@ -47,15 +47,26 @@ class VerificationController extends Controller
         $photoUrl = null;
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $file = $_FILES['photo'];
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            // Don't trust the client-supplied MIME type ($file['type']) or filename
+            // extension - both are request headers/fields the client fully controls.
+            // getimagesize() actually parses the file's real header bytes, so a
+            // non-image (or a polyglot) fails here instead of being trusted.
+            $allowedMimes = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+            ];
 
-            if (in_array($file['type'], $allowedTypes) && $file['size'] <= 5 * 1024 * 1024) {
+            $info = @getimagesize($file['tmp_name']);
+            $detectedMime = $info['mime'] ?? null;
+
+            if ($detectedMime && isset($allowedMimes[$detectedMime]) && $file['size'] <= 5 * 1024 * 1024) {
                 $uploadDir = ROOT_DIR . '/public/uploads/signalements';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
 
-                $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $ext = $allowedMimes[$detectedMime];
                 $filename = 'fraude_' . $conducteurId . '_' . time() . '.' . $ext;
                 $destination = $uploadDir . '/' . $filename;
 
@@ -73,6 +84,7 @@ class VerificationController extends Controller
             );
             $this->json(['success' => true]);
         } catch (\Exception $e) {
+            error_log('[VerificationController::signalerFraude] ' . $e->getMessage());
             $this->json(['error' => 'Erreur lors de l\'envoi du signalement'], 500);
         }
     }

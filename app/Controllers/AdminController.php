@@ -27,9 +27,26 @@ class AdminController extends Controller
         }
 
         $file = $_FILES[$fileKey];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        if (!in_array($file['type'], $allowedTypes)) {
+        // Don't trust the client-supplied MIME type ($file['type']) or filename
+        // extension - both are request fields the client fully controls.
+        // getimagesize() parses the file's real header bytes, so a non-image
+        // (or a polyglot) is rejected instead of trusted.
+        if ($file['size'] > 5 * 1024 * 1024) {
+            return null;
+        }
+
+        $allowedMimes = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+        ];
+
+        $info = @getimagesize($file['tmp_name']);
+        $detectedMime = $info['mime'] ?? null;
+
+        if (!$detectedMime || !isset($allowedMimes[$detectedMime])) {
             return null;
         }
 
@@ -39,7 +56,7 @@ class AdminController extends Controller
             mkdir($fullPath, 0755, true);
         }
 
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $extension = $allowedMimes[$detectedMime];
         $filename = uniqid() . '_' . time() . '.' . $extension;
         $destination = $fullPath . '/' . $filename;
 
@@ -318,6 +335,7 @@ class AdminController extends Controller
                 }
             }
         } catch (\Exception $e) {
+            error_log('[AdminController::dashboard] ' . $e->getMessage());
             // Keep defaults (empty arrays)
         }
 
@@ -340,6 +358,7 @@ class AdminController extends Controller
         try {
             $utilisateurs = $db->fetchAll("SELECT id, nom, prenom, email, telephone, role, statut, date_creation, derniere_connexion FROM utilisateurs ORDER BY date_creation DESC");
         } catch (\Exception $e) {
+            error_log('[AdminController::utilisateurs] ' . $e->getMessage());
             $utilisateurs = [];
         }
 
@@ -362,6 +381,7 @@ class AdminController extends Controller
                  ORDER BY c.date_creation DESC"
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::conducteurs] ' . $e->getMessage());
             $conducteurs = [];
         }
 
@@ -384,6 +404,7 @@ class AdminController extends Controller
                  ORDER BY v.date_creation DESC"
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::vehicules] ' . $e->getMessage());
             $vehicules = [];
         }
 
@@ -410,6 +431,7 @@ class AdminController extends Controller
                  LIMIT 100"
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::taxes] ' . $e->getMessage());
             $taxes = [];
             $paiements = [];
         }
@@ -468,6 +490,7 @@ class AdminController extends Controller
                 $params
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::paiement] ' . $e->getMessage());
             $conducteurs = [];
             $paiementsValides = [];
         }
@@ -516,6 +539,7 @@ class AdminController extends Controller
             header('Location: ' . BASE_PATH . '/admin/paiement?success=Paiement enregistré avec succès');
             exit;
         } catch (\Exception $e) {
+            error_log('[AdminController::validerPaiement] ' . $e->getMessage());
             header('Location: ' . BASE_PATH . '/admin/paiement?error=Erreur: ' . urlencode($e->getMessage()));
             exit;
         }
@@ -552,6 +576,7 @@ class AdminController extends Controller
                 $params
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::exportPaiementExcel] ' . $e->getMessage());
             $paiements = [];
         }
 
@@ -730,6 +755,7 @@ class AdminController extends Controller
                  ORDER BY p.date_creation DESC"
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::parkings] ' . $e->getMessage());
             $parkings = [];
         }
 
@@ -750,6 +776,7 @@ class AdminController extends Controller
             try {
                 $conducteur = $db->fetchOne("SELECT * FROM conducteurs WHERE id = ?", [$id]);
             } catch (\Exception $e) {
+                error_log('[AdminController::conducteurForm] ' . $e->getMessage());
                 $conducteur = null;
             }
         }
@@ -860,6 +887,7 @@ class AdminController extends Controller
             header('Location: ' . BASE_PATH . '/admin/conducteurs?success=' . urlencode($message));
             exit;
         } catch (\Exception $e) {
+            error_log('[AdminController::saveConducteur] ' . $e->getMessage());
             $this->render('admin/conducteur-form', [
                 'pageTitle' => $id ? 'Modifier Conducteur' : 'Nouveau Conducteur',
                 'currentPage' => '/admin/conducteurs',
@@ -900,6 +928,7 @@ class AdminController extends Controller
                  GROUP BY mois ORDER BY mois DESC LIMIT 12"
             );
         } catch (\Exception $e) {
+            error_log('[AdminController::statistiques] ' . $e->getMessage());
             $totalConducteurs = 0;
             $totalVehicules = 0;
             $totalCartes = 0;
@@ -964,6 +993,7 @@ class AdminController extends Controller
                         $db->query("DELETE FROM conducteurs WHERE id = ?", [$id]);
                         $this->json(['success' => true]);
                     } catch (\Exception $e) {
+                        error_log('[AdminController::apiConducteurs] ' . $e->getMessage());
                         $this->json(['error' => 'Erreur lors de la suppression.'], 500);
                     }
                     break;
@@ -987,6 +1017,7 @@ class AdminController extends Controller
                     );
                     $this->json(['success' => true, 'id' => $db->lastInsertId()], 201);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiConducteurs] ' . $e->getMessage());
                     $this->json(['error' => "Erreur lors de la création."], 500);
                 }
                 break;
@@ -1011,6 +1042,7 @@ class AdminController extends Controller
                     );
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiConducteurs] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la mise à jour.'], 500);
                 }
                 break;
@@ -1025,6 +1057,7 @@ class AdminController extends Controller
                     $db->query("DELETE FROM conducteurs WHERE id = ?", [$id]);
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiConducteurs] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la suppression.'], 500);
                 }
                 break;
@@ -1079,6 +1112,7 @@ class AdminController extends Controller
                     );
                     $this->json(['success' => true, 'id' => $db->lastInsertId()], 201);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiUtilisateurs] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la création'], 500);
                 }
                 break;
@@ -1124,6 +1158,7 @@ class AdminController extends Controller
                     $db->query($sql, $params);
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiUtilisateurs] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la mise à jour'], 500);
                 }
                 break;
@@ -1143,6 +1178,7 @@ class AdminController extends Controller
                     $db->query("DELETE FROM utilisateurs WHERE id = ?", [$id]);
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiUtilisateurs] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la suppression'], 500);
                 }
                 break;
@@ -1184,6 +1220,7 @@ class AdminController extends Controller
                     );
                     $this->json(['success' => true, 'id' => $db->lastInsertId()], 201);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiVehicules] ' . $e->getMessage());
                     $this->json(['error' => "Erreur lors de la création."], 500);
                 }
                 break;
@@ -1208,6 +1245,7 @@ class AdminController extends Controller
                     );
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiVehicules] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la mise à jour.'], 500);
                 }
                 break;
@@ -1222,6 +1260,7 @@ class AdminController extends Controller
                     $db->query("DELETE FROM vehicules WHERE id = ?", [$id]);
                     $this->json(['success' => true]);
                 } catch (\Exception $e) {
+                    error_log('[AdminController::apiVehicules] ' . $e->getMessage());
                     $this->json(['error' => 'Erreur lors de la suppression.'], 500);
                 }
                 break;

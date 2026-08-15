@@ -1,5 +1,6 @@
 /vendor/
 /.env
+/.claude/
 /storage/logs/*.log
 /public/uploads/*
 !/public/uploads/logos/

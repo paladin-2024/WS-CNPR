@@ -1,0 +1,30 @@
+{
+    "name": "Portail Numérique du Ministère des Transports",
+    "short_name": "Min. Transports",
+    "description": "Portail numérique du Ministère des Transports — enregistrement des conducteurs, véhicules, taxes et brevets professionnels.",
+    "start_url": "../",
+    "scope": "../",
+    "display": "standalone",
+    "background_color": "#FAFAFA",
+    "theme_color": "#007FFF",
+    "icons": [
+        {
+            "src": "assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "assets/icons/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

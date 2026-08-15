@@ -91,7 +91,7 @@ $appLogo = ConfigController::get('app_logo', '');
 /* Role cards */
 .role-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
   margin-bottom: 20px;
 }

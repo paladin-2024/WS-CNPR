@@ -89,10 +89,12 @@ class AuthController extends Controller
             ['label' => 'Révision',  'description' => 'Vérifiez vos données',           'icon' => 'check-circle-2'],
         ];
 
+        // Only self-service roles - AuthController::register() now rejects
+        // anything else. Ministry/admin accounts are provisioned by an
+        // existing admin (/admin/utilisateurs), never via public signup.
         $roleOptions = [
             ['value' => 'citoyen',    'label' => 'Citoyen',        'icon' => 'user-circle', 'description' => 'Accès aux services publics'],
             ['value' => 'conducteur', 'label' => 'Conducteur',     'icon' => 'truck',       'description' => 'Carte professionnelle, immatriculation'],
-            ['value' => 'agent',      'label' => 'Agent ministère', 'icon' => 'shield',      'description' => 'Accès administration'],
         ];
 
         $this->render('auth/register', [

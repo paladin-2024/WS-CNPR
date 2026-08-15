@@ -19,16 +19,16 @@
 FROM composer:2 AS vendor
 
 # Install PHP extensions needed by phpoffice/phpspreadsheet for composer install
-# composer:2 is based on php:8.3-cli, so we use docker-php-ext-install
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        libpq-dev \
+# composer:2 is based on php:8.3-cli-alpine, so we use apk + docker-php-ext-install
+RUN apk add --no-cache \
+        postgresql-dev \
         libpng-dev \
-        libjpeg62-turbo-dev \
-        libfreetype6-dev \
+        libjpeg-turbo-dev \
+        freetype-dev \
         libwebp-dev \
         libzip-dev \
-        libonig-dev \
-        libicu-dev \
+        oniguruma-dev \
+        icu-dev \
         unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
@@ -37,8 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         mbstring \
         intl \
-        bcmath \
-    && rm -rf /var/lib/apt/lists/*
+        bcmath
 
 WORKDIR /app
 

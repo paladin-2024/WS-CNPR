@@ -87,8 +87,26 @@ class SmsService
         $status = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
 
-        self::log('Réponse API', ['status' => $status, 'error' => $error, 'res' => substr($res, 0, 200)]);
+        self::log('Réponse API', ['status' => $status, 'error' => $error, 'res' => substr((string)$res, 0, 200)]);
 
-        return $res !== false && $status < 400;
+        if ($res === false || $status >= 400) {
+            return false;
+        }
+
+        // Dream Digital returns HTTP 200 even on a logical failure (e.g. bad
+        // credentials, insufficient balance) - the real outcome is in the
+        // JSON body's "status" field ("S" = sent, "F" = failed).
+        $data = json_decode($res, true);
+        if (!is_array($data) || !isset($data['status'])) {
+            self::log('ERREUR: réponse API inattendue', ['res' => substr($res, 0, 200)]);
+            return false;
+        }
+
+        if ($data['status'] !== 'S') {
+            self::log('ERREUR: échec API', ['status' => $data['status'], 'remarks' => $data['remarks'] ?? null]);
+            return false;
+        }
+
+        return true;
     }
 }

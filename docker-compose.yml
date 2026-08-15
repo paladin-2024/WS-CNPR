@@ -46,9 +46,7 @@ services:
       - cnpr_network
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/${GHCR_OWNER:-paladin-2024}/cnpr-app:latest
     container_name: cnpr_php
     restart: unless-stopped
     env_file:

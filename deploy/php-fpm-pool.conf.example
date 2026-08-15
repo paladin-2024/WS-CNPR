@@ -60,12 +60,11 @@ request_terminate_timeout = 300s
 ; size limit except VerificationController::signalerFraude() (5MB, for
 ; citizen-submitted fraud report photos). AdminController's conducteur
 ; photo/ID-scan upload and ConfigController's logo/signature upload rely
-; entirely on these php.ini values — there's no code-side ceiling. 10M is a
-; reasonable default for "one photo + one scanned ID document" but is a
-; judgment call, not something read out of the code; confirm real-world
-; scan sizes before shipping.
-php_admin_value[upload_max_filesize] = 10M
-php_admin_value[post_max_size] = 12M    ; must be >= upload_max_filesize (it bounds the WHOLE multipart body, not just the file)
+; entirely on these php.ini values — there's no code-side ceiling. 50M matches
+; the Docker deploy path's Dockerfile/nginx.conf values - keep all three in
+; sync if you change it.
+php_admin_value[upload_max_filesize] = 50M
+php_admin_value[post_max_size] = 55M    ; must be >= upload_max_filesize (it bounds the WHOLE multipart body, not just the file)
 
 ; Memory — PhpSpreadsheet's Excel export (BrevetController::downloadExcel())
 ; fetches ALL matching conducteurs for the selected date range in one

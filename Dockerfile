@@ -126,10 +126,14 @@ RUN { \
 
 # The app handles photo/signature/logo uploads (see app/Controllers/
 # AdminController.php, ConfigController.php, VerificationController.php);
-# the stock 2M/8M php.ini defaults are too small for typical driver photos.
+# the stock 2M/8M php.ini defaults are too small. post_max_size must stay
+# above upload_max_filesize (PHP silently drops the whole $_POST/$_FILES
+# payload otherwise) - keep both nginx's client_max_body_size (nginx/conf.d/
+# cnpr.wscsarl.info.conf) and the VPS's own system-Nginx limit in sync with
+# these or uploads will 413 before ever reaching PHP.
 RUN { \
-        echo 'upload_max_filesize=10M'; \
-        echo 'post_max_size=12M'; \
+        echo 'upload_max_filesize=50M'; \
+        echo 'post_max_size=55M'; \
         echo 'memory_limit=256M'; \
     } > /usr/local/etc/php/conf.d/app-uploads.ini
 

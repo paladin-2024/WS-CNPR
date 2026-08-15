@@ -130,13 +130,12 @@ server {
 #     # (5 MB, citizen fraud-report photos). AdminController's conducteur
 #     # photo/ID-scan upload and ConfigController's logo/signature upload
 #     # have NO server-side size check at all — they're gated only by
-#     # whatever php.ini/Nginx allow. 10M is a judgment-call default that
-#     # comfortably covers a driver photo + an ID document scan in one
-#     # multipart form submit; raise it here (and in upload_max_filesize /
-#     # post_max_size in deploy/php-fpm-pool.conf.example, which MUST stay
-#     # >= this value) if real-world scans run larger. Confirm with whoever
-#     # owns the upload UX before shipping.
-#     client_max_body_size 10M;
+#     # whatever php.ini/Nginx allow. 50M matches Dockerfile's
+#     # upload_max_filesize/post_max_size and nginx/conf.d/cnpr.wscsarl.info.conf's
+#     # client_max_body_size for the Docker deploy path — keep all three in
+#     # sync (post_max_size in deploy/php-fpm-pool.conf.example must stay
+#     # >= this value) if you change it.
+#     client_max_body_size 50M;
 #
 #     # BrevetController's downloadQrcodes()/downloadPhotos()/downloadExcel()
 #     # run unbounded queries (no LIMIT) and downloadQrcodes() makes one

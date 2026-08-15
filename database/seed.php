@@ -48,7 +48,7 @@ try {
         [
             'nom'       => 'Admin',
             'prenom'    => 'System',
-            'email'     => 'admin@mintransport.gov',
+            'email'     => 'admin@transport.dev',
             'telephone' => '+243810000000',
             'password'  => password_hash('admin123', PASSWORD_BCRYPT),
             'role'      => 'admin',
@@ -75,7 +75,7 @@ try {
 
     echo "✔ Utilisateurs par défaut insérés.\n<br>";
     echo "\n<br><strong>Comptes disponibles :</strong>\n<br>";
-    echo "  admin@mintransport.gov / admin123  (rôle: admin)\n<br>";
+    echo "  admin@transport.dev / admin123  (rôle: admin)\n<br>";
     echo "  agent@mintransport.gov / agent123  (rôle: agent)\n<br>";
     echo "\n<br>✅ Initialisation terminée avec succès !\n<br>";
 } catch (PDOException $e) {

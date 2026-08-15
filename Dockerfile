@@ -49,6 +49,7 @@ FROM php:8.3-fpm AS app
 #     enabled by default in the official php-fpm image, nothing to do
 #
 # opcache is installed too (standard production performance win for PHP-FPM).
+# intl and bcmath added for potential future needs (currency, i18n)
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpq-dev \
         libpng-dev \
@@ -58,6 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev \
         libonig-dev \
         libcurl4-openssl-dev \
+        libicu-dev \
         unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
@@ -66,10 +68,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         mbstring \
         curl \
+        intl \
+        bcmath \
         opcache \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
         libpq-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
-        libzip-dev libonig-dev libcurl4-openssl-dev \
+        libzip-dev libonig-dev libcurl4-openssl-dev libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Recommended production opcache settings. validate_timestamps=0 means PHP
@@ -115,6 +119,11 @@ RUN mkdir -p storage/logs \
     && chown -R www-data:www-data storage public/uploads \
     && chmod -R 775 storage public/uploads
 
+# Entrypoint for DB initialization and permissions
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 9000
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]

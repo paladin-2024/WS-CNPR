@@ -1,94 +1,118 @@
-# Portail Numérique du Ministère des Transports — Docker Compose stack.
+# Portail Numérique du Ministère des Transports — Docker Compose stack for cnpr.wscsarl.info
 #
-# Services: nginx (edge/static) -> app (php-fpm) -> db (postgres).
+# Services: nginx (edge/SSL) -> app (php-fpm) -> db (postgres) + certbot (auto-renew)
 #
 # ────────────────────────────────────────────────────────────────────────────
 # ONE-TIME SETUP (fresh install)
 # ────────────────────────────────────────────────────────────────────────────
-#   1. cp .env.docker.example .env
+#   1. cp .env.production .env
 #      Fill in real values — at minimum DB_PASSWORD, and the SMS_* vars if
-#      SMS sending is needed. Leave DB_HOST=db and DB_PORT=5432 as-is; those
-#      are the Postgres service's name and *internal* container port on the
-#      compose network, not a host-facing address.
+#      SMS sending is needed. Leave DB_HOST=postgres and DB_PORT=5432 as-is;
+#      those are the Postgres service's name and *internal* container port on
+#      the compose network, not a host-facing address.
 #
 #   2. docker compose up -d --build
+#      - postgres starts, runs schema.sql from /docker-entrypoint-initdb.d/
+#      - certbot auto-obtains Let's Encrypt cert for cnpr.wscsarl.info (port 80)
+#      - app runs docker-entrypoint.sh: waits for DB, runs seed.php
 #
-#   3. docker compose exec app php database/seed.php
-#      The `db` service's POSTGRES_DB only creates an empty database — the
-#      app's own tables (utilisateurs, conducteurs, vehicules, ...) and the
-#      default admin/agent accounts still need database/schema.sql applied,
-#      which this script does (idempotent — safe to re-run any time, e.g.
-#      after pulling schema changes). Prints the default login credentials
-#      when it finishes.
-#
-#   4. Visit http://localhost/ (or the host/port you've mapped below).
+#   3. Visit https://cnpr.wscsarl.info
 #
 # Re-running `docker compose up -d` afterwards (e.g. after a `git pull` +
-# rebuild) does NOT need step 3 repeated unless schema.sql itself changed —
-# it's cheap to re-run anyway since it's idempotent.
-# ────────────────────────────────────────────────────────────────────────────
+# rebuild) does NOT need manual seed — entrypoint handles it idempotently.
+# ────────────────────────────────────────────────────────────────────────
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - uploads_data:/var/www/html/public/uploads
-      - logs_data:/var/www/html/storage/logs
-    expose:
-      - "9000"
-    depends_on:
-      db:
-        condition: service_healthy
-
-  nginx:
-    image: nginx:1.27-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      # Uncomment to terminate TLS here once real certificates exist on the
-      # host (see the commented HTTPS block at the bottom of
-      # deploy/nginx.conf.example — do not enable either half without the
-      # other):
-      # - "443:443"
-    volumes:
-      - ./deploy/nginx.conf.example:/etc/nginx/conf.d/default.conf:ro
-      - ./public:/var/www/html/public:ro
-      - uploads_data:/var/www/html/public/uploads:ro
-      # Mount real certs here if you enable the "443" port above, e.g.:
-      # - /etc/letsencrypt/live/your-domain/:/etc/nginx/certs:ro
-    depends_on:
-      - app
-
-  db:
+  postgres:
     image: postgres:16-alpine
+    container_name: cnpr_postgres
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE:-min_transport}
+      POSTGRES_USER: ${DB_USERNAME:-transport_app}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-transport_app} -d ${DB_DATABASE:-min_transport}"]
       interval: 5s
       timeout: 5s
       retries: 10
       start_period: 10s
-    # Not exposed to the host by default (app/nginx reach it over the compose
-    # network by service name "db"). Uncomment for host-side psql access
-    # during setup/debugging — pick a host port that won't clash with a
-    # host-installed Postgres if one exists:
-    # ports:
-    #   - "5433:5432"
+    networks:
+      - cnpr_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cnpr_php
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    volumes:
+      - ./public:/var/www/html/public:ro
+      - ./app:/var/www/html/app:ro
+      - ./config:/var/www/html/config:ro
+      - ./database:/var/www/html/database:ro
+      - ./index.php:/var/www/html/index.php:ro
+      - ./router.php:/var/www/html/router.php:ro
+      - uploads_conducteurs:/var/www/html/public/uploads/conducteurs
+      - uploads_signatures:/var/www/html/public/uploads/signatures
+      - uploads_logos:/var/www/html/public/uploads/logos
+      - storage_logs:/var/www/html/storage/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cnpr_network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: cnpr_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./public:/var/www/html/public:ro
+      - uploads_conducteurs:/var/www/html/public/uploads/conducteurs:ro
+      - uploads_signatures:/var/www/html/public/uploads/signatures:ro
+      - uploads_logos:/var/www/html/public/uploads/logos:ro
+      - certbot_www:/var/www/certbot
+      - certbot_etc:/etc/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - cnpr_network
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: cnpr_certbot
+    restart: unless-stopped
+    volumes:
+      - certbot_etc:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet || true; sleep 12h & wait $${!}; done'"
+    networks:
+      - cnpr_network
 
 volumes:
-  uploads_data:
-  logs_data:
   postgres_data:
+  uploads_conducteurs:
+  uploads_signatures:
+  uploads_logos:
+  storage_logs:
+  certbot_www:
+  certbot_etc:
+
+networks:
+  cnpr_network:
+    driver: bridge

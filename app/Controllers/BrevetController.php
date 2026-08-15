@@ -78,10 +78,15 @@ class BrevetController extends Controller
         $dateDebut = $_GET['date_debut'] ?? '';
         $dateFin = $_GET['date_fin'] ?? '';
 
-        $conducteurs = $db->fetchAll(
-            "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau' AND date_enregistrement BETWEEN ? AND ? ORDER BY date_enregistrement DESC",
-            [$dateDebut, $dateFin]
-        );
+        $sql = "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau'";
+        $params = [];
+        if ($dateDebut !== '' && $dateFin !== '') {
+            $sql .= " AND date_enregistrement BETWEEN ? AND ?";
+            $params[] = $dateDebut;
+            $params[] = $dateFin;
+        }
+        $sql .= " ORDER BY date_enregistrement DESC";
+        $conducteurs = $db->fetchAll($sql, $params);
 
         $cheminPhotos = $_GET['chemin_photos'] ?? '';
         $cheminQrcodes = $_GET['chemin_qrcodes'] ?? '';
@@ -238,10 +243,15 @@ class BrevetController extends Controller
         $dateDebut = $_GET['date_debut'] ?? '';
         $dateFin = $_GET['date_fin'] ?? '';
 
-        $conducteurs = $db->fetchAll(
-            "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau' AND date_enregistrement BETWEEN ? AND ? AND photo_url IS NOT NULL ORDER BY id",
-            [$dateDebut, $dateFin]
-        );
+        $sql = "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau' AND photo_url IS NOT NULL";
+        $params = [];
+        if ($dateDebut !== '' && $dateFin !== '') {
+            $sql .= " AND date_enregistrement BETWEEN ? AND ?";
+            $params[] = $dateDebut;
+            $params[] = $dateFin;
+        }
+        $sql .= " ORDER BY id";
+        $conducteurs = $db->fetchAll($sql, $params);
 
         $filename = "photos_conducteurs_{$dateDebut}_{$dateFin}.zip";
         $tmpFile = tempnam(sys_get_temp_dir(), 'photos_');
@@ -275,10 +285,15 @@ class BrevetController extends Controller
         $dateDebut = $_GET['date_debut'] ?? '';
         $dateFin = $_GET['date_fin'] ?? '';
 
-        $conducteurs = $db->fetchAll(
-            "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau' AND date_enregistrement BETWEEN ? AND ? ORDER BY id",
-            [$dateDebut, $dateFin]
-        );
+        $sql = "SELECT * FROM conducteurs WHERE statut_brevet = 'nouveau'";
+        $params = [];
+        if ($dateDebut !== '' && $dateFin !== '') {
+            $sql .= " AND date_enregistrement BETWEEN ? AND ?";
+            $params[] = $dateDebut;
+            $params[] = $dateFin;
+        }
+        $sql .= " ORDER BY id";
+        $conducteurs = $db->fetchAll($sql, $params);
 
         $filename = "qrcodes_conducteurs_{$dateDebut}_{$dateFin}.zip";
         $tmpFile = tempnam(sys_get_temp_dir(), 'qrcodes_');

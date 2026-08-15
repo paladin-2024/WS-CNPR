@@ -47,8 +47,15 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
     statut VARCHAR(20) DEFAULT 'actif' CHECK (statut IN ('actif', 'inactif', 'suspendu')),
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    derniere_connexion TIMESTAMP NULL
+    derniere_connexion TIMESTAMP NULL,
+    tentatives_echouees SMALLINT NOT NULL DEFAULT 0,
+    verrouille_jusqu_a TIMESTAMP NULL
 );
+-- Idempotent for pre-existing databases (CREATE TABLE IF NOT EXISTS above is
+-- a no-op once the table already exists, so these ADD COLUMN IF NOT EXISTS
+-- keep re-running seed.php on an already-deployed DB safe/effective too).
+ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS tentatives_echouees SMALLINT NOT NULL DEFAULT 0;
+ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS verrouille_jusqu_a TIMESTAMP NULL;
 CREATE INDEX IF NOT EXISTS idx_utilisateurs_email ON utilisateurs (email);
 CREATE INDEX IF NOT EXISTS idx_utilisateurs_role ON utilisateurs (role);
 CREATE INDEX IF NOT EXISTS idx_utilisateurs_statut ON utilisateurs (statut);

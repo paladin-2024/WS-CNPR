@@ -34,6 +34,13 @@ class AuthController extends Controller
         ], 'none');
     }
 
+    // Verrouillage après échecs répétés : au-delà de ce nombre de tentatives
+    // échouées consécutives, le compte est bloqué temporairement (indépendant
+    // du CAPTCHA/2FA qui n'existent pas dans cette app - c'est la seule
+    // protection contre le brute-force sur /login).
+    private const MAX_TENTATIVES = 5;
+    private const DUREE_VERROUILLAGE = '15 minutes';
+
     public function login()
     {
         $email = trim($_POST['email'] ?? '');
@@ -52,14 +59,34 @@ class AuthController extends Controller
                 [$email]
             );
 
+            if ($user && !empty($user['verrouille_jusqu_a']) && strtotime($user['verrouille_jusqu_a']) > time()) {
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Compte temporairement verrouillé après plusieurs échecs. Réessayez dans quelques minutes.'];
+                $this->redirect('/login');
+                return;
+            }
+
             if (!$user || !password_verify($password, $user['mot_de_passe'])) {
+                if ($user) {
+                    $tentatives = (int)$user['tentatives_echouees'] + 1;
+                    if ($tentatives >= self::MAX_TENTATIVES) {
+                        $db->query(
+                            "UPDATE utilisateurs SET tentatives_echouees = ?, verrouille_jusqu_a = NOW() + INTERVAL '" . self::DUREE_VERROUILLAGE . "' WHERE id = ?",
+                            [$tentatives, $user['id']]
+                        );
+                    } else {
+                        $db->query(
+                            "UPDATE utilisateurs SET tentatives_echouees = ? WHERE id = ?",
+                            [$tentatives, $user['id']]
+                        );
+                    }
+                }
                 $_SESSION['flash'] = ['type' => 'error', 'message' => 'Email ou mot de passe incorrect.'];
                 $this->redirect('/login');
                 return;
             }
 
             $db->query(
-                "UPDATE utilisateurs SET derniere_connexion = NOW() WHERE id = ?",
+                "UPDATE utilisateurs SET derniere_connexion = NOW(), tentatives_echouees = 0, verrouille_jusqu_a = NULL WHERE id = ?",
                 [$user['id']]
             );
 

@@ -133,6 +133,10 @@ RUN { \
         echo 'memory_limit=256M'; \
     } > /usr/local/etc/php/conf.d/app-uploads.ini
 
+# Don't leak the PHP version via the X-Powered-By response header
+# (expose_php defaults to On in the stock php:8.3-fpm image).
+RUN echo 'expose_php=off' > /usr/local/etc/php/conf.d/security.ini
+
 WORKDIR /var/www/html
 
 # Vendor deps from the build stage (no Composer, no download cache in the

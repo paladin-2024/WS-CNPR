@@ -1,4 +1,14 @@
+# Deny sensitive paths - not needed under the documented Docker/Nginx
+# deployment (nginx/conf.d/cnpr.wscsarl.info.conf already denies these), but
+# this file only matters if the app is ever served by Apache directly from
+# the project root, where nothing else stops these from being served as
+# static files/directory listings.
+<FilesMatch "^\.(env|git|htaccess|htpasswd)">
+    Require all denied
+</FilesMatch>
 RewriteEngine On
+RewriteRule ^(database|storage|config|app|vendor)(/|$) - [F,L]
+RewriteRule ^composer\.(json|lock)$ - [F,L]
 
 # Allow direct access to existing files/dirs
 RewriteCond %{REQUEST_FILENAME} !-f

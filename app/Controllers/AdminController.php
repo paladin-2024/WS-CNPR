@@ -1107,6 +1107,15 @@ class AdminController extends Controller
                     return;
                 }
 
+                // 'minister_admin' shares this route (role:admin,minister_admin) but is
+                // deliberately a lesser tier in Auth::hasPermission() - without this check
+                // it could hand itself/anyone the 'admin' role and inherit full ('all')
+                // permissions through the role-based hasRole() checks elsewhere.
+                if ($role === 'admin' && (Auth::user()['role'] ?? null) !== 'admin') {
+                    $this->json(['error' => 'Seul un administrateur peut attribuer le rôle Administrateur'], 403);
+                    return;
+                }
+
                 $existing = $db->fetchOne("SELECT id FROM utilisateurs WHERE email = ?", [$email]);
                 if ($existing) {
                     $this->json(['error' => 'Un utilisateur avec cet email existe déjà'], 400);
@@ -1146,6 +1155,17 @@ class AdminController extends Controller
                     return;
                 }
 
+                // Same escalation guard as create: block a non-admin (e.g. minister_admin)
+                // from granting the admin role, or from touching an account that already
+                // has it (would let it demote/lock out a real admin).
+                if ((Auth::user()['role'] ?? null) !== 'admin') {
+                    $targetUser = $db->fetchOne("SELECT role FROM utilisateurs WHERE id = ?", [$id]);
+                    if ($role === 'admin' || ($targetUser && $targetUser['role'] === 'admin')) {
+                        $this->json(['error' => 'Action réservée à un administrateur'], 403);
+                        return;
+                    }
+                }
+
                 $existing = $db->fetchOne("SELECT id FROM utilisateurs WHERE email = ? AND id != ?", [$email, $id]);
                 if ($existing) {
                     $this->json(['error' => 'Un autre utilisateur avec cet email existe déjà'], 400);
@@ -1182,6 +1202,13 @@ class AdminController extends Controller
                 if ($currentUser && $currentUser['id'] == $id) {
                     $this->json(['error' => 'Vous ne pouvez pas supprimer votre propre compte'], 400);
                     return;
+                }
+                if (($currentUser['role'] ?? null) !== 'admin') {
+                    $targetUser = $db->fetchOne("SELECT role FROM utilisateurs WHERE id = ?", [$id]);
+                    if ($targetUser && $targetUser['role'] === 'admin') {
+                        $this->json(['error' => 'Action réservée à un administrateur'], 403);
+                        return;
+                    }
                 }
                 try {
                     $db->query("DELETE FROM utilisateurs WHERE id = ?", [$id]);

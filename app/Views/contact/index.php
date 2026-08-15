@@ -64,6 +64,7 @@
                 <?php endif; ?>
 
                 <form method="POST" action="<?= BASE_PATH ?>/contact/send">
+                <?= \App\Core\Csrf::field() ?>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;">
                         <div>
                             <label style="display:block;font-size:14px;font-weight:600;color:#334155;margin-bottom:8px;font-family:Poppins,sans-serif;">Nom <span style="color:#dc2626;">*</span></label>

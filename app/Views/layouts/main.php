@@ -1,5 +1,6 @@
 <?php 
 use App\Core\Auth;
+use App\Core\Csrf;
 use App\Controllers\ConfigController;
 $appName = ConfigController::get('app_name', 'Ministère des Transports');
 $appLogo = ConfigController::get('app_logo', '');
@@ -10,10 +11,15 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= htmlspecialchars(Csrf::token()) ?>">
     <title><?= htmlspecialchars($pageTitle ?? 'Accueil') ?> - <?= htmlspecialchars($appName) ?></title>
     <?php if (!empty($appLogo)): ?>
     <link rel="icon" type="image/<?= pathinfo($appLogo, PATHINFO_EXTENSION) ?: 'png' ?>" href="<?= BASE_PATH ?>/public/<?= htmlspecialchars($appLogo) ?>">
+    <?php else: ?>
+    <link rel="icon" type="image/png" href="<?= BASE_PATH ?>/public/assets/icons/favicon-32.png">
     <?php endif; ?>
+    <link rel="manifest" href="<?= BASE_PATH ?>/public/manifest.json">
+    <meta name="theme-color" content="#007FFF">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -276,6 +282,13 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         })();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('<?= BASE_PATH ?>/public/sw.js').catch(function() {});
+            });
+        }
     </script>
 </body>
 </html>

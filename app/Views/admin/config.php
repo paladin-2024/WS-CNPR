@@ -35,6 +35,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
         <?php endif; ?>
 
         <form method="POST" action="<?= BASE_PATH ?>/admin/config/save" enctype="multipart/form-data">
+                <?= \App\Core\Csrf::field() ?>
             <div style="display:grid;gap:20px;">
                 <div>
                     <label style="display:block;font-size:14px;font-weight:600;color:#374151;margin-bottom:6px;">Nom de l'application *</label>

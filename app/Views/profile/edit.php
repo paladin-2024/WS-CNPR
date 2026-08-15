@@ -184,6 +184,7 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
     <!-- Formulaire -->
     <div class="form-card">
         <form method="POST" action="<?= BASE_PATH ?>/profile/update">
+                <?= \App\Core\Csrf::field() ?>
             <!-- Nom et Prénom -->
             <div class="form-row">
                 <div class="form-group">

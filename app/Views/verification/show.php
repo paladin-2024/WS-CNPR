@@ -314,6 +314,7 @@ $isFound = $conducteur !== null;
                 </div>
                 <div class="fraud-body open">
                     <form class="fraud-form" id="fraudForm" enctype="multipart/form-data">
+                <?= \App\Core\Csrf::field() ?>
                         <input type="hidden" name="conducteur_id" value="0">
                         <div id="fraudMsg" class="fraud-msg"></div>
                         <div class="fraud-group">
@@ -476,6 +477,7 @@ $isFound = $conducteur !== null;
                 </div>
                 <div class="fraud-body" id="fraudBody">
                     <form class="fraud-form" id="fraudForm" enctype="multipart/form-data">
+                <?= \App\Core\Csrf::field() ?>
                         <input type="hidden" name="conducteur_id" value="<?= (int)$conducteur['id'] ?>">
                         <div id="fraudMsg" class="fraud-msg"></div>
                         <div class="fraud-group">
@@ -555,6 +557,7 @@ if (fraudForm) {
             const formData = new FormData(this);
             const response = await fetch(BASE_PATH + '/verification/signaler', {
                 method: 'POST',
+                headers: { 'X-CSRF-Token': CSRF_TOKEN },
                 body: formData
             });
             const result = await response.json();

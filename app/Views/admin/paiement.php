@@ -381,6 +381,7 @@ function formatCurrency($amount) {
                 </div>
             </div>
             <form id="paiementForm" method="POST" action="<?= BASE_PATH ?>/admin/paiement/valider">
+                <?= \App\Core\Csrf::field() ?>
                 <input type="hidden" name="conducteur_id" id="modalConducteurId">
                 <div class="form-group">
                     <label for="montant">Montant (USD)</label>

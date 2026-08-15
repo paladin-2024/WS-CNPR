@@ -8,8 +8,17 @@
  * panneau d'hébergement) et les identifiants doivent être configurés dans .env
  * (voir .env.example) — ce script ne crée pas la base, seulement les tables.
  *
+ * CLI uniquement : ce script ne doit jamais être accessible via le navigateur
+ * (il peut réinitialiser le schéma et recréer les comptes admin/agent par
+ * défaut avec des mots de passe connus).
+ *
  * Usage : php database/seed.php
  */
+
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Accès interdit : ce script ne peut être exécuté qu\'en ligne de commande (CLI).');
+}
 
 require __DIR__ . '/../app/Core/Env.php';
 

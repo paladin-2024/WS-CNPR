@@ -48,6 +48,11 @@ class Router
             }
 
             if (preg_match($route['pattern'], $url, $matches)) {
+                if (in_array($method, ['POST', 'PUT', 'DELETE'], true) && !Csrf::verify(Csrf::fromRequest())) {
+                    $this->csrfFailed($url);
+                    return;
+                }
+
                 // Run middleware
                 foreach ($route['middleware'] as $mw) {
                     if ($mw === 'auth' && !Auth::check()) {
@@ -94,6 +99,20 @@ class Router
         }
 
         $this->notFound();
+    }
+
+    private function csrfFailed($url)
+    {
+        http_response_code(419);
+        if (strpos($url, '/api/') !== false) {
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Session expirée, veuillez réessayer.']);
+            return;
+        }
+
+        $_SESSION['flash'] = ['type' => 'error', 'message' => 'Votre session a expiré. Veuillez réessayer.'];
+        $referer = $_SERVER['HTTP_REFERER'] ?? (BASE_PATH . '/');
+        header('Location: ' . $referer);
     }
 
     private function notFound($message = 'Page non trouvée')

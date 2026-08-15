@@ -975,14 +975,14 @@ class AdminController extends Controller
                         $numeroPermis = null;
                     }
                     $db->query(
-                        "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicats, date_enregistrement, date_expiration, statut)
+                        "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicat, date_enregistrement, date_expiration, statut)
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
                         [
                             $data['nom'] ?? '', $data['prenom'] ?? '', $data['date_naissance'] ?? null,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',
                             $numeroPermis, $data['categorie_permis'] ?? 'B',
                             $data['date_expiration_permis'] ?? null, $data['association'] ?? '',
-                            $data['syndicats'] ?? '',
+                            $data['syndicat'] ?? '',
                         ]
                     );
                     $this->json(['success' => true, 'id' => $db->lastInsertId()], 201);

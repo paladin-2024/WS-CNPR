@@ -1,25 +1,52 @@
 <?php
 /**
  * Point d'entrée unique - Portail Numérique du Ministère des Transports
- * 
+ *
  * Architecture MVC avec point d'entrée à la racine du projet.
  * Les assets (CSS, JS, images) sont servis depuis le dossier public/.
  */
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-ob_start();
-session_start();
-
-// Autoloader Composer
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require __DIR__ . '/vendor/autoload.php';
-}
-
 // Chemins absolus - Détection automatique du chemin de base
 define('ROOT_PATH', __DIR__);  // Chemin serveur pour les includes
 define('ROOT_DIR', __DIR__);    // Alias pour compatibilité avec le code existant
+
+require ROOT_PATH . '/vendor/autoload.php';
+
+// Charger les variables d'environnement (.env, non versionné) avant toute
+// décision qui en dépend (affichage des erreurs, cookies de session, etc.)
+App\Core\Env::load(ROOT_PATH . '/.env');
+
+$appEnv = App\Core\Env::get('APP_ENV', 'production');
+$isProduction = $appEnv === 'production';
+
+if ($isProduction) {
+    // En production : ne jamais afficher les erreurs (fuite de chemins/stack
+    // traces), les journaliser à la place.
+    ini_set('display_errors', '0');
+    ini_set('log_errors', '1');
+    ini_set('error_log', ROOT_PATH . '/storage/logs/php-error.log');
+} else {
+    ini_set('display_errors', '1');
+    ini_set('log_errors', '1');
+}
+error_reporting(E_ALL);
+
+// Cookies de session : httponly + samesite systématiques, secure dès que la
+// requête arrive en HTTPS (terminaison TLS faite par le reverse proxy en
+// production - voir deploy/nginx.conf.example pour le header transmis).
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => $isHttps,
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+ini_set('session.use_strict_mode', '1');
+
+ob_start();
+session_start();
 
 // Détecter automatiquement le chemin URL
 $scriptName = dirname($_SERVER['SCRIPT_NAME']);
@@ -30,27 +57,6 @@ define('BASE_PATH', $scriptName);  // URL pour les redirections (vide si racine)
 define('APP_PATH', ROOT_PATH . '/app');
 define('PUBLIC_PATH', ROOT_PATH . '/public');
 define('ASSETS_PATH', BASE_PATH . '/public/assets');
-
-// Autoloader PSR-4 : App\ → app/
-spl_autoload_register(function ($class) {
-    $prefix = 'App\\';
-    $baseDir = ROOT_PATH . '/app/';
-
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
-
-    $relativeClass = substr($class, $len);
-    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-
-    if (file_exists($file)) {
-        require $file;
-    }
-});
-
-// Charger les variables d'environnement (.env, non versionné)
-App\Core\Env::load(ROOT_PATH . '/.env');
 
 // Charger la configuration
 $config = require ROOT_PATH . '/config/database.php';

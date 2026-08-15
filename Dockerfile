@@ -59,8 +59,13 @@ FROM php:8.3-fpm AS app
 # --- System packages + PHP extensions -------------------------------------
 #
 # Required by the app itself:
-#   pdo_pgsql  - app/Core/Database.php connects to PostgreSQL via PDO
-#   curl       - app/Core/SmsService.php calls the Dream Digital SMS API
+#   pdo_pgsql        - app/Core/Database.php connects to PostgreSQL via PDO
+#   curl             - app/Core/SmsService.php calls the Dream Digital SMS API
+#   postgresql-client - provides pg_isready, used by docker-entrypoint.sh to
+#     wait for the postgres service; without it the entrypoint's `until
+#     pg_isready ...` loop treats "command not found" as "not ready" forever
+#     and php-fpm never starts (reproduced live: container stuck printing
+#     "Waiting for PostgreSQL..." even though postgres itself was healthy)
 #
 # Required by phpoffice/phpspreadsheet (see its composer.json "require"):
 #   ext-gd, ext-zip, ext-mbstring - not compiled into the base php:8.3-fpm
@@ -95,6 +100,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libcurl4-openssl-dev \
         libicu-dev \
         unzip \
+        postgresql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
         pdo_pgsql \

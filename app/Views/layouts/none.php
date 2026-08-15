@@ -36,6 +36,13 @@ $appLogo = ConfigController::get('app_logo', '');
     <?= $content ?>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+
         // Top Progress Bar
         const progressBar = document.getElementById('top-progress-bar');
         

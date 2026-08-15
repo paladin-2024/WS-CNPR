@@ -187,16 +187,16 @@ function formatDateBrevet($date) {
         <input type="date" id="filterDateDebut" value="<?= htmlspecialchars($date_debut) ?>" title="Date début">
         <input type="date" id="filterDateFin" value="<?= htmlspecialchars($date_fin) ?>" title="Date fin">
         <button class="btn btn-primary" onclick="filtrerParDate()">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <i data-lucide="funnel"></i>
             Filtrer
         </button>
         <div class="imp-toolbar-sep"></div>
         <div class="imp-search">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <i data-lucide="search"></i>
             <input type="text" id="searchInput" placeholder="Rechercher nom, permis...">
         </div>
         <span class="imp-badge-count">
-            <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <i data-lucide="printer" style="width:14px;height:14px;"></i>
             <span id="totalCount"><?= count($conducteurs) ?></span> à imprimer
         </span>
     </div>
@@ -204,17 +204,17 @@ function formatDateBrevet($date) {
     <!-- Onglets -->
     <div class="imp-tabs">
         <button class="imp-tab active" onclick="switchTab('nouveau')" id="tabNouveau">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <i data-lucide="printer" style="width:16px;height:16px;"></i>
             Nouveaux brevets
             <span class="tab-count" id="countNouveau"><?= count($conducteurs) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('encours')" id="tabEncours">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <i data-lucide="clock" style="width:16px;height:16px;"></i>
             Brevets en cours
             <span class="tab-count" id="countEncours"><?= count($conducteursEnCours) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('imprimes')" id="tabImprimes">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <i data-lucide="circle-check-big" style="width:16px;height:16px;"></i>
             Déjà imprimés
             <span class="tab-count" id="countImprimes"><?= count($conducteursImprimes) ?></span>
         </button>
@@ -225,22 +225,22 @@ function formatDateBrevet($date) {
         <!-- Actions de téléchargement -->
         <div class="imp-actions" id="actionsNouveau" style="<?= empty($conducteurs) ? 'display:none' : '' ?>">
             <button class="btn btn-success" onclick="document.getElementById('excelModal').style.display='flex'">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <i data-lucide="file-down"></i>
                 Excel
             </button>
             <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photos?date_debut=<?= urlencode($date_debut) ?>&date_fin=<?= urlencode($date_fin) ?>" class="btn btn-primary">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <i data-lucide="image"></i>
                 Photos ZIP
             </a>
             <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcodes?date_debut=<?= urlencode($date_debut) ?>&date_fin=<?= urlencode($date_fin) ?>" class="btn btn-purple">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                <i data-lucide="qr-code"></i>
                 QR Codes ZIP
             </a>
             <form id="formMarquerImpression" method="POST" action="<?= BASE_PATH ?>/admin/imprimeur/marquer-impression" style="display:inline;">
                 <input type="hidden" name="date_debut" value="<?= htmlspecialchars($date_debut) ?>">
                 <input type="hidden" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
                 <button type="button" class="btn btn-warning" onclick="confirmerMarquerImpression(<?= count($conducteurs) ?>)">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <i data-lucide="printer"></i>
                     Marquer "En cours"
                 </button>
             </form>
@@ -249,7 +249,7 @@ function formatDateBrevet($date) {
         <div class="table-container">
             <div id="emptyNouveau" style="<?= empty($conducteurs) ? '' : 'display:none' ?>">
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <i data-lucide="printer"></i>
                     <h3>Aucun brevet à imprimer</h3>
                     <p><?= ($date_debut && $date_fin) ? 'Aucun conducteur trouvé pour cette période' : 'Sélectionnez une période pour afficher les conducteurs' ?></p>
                 </div>
@@ -293,15 +293,15 @@ function formatDateBrevet($date) {
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>
+                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
                                     </a>
                                 </div>
                             </td>
@@ -317,7 +317,7 @@ function formatDateBrevet($date) {
         <div class="table-container">
             <div id="emptyEncours" style="<?= empty($conducteursEnCours) ? '' : 'display:none' ?>">
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="clock"></i>
                     <h3>Aucun brevet en cours</h3>
                     <p>Aucun brevet en cours d'impression pour le moment</p>
                 </div>
@@ -355,15 +355,15 @@ function formatDateBrevet($date) {
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>
+                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
                                     </a>
                                 </div>
                             </td>
@@ -379,7 +379,7 @@ function formatDateBrevet($date) {
         <div class="table-container">
             <div id="emptyImprimes" style="<?= empty($conducteursImprimes) ? '' : 'display:none' ?>">
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="circle-check-big"></i>
                     <h3>Aucun brevet imprimé</h3>
                     <p>Aucun brevet imprimé pour le moment</p>
                 </div>
@@ -417,15 +417,15 @@ function formatDateBrevet($date) {
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>
+                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
                                     </a>
                                 </div>
                             </td>
@@ -446,7 +446,7 @@ function formatDateBrevet($date) {
                 <p style="margin:2px 0 0 0; font-size:12px; color:#64748B;">Chemins des dossiers photos et QR codes</p>
             </div>
             <button onclick="document.getElementById('excelModal').style.display='none'" style="background:none; border:none; cursor:pointer; padding:4px; color:#64748B;">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <i data-lucide="x" style="width:18px;height:18px;"></i>
             </button>
         </div>
         <div style="padding:16px 20px;">
@@ -461,7 +461,7 @@ function formatDateBrevet($date) {
             <div style="display:flex; gap:10px; justify-content:flex-end;">
                 <button onclick="document.getElementById('excelModal').style.display='none'" class="btn btn-outline">Annuler</button>
                 <button onclick="downloadExcel()" class="btn btn-success">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <i data-lucide="file-down"></i>
                     Télécharger
                 </button>
             </div>
@@ -560,7 +560,7 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
         const initials = ((c.prenom||'').charAt(0) + (c.nom||'').charAt(0)).toUpperCase();
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
         const hasPhoto = c.photo_url ? '<span class="badge" style="background:#ECFDF5;color:#059669;">✓</span>' : '<span class="badge" style="background:#FEF2F2;color:#DC2626;">✗</span>';
-        const carteIcon = `<svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>`;
+        const carteIcon = `<i data-lucide="id-card" style="width:12px;height:12px;"></i>`;
         return `<tr>
             <td><strong>${c.id}</strong></td>
             <td><div class="conducteur-info"><div class="conducteur-avatar">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
@@ -572,6 +572,7 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
             <td><a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Carte brevet" style="padding:4px 8px;">${carteIcon}</a></td>
         </tr>`;
     }).join('');
+    if (window.lucide) lucide.createIcons();
 }
 
 function renderEncours(conducteurs) {
@@ -601,6 +602,7 @@ function renderEncours(conducteurs) {
             <td><span class="badge badge-encours">En cours d'impression</span></td>
         </tr>`;
     }).join('');
+    if (window.lucide) lucide.createIcons();
 }
 
 function renderImprimes(conducteurs) {
@@ -630,6 +632,7 @@ function renderImprimes(conducteurs) {
             <td><span class="badge badge-imprime">Imprimé ✓</span></td>
         </tr>`;
     }).join('');
+    if (window.lucide) lucide.createIcons();
 }
 
 // ── Excel ──
@@ -676,11 +679,12 @@ function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+        success: '<i data-lucide="circle-check-big"></i>',
+        error: '<i data-lucide="circle-alert"></i>'
     };
     toast.innerHTML = icons[type] + '<span>' + message + '</span>';
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     setTimeout(() => {
         toast.style.animation = 'toastOut 0.3s forwards';
         setTimeout(() => toast.remove(), 350);

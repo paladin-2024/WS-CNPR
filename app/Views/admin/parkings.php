@@ -236,14 +236,14 @@ function formatDate($date) {
     <div class="page-header">
         <h1 class="page-title">Gestion des Parkings</h1>
         <button class="btn btn-primary">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <i data-lucide="plus"></i>
             Nouveau parking
         </button>
     </div>
 
     <?php if (empty($parkings)): ?>
         <div class="empty-state">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <i data-lucide="building-2"></i>
             <h3>Aucun parking trouvé</h3>
             <p>Commencez par ajouter un nouveau parking</p>
         </div>
@@ -256,7 +256,7 @@ function formatDate($date) {
                     <div class="parking-header">
                         <h3 class="parking-title"><?= htmlspecialchars($parking['nom'] ?? '') ?></h3>
                         <div class="parking-location">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <i data-lucide="map-pin"></i>
                             <?= htmlspecialchars($parking['localisation'] ?? '-') ?>
                         </div>
                     </div>
@@ -277,13 +277,13 @@ function formatDate($date) {
                         <div class="parking-contact">
                             <?php if (!empty($parking['responsable_nom'])): ?>
                                 <span>
-                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    <i data-lucide="user"></i>
                                     <?= htmlspecialchars(($parking['responsable_prenom'] ?? '') . ' ' . ($parking['responsable_nom'] ?? '')) ?>
                                 </span>
                             <?php endif; ?>
                             <?php if (!empty($parking['telephone'])): ?>
                                 <span>
-                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                    <i data-lucide="phone"></i>
                                     <?= htmlspecialchars($parking['telephone']) ?>
                                 </span>
                             <?php endif; ?>
@@ -291,7 +291,7 @@ function formatDate($date) {
                     </div>
                     <div class="parking-footer">
                         <button class="action-btn action-btn-edit" title="Modifier">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            <i data-lucide="pencil"></i>
                         </button>
                     </div>
                 </div>

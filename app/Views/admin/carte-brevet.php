@@ -572,28 +572,28 @@ body {
 <!-- ══ TOOLBAR ══ -->
 <div class="toolbar">
     <div class="toolbar-title">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>
+        <i data-lucide="id-card"></i>
         Carte Brevet — <?= htmlspecialchars($nomComplet) ?>
     </div>
 
     <a href="<?= BASE_PATH ?>/admin/imprimeur" class="tbtn tbtn-back">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <i data-lucide="arrow-left"></i>
         Retour
     </a>
     <button class="tbtn tbtn-print" onclick="window.print()">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        <i data-lucide="printer"></i>
         Imprimer
     </button>
     <button class="tbtn tbtn-dl-r" onclick="downloadCard('recto')">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <i data-lucide="download"></i>
         Recto PNG
     </button>
     <button class="tbtn tbtn-dl-v" onclick="downloadCard('verso')">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <i data-lucide="download"></i>
         Verso PNG
     </button>
     <button class="tbtn tbtn-dl-both" onclick="downloadCard('both')">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <i data-lucide="download"></i>
         Recto + Verso
     </button>
 </div>
@@ -642,7 +642,7 @@ body {
                         <img src="<?= $photoBase64 ?>" alt="Photo conducteur">
                     <?php else: ?>
                         <span class="r-photo-ph">
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#94A3B8"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
                         </span>
                     <?php endif; ?>
                 </div>

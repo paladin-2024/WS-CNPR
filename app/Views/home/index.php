@@ -167,7 +167,8 @@
         badge.style.background = slide.accent + '25';
         badge.style.border = '1px solid ' + slide.accent + '60';
         badge.style.color = slide.accent;
-        badge.querySelector('i').setAttribute('data-lucide', slide.icon);
+        var badgeIcon = badge.querySelector('i, svg');
+        if (badgeIcon) badgeIcon.setAttribute('data-lucide', slide.icon);
         document.getElementById('hero-badge-text').textContent = slide.badge;
 
         // Title / subtitle

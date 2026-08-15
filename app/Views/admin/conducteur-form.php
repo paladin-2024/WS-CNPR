@@ -335,7 +335,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     <div class="page-header">
         <h1 class="page-title"><?= $isEdit ? 'Modifier' : 'Nouveau' ?> Conducteur</h1>
         <a href="<?= BASE_PATH ?>/admin/conducteurs" class="btn btn-secondary">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
             Retour à la liste
         </a>
     </div>
@@ -436,12 +436,12 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                             <div class="file-preview-item" id="preview_photo_url" onclick="document.getElementById('photo_url').click()">
                                 <input type="file" name="photo_url" id="photo_url" accept="image/*" style="display:none" onchange="previewFile(this, 'preview_photo_url')">
                                 <div class="placeholder">
-                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <i data-lucide="image"></i>
                                     <span>Cliquez pour ajouter</span>
                                 </div>
                                 <img src="" alt="Preview" style="display:none">
                                 <button type="button" class="remove-btn" onclick="event.stopPropagation(); removeFile('preview_photo_url')">
-                                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <i data-lucide="x" style="width:12px;height:12px;"></i>
                                 </button>
                             </div>
                         </div>
@@ -453,12 +453,12 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                             <div class="file-preview-item" id="preview_photo_piece_identite" onclick="document.getElementById('photo_piece_identite').click()">
                                 <input type="file" name="photo_piece_identite" id="photo_piece_identite" accept="image/*" style="display:none" onchange="previewFile(this, 'preview_photo_piece_identite')">
                                 <div class="placeholder">
-                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    <i data-lucide="file-text"></i>
                                     <span>Cliquez pour ajouter</span>
                                 </div>
                                 <img src="" alt="Preview" style="display:none">
                                 <button type="button" class="remove-btn" onclick="event.stopPropagation(); removeFile('preview_photo_piece_identite')">
-                                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <i data-lucide="x" style="width:12px;height:12px;"></i>
                                 </button>
                             </div>
                         </div>
@@ -487,7 +487,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
             <div class="form-actions">
                 <a href="<?= BASE_PATH ?>/admin/conducteurs" class="btn btn-secondary">Annuler</a>
                 <button type="submit" class="btn btn-primary">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <i data-lucide="check" style="width:18px;height:18px;"></i>
                     <?= $isEdit ? 'Mettre à jour' : 'Enregistrer' ?>
                 </button>
             </div>
@@ -503,13 +503,14 @@ function showToast(message, type = 'success') {
     toast.className = `toast toast-${type}`;
     
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>',
-        warning: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>'
+        success: '<i data-lucide="check"></i>',
+        error: '<i data-lucide="x"></i>',
+        warning: '<i data-lucide="triangle-alert"></i>'
     };
     
     toast.innerHTML = icons[type] + message;
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     
     setTimeout(() => {
         toast.classList.add('hiding');

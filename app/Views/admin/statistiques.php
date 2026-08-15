@@ -341,42 +341,42 @@ $brevetStatusColors = [
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon" style="background: #EFF6FF; color: #3B82F6;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i data-lucide="circle-check-big"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalConducteurs) ?></div>
             <div class="stat-label">Conducteurs</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #F5F3FF; color: #8B5CF6;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <i data-lucide="car"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalVehicules) ?></div>
             <div class="stat-label">Véhicules</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #ECFDF5; color: #059669;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <i data-lucide="credit-card"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalCartes) ?></div>
             <div class="stat-label">Cartes Pro.</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #FFFBEB; color: #D97706;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i data-lucide="dollar-sign"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalPaiements) ?></div>
             <div class="stat-label">Taxes (CDF)</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #F0F9FF; color: #0369A1;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <i data-lucide="users"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalUtilisateurs) ?></div>
             <div class="stat-label">Utilisateurs</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #FEF2F2; color: #EF4444;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <i data-lucide="building-2"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalParkings) ?></div>
             <div class="stat-label">Parkings</div>
@@ -385,14 +385,14 @@ $brevetStatusColors = [
 
     <!-- Brevets Section -->
     <div class="section-title" style="color: #6366F1;">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <i data-lucide="file-text"></i>
         Suivi des Brevets
     </div>
 
     <div class="brevet-stats-row">
         <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card" style="border-left-color: #6366F1;">
             <div class="brevet-stat-icon" style="background: #EEF2FF; color: #6366F1;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <i data-lucide="file-plus"></i>
             </div>
             <div class="brevet-stat-info">
                 <div class="brevet-stat-label">Nouveaux brevets</div>
@@ -401,7 +401,7 @@ $brevetStatusColors = [
         </a>
         <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card" style="border-left-color: #F59E0B;">
             <div class="brevet-stat-icon" style="background: #FFFBEB; color: #F59E0B;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <i data-lucide="printer"></i>
             </div>
             <div class="brevet-stat-info">
                 <div class="brevet-stat-label">En cours d'impression</div>
@@ -410,7 +410,7 @@ $brevetStatusColors = [
         </a>
         <a href="<?= BASE_PATH ?>/admin/receptionnaire" class="brevet-stat-card" style="border-left-color: #10B981;">
             <div class="brevet-stat-icon" style="background: #ECFDF5; color: #10B981;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i data-lucide="circle-check-big"></i>
             </div>
             <div class="brevet-stat-info">
                 <div class="brevet-stat-label">Brevets imprimés</div>

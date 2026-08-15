@@ -182,16 +182,16 @@ function formatDateRecep($date) {
         <input type="date" id="filterDateDebut" value="<?= htmlspecialchars($date_debut) ?>" title="Date début">
         <input type="date" id="filterDateFin" value="<?= htmlspecialchars($date_fin) ?>" title="Date fin">
         <button class="btn btn-primary" onclick="filtrerParDate()">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <i data-lucide="funnel"></i>
             Filtrer
         </button>
         <div class="recep-toolbar-sep"></div>
         <div class="recep-search">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <i data-lucide="search"></i>
             <input type="text" id="searchInput" placeholder="Rechercher nom, permis...">
         </div>
         <span class="recep-badge-count" id="badgeCount">
-            <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <i data-lucide="clock" style="width:14px;height:14px;"></i>
             <span id="totalCount"><?= count($conducteurs) ?></span> en attente
         </span>
     </div>
@@ -199,12 +199,12 @@ function formatDateRecep($date) {
     <!-- Onglets -->
     <div class="recep-tabs">
         <button class="recep-tab active" onclick="switchTab('attente')" id="tabAttente">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <i data-lucide="clock" style="width:16px;height:16px;"></i>
             En attente de réception
             <span class="tab-count" id="countAttente"><?= count($conducteurs) ?></span>
         </button>
         <button class="recep-tab" onclick="switchTab('recus')" id="tabRecus">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <i data-lucide="circle-check-big" style="width:16px;height:16px;"></i>
             Déjà réceptionnés
             <span class="tab-count" id="countRecus"><?= count($conducteursImprimes) ?></span>
         </button>
@@ -215,11 +215,11 @@ function formatDateRecep($date) {
         <!-- Actions + sélection -->
         <div class="recep-actions" id="actionsBar" style="<?= empty($conducteurs) ? 'display:none' : '' ?>">
             <button class="btn btn-success" onclick="confirmerSelectionnes()">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i data-lucide="circle-check-big"></i>
                 Confirmer sélection
             </button>
             <button class="btn btn-primary" onclick="confirmerTous()">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <i data-lucide="check"></i>
                 Confirmer tous
             </button>
             <span class="sel-count" id="selectionCount">0 sélectionné(s)</span>
@@ -228,7 +228,7 @@ function formatDateRecep($date) {
         <div class="table-container">
             <div id="emptyAttente" style="<?= empty($conducteurs) ? '' : 'display:none' ?>">
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="circle-check-big"></i>
                     <h3>Aucun brevet en attente</h3>
                     <p>Aucun brevet en cours d'impression à réceptionner</p>
                 </div>
@@ -265,7 +265,7 @@ function formatDateRecep($date) {
                             <td><span class="badge badge-pending" id="badge-<?= $c['id'] ?>">En cours</span></td>
                             <td>
                                 <button class="btn btn-success btn-sm" id="btn-<?= $c['id'] ?>" onclick="confirmerUn(<?= $c['id'] ?>)">
-                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <i data-lucide="check"></i>
                                     OK
                                 </button>
                             </td>
@@ -281,7 +281,7 @@ function formatDateRecep($date) {
         <div class="table-container">
             <div id="emptyRecus" style="<?= empty($conducteursImprimes) ? '' : 'display:none' ?>">
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="circle-check-big"></i>
                     <h3>Aucun brevet réceptionné</h3>
                     <p>Aucun brevet réceptionné pour le moment</p>
                 </div>
@@ -347,11 +347,12 @@ function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+        success: '<i data-lucide="circle-check-big"></i>',
+        error: '<i data-lucide="circle-alert"></i>'
     };
     toast.innerHTML = icons[type] + '<span>' + message + '</span>';
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     setTimeout(() => {
         toast.style.animation = 'toastOut 0.3s forwards';
         setTimeout(() => toast.remove(), 350);
@@ -419,9 +420,10 @@ function renderAttente(conducteurs) {
             <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-pending" id="badge-${c.id}">En cours</span></td>
-            <td><button class="btn btn-success btn-sm" id="btn-${c.id}" onclick="confirmerUn(${c.id})"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> OK</button></td>
+            <td><button class="btn btn-success btn-sm" id="btn-${c.id}" onclick="confirmerUn(${c.id})"><i data-lucide="check"></i> OK</button></td>
         </tr>`;
     }).join('');
+    if (window.lucide) lucide.createIcons();
 
     document.getElementById('selectAll').checked = false;
     updateSelectionCount();

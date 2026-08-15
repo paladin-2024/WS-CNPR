@@ -80,7 +80,7 @@ class AdminController extends Controller
                         ['icon' => 'user-check', 'label' => 'Total Conducteurs', 'value' => $totalConducteurs, 'color' => '#3B82F6', 'href' => '/admin/conducteurs'],
                         ['icon' => 'credit-card', 'label' => 'Total Brévets', 'value' => $brevetsNouveau + $brevetsEnCours + $brevetsImprimes, 'color' => '#059669', 'href' => '/admin/imprimeur'],
                         ['icon' => 'wallet', 'label' => 'Paiements Brevet', 'value' => $conducteursPayes, 'color' => '#7C3AED', 'href' => '/admin/paiement'],
-                        ['icon' => 'dollar', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
+                        ['icon' => 'dollar-sign', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
                     ];
 
                     $brevetStats = [
@@ -112,7 +112,7 @@ class AdminController extends Controller
                         ['icon' => 'user-check', 'label' => 'Total Conducteurs', 'value' => $totalConducteurs, 'color' => '#3B82F6', 'href' => '/admin/conducteurs'],
                         ['icon' => 'car', 'label' => 'Total Véhicules', 'value' => $totalVehicules, 'color' => '#8B5CF6', 'href' => '/admin/vehicules'],
                         ['icon' => 'wallet', 'label' => 'Paiements Brevet', 'value' => $conducteursPayes, 'color' => '#7C3AED', 'href' => '/admin/paiement'],
-                        ['icon' => 'dollar', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
+                        ['icon' => 'dollar-sign', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
                     ];
 
                     $quickActions = [
@@ -149,7 +149,7 @@ class AdminController extends Controller
 
                     $stats = [
                         ['icon' => 'wallet', 'label' => 'Total Paiements', 'value' => $conducteursPayes, 'color' => '#7C3AED', 'href' => '/admin/paiement'],
-                        ['icon' => 'dollar', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
+                        ['icon' => 'dollar-sign', 'label' => 'Total Perçu', 'value' => $totalPaiementsBrevet, 'color' => '#D97706', 'href' => '/admin/paiement'],
                         ['icon' => 'check-circle', 'label' => 'Paiements aujourd\'hui', 'value' => $paiementsAujourdhui, 'color' => '#10B981', 'href' => '/admin/paiement'],
                     ];
 

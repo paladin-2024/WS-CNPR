@@ -277,7 +277,7 @@ function formatDateTime($date) {
     <div class="page-header">
         <h1 class="page-title">Taxes & Paiements</h1>
         <button class="btn btn-primary">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <i data-lucide="plus"></i>
             Nouvelle taxe
         </button>
     </div>
@@ -290,7 +290,7 @@ function formatDateTime($date) {
         
         <?php if (empty($taxes)): ?>
             <div class="empty-state">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                <i data-lucide="ticket-percent"></i>
                 <h4>Aucune taxe définie</h4>
                 <p>Commencez par créer des types de taxes</p>
             </div>
@@ -317,7 +317,7 @@ function formatDateTime($date) {
         <div class="table-container">
             <?php if (empty($paiements)): ?>
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                    <i data-lucide="credit-card"></i>
                     <h4>Aucun paiement enregistré</h4>
                     <p>Les paiements apparaîtront ici</p>
                 </div>
@@ -360,10 +360,10 @@ function formatDateTime($date) {
                                 <td>
                                     <div class="action-btns">
                                         <button class="action-btn action-btn-view" title="Voir">
-                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            <i data-lucide="eye"></i>
                                         </button>
                                         <button class="action-btn action-btn-verify" title="Vérifier">
-                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <i data-lucide="circle-check-big"></i>
                                         </button>
                                     </div>
                                 </td>

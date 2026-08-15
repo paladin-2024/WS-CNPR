@@ -375,14 +375,14 @@ function formatDateTime($date) {
     <div class="page-header">
         <h1 class="page-title">Gestion des Utilisateurs</h1>
         <button class="btn btn-primary" onclick="openUserModal()">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            <i data-lucide="user-plus"></i>
             Nouvel utilisateur
         </button>
     </div>
 
     <div class="filters-bar">
         <div class="search-box">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <i data-lucide="search"></i>
             <input type="text" id="searchInput" placeholder="Rechercher par nom, email, téléphone...">
         </div>
         <select class="filter-select" id="roleFilter">
@@ -413,7 +413,7 @@ function formatDateTime($date) {
     <div class="table-container">
         <?php if (empty($utilisateurs)): ?>
             <div class="empty-state">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <i data-lucide="users"></i>
                 <h3>Aucun utilisateur trouvé</h3>
                 <p>Commencez par ajouter un nouvel utilisateur</p>
             </div>
@@ -462,10 +462,10 @@ function formatDateTime($date) {
                             <td>
                                 <div class="action-btns">
                                     <button class="action-btn action-btn-edit" title="Modifier" onclick="editUser(<?= (int)$user['id'] ?>)">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        <i data-lucide="pencil"></i>
                                     </button>
                                     <button class="action-btn action-btn-delete" title="Supprimer" onclick="deleteUser(<?= (int)$user['id'] ?>)">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        <i data-lucide="trash-2"></i>
                                     </button>
                                 </div>
                             </td>
@@ -483,7 +483,7 @@ function formatDateTime($date) {
         <div class="modal-header">
             <h2 id="modalTitle">Nouvel utilisateur</h2>
             <button class="modal-close" onclick="closeUserModal()">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <i data-lucide="x"></i>
             </button>
         </div>
         <form id="userForm">
@@ -556,14 +556,15 @@ function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+        success: '<i data-lucide="circle-check-big"></i>',
+        error: '<i data-lucide="circle-alert"></i>'
     };
     toast.innerHTML = icons[type] + '<span>' + message + '</span>';
     const progress = document.createElement('div');
     progress.className = 'toast-progress';
     toast.appendChild(progress);
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     setTimeout(() => {
         toast.style.animation = 'toastSlideOut 0.3s ease forwards';
         setTimeout(() => toast.remove(), 350);

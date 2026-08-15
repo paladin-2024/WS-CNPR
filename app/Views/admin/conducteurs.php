@@ -495,7 +495,7 @@ function formatDate($date) {
     <div class="page-header">
         <h1 class="page-title">Gestion des Conducteurs</h1>
         <a href="<?= BASE_PATH ?>/admin/conducteurs/ajouter" class="btn btn-primary">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <i data-lucide="plus"></i>
             Nouveau conducteur
         </a>
     </div>
@@ -503,7 +503,7 @@ function formatDate($date) {
     <!-- Filters -->
     <div class="filters-bar">
         <div class="search-box">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <i data-lucide="search"></i>
             <input type="text" placeholder="Rechercher par nom, téléphone, numéro de permis..." id="searchInput">
         </div>
         <select class="filter-select" id="statusFilter">
@@ -518,7 +518,7 @@ function formatDate($date) {
     <div class="table-container">
         <?php if (empty($conducteurs)): ?>
             <div class="empty-state">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <i data-lucide="users"></i>
                 <h3>Aucun conducteur trouvé</h3>
                 <p>Commencez par ajouter un nouveau conducteur</p>
             </div>
@@ -568,13 +568,13 @@ function formatDate($date) {
                             <td>
                                 <div class="action-btns">
                                     <button class="action-btn action-btn-view" title="Voir les détails" onclick="showDriver(<?= $conducteur['id'] ?>)">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        <i data-lucide="eye"></i>
                                         </button>
                                         <a href="<?= BASE_PATH ?>/admin/conducteurs/modifier/<?= $conducteur['id'] ?>" class="action-btn action-btn-edit" title="Modifier" style="text-decoration:none;">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        <i data-lucide="pencil"></i>
                                     </a>
                                     <button class="action-btn action-btn-delete" title="Supprimer" onclick="deleteConducteur(<?= $conducteur['id'] ?>)">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        <i data-lucide="trash-2"></i>
                                     </button>
                                 </div>
                             </td>
@@ -592,7 +592,7 @@ function formatDate($date) {
         <div style="padding:20px 24px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
             <h2 style="margin:0;font-size:18px;font-weight:600;color:#1A2744;">Détails du conducteur</h2>
             <button onclick="closeDriverModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <i data-lucide="x" style="width:20px;height:20px;"></i>
             </button>
         </div>
         <div id="driverDetailBody" style="padding:24px;max-height:70vh;overflow-y:auto;">
@@ -606,7 +606,7 @@ function formatDate($date) {
         <div style="padding:20px 24px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
             <h2 id="modalTitle" style="margin:0;font-size:18px;font-weight:600;color:#1A2744;">Nouveau conducteur</h2>
             <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <i data-lucide="x" style="width:20px;height:20px;"></i>
             </button>
         </div>
         <form id="conducteurForm" style="padding:24px;">
@@ -879,8 +879,8 @@ function showToast(message, type = 'success') {
     toast.className = `toast toast-${type}`;
     
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+        success: '<i data-lucide="circle-check-big"></i>',
+        error: '<i data-lucide="circle-alert"></i>'
     };
     
     toast.innerHTML = icons[type] + '<span>' + message + '</span>';
@@ -891,6 +891,7 @@ function showToast(message, type = 'success') {
     toast.appendChild(progress);
     
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     
     setTimeout(() => {
         toast.style.animation = 'toastSlideOut 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';

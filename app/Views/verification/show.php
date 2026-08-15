@@ -298,7 +298,7 @@ $isFound = $conducteur !== null;
         <?php if (!$isFound): ?>
             <!-- Non trouvé -->
             <div class="status-banner not-found">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                <i data-lucide="x"></i>
                 <div class="status-text">
                     <h3>Brevet non trouvé</h3>
                     <p>Aucun conducteur ne correspond à cet identifiant. Ce brevet pourrait être frauduleux.</p>
@@ -308,9 +308,9 @@ $isFound = $conducteur !== null;
             <!-- Signalement pour brevet introuvable -->
             <div class="fraud-section">
                 <div class="fraud-header open" onclick="toggleFraud()">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="circle-alert"></i>
                     <h3>Signaler un cas de fraude</h3>
-                    <svg class="chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="fraud-body open">
                     <form class="fraud-form" id="fraudForm" enctype="multipart/form-data">
@@ -331,7 +331,7 @@ $isFound = $conducteur !== null;
                         <div class="fraud-group">
                             <label>Photo du brevet suspect</label>
                             <div class="fraud-photo-area" onclick="document.getElementById('fraudPhoto').click()">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+                                <i data-lucide="camera"></i>
                                 <p>Appuyez pour prendre une photo</p>
                                 <small>JPEG, PNG — max 5 Mo</small>
                                 <input type="file" id="fraudPhoto" name="photo" accept="image/*" capture="environment" onchange="previewPhoto(this)">
@@ -341,7 +341,7 @@ $isFound = $conducteur !== null;
                             </div>
                         </div>
                         <button type="submit" class="btn-fraud" id="fraudSubmitBtn">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <i data-lucide="circle-alert"></i>
                             Envoyer le signalement
                         </button>
                     </form>
@@ -351,7 +351,7 @@ $isFound = $conducteur !== null;
         <?php elseif ($isAuthentique): ?>
             <!-- Authentique -->
             <div class="status-banner authentic" style="animation: pulse 2s ease-in-out;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                <i data-lucide="shield-check"></i>
                 <div class="status-text">
                     <h3>✓ Brevet authentique</h3>
                     <p>Ce brevet est vérifié et valide</p>
@@ -361,7 +361,7 @@ $isFound = $conducteur !== null;
         <?php else: ?>
             <!-- Non imprimé ou suspendu -->
             <div class="status-banner not-printed">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i data-lucide="circle-alert"></i>
                 <div class="status-text">
                     <h3>⚠ Brevet non validé</h3>
                     <p>
@@ -393,7 +393,7 @@ $isFound = $conducteur !== null;
                     <div>
                         <h2 class="verif-name"><?= htmlspecialchars(($conducteur['prenom'] ?? '') . ' ' . ($conducteur['nom'] ?? '')) ?></h2>
                         <span class="verif-permis">
-                            <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            <i data-lucide="credit-card" style="width:14px;height:14px;"></i>
                             <?= htmlspecialchars($conducteur['numero_permis'] ?? '-') ?> — Cat. <?= htmlspecialchars($conducteur['categorie_permis'] ?? '-') ?>
                         </span>
                     </div>
@@ -470,9 +470,9 @@ $isFound = $conducteur !== null;
             <!-- Fraud Report -->
             <div class="fraud-section">
                 <div class="fraud-header" onclick="toggleFraud()">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <i data-lucide="circle-alert"></i>
                     <h3>Ce brevet n'est pas authentique ?</h3>
-                    <svg class="chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="fraud-body" id="fraudBody">
                     <form class="fraud-form" id="fraudForm" enctype="multipart/form-data">
@@ -493,7 +493,7 @@ $isFound = $conducteur !== null;
                         <div class="fraud-group">
                             <label>Photo du brevet suspect</label>
                             <div class="fraud-photo-area" onclick="document.getElementById('fraudPhoto').click()">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+                                <i data-lucide="camera"></i>
                                 <p>Appuyez pour prendre une photo</p>
                                 <small>JPEG, PNG — max 5 Mo</small>
                                 <input type="file" id="fraudPhoto" name="photo" accept="image/*" capture="environment" onchange="previewPhoto(this)">
@@ -503,7 +503,7 @@ $isFound = $conducteur !== null;
                             </div>
                         </div>
                         <button type="submit" class="btn-fraud" id="fraudSubmitBtn">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <i data-lucide="circle-alert"></i>
                             Envoyer le signalement
                         </button>
                     </form>
@@ -548,7 +548,8 @@ if (fraudForm) {
         const msg = document.getElementById('fraudMsg');
 
         btn.disabled = true;
-        btn.innerHTML = '<svg style="width:18px;height:18px;animation:spin 1s linear infinite;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Envoi en cours...';
+        btn.innerHTML = '<i data-lucide="refresh-cw" style="width:18px;height:18px;animation:spin 1s linear infinite;"></i> Envoi en cours...';
+        if (window.lucide) lucide.createIcons();
 
         try {
             const formData = new FormData(this);
@@ -569,14 +570,16 @@ if (fraudForm) {
                 msg.textContent = result.error || 'Erreur lors de l\'envoi';
                 msg.style.display = 'block';
                 btn.disabled = false;
-                btn.innerHTML = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Envoyer le signalement';
+                btn.innerHTML = '<i data-lucide="circle-alert" style="width:18px;height:18px;"></i> Envoyer le signalement';
+                if (window.lucide) lucide.createIcons();
             }
         } catch (error) {
             msg.className = 'fraud-msg error';
             msg.textContent = 'Erreur de connexion';
             msg.style.display = 'block';
             btn.disabled = false;
-            btn.innerHTML = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Envoyer le signalement';
+            btn.innerHTML = '<i data-lucide="circle-alert" style="width:18px;height:18px;"></i> Envoyer le signalement';
+            if (window.lucide) lucide.createIcons();
         }
     });
 }

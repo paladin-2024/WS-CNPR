@@ -140,19 +140,19 @@
       <div style="display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <i data-lucide="shield-check" style="width:18px;height:18px;color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Plateforme sécurisée et certifiée</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <i data-lucide="globe" style="width:18px;height:18px;color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Accessible 24h/24, 7j/7</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <i data-lucide="zap" style="width:18px;height:18px;color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Traitement rapide de vos dossiers</span>
         </div>
@@ -173,7 +173,7 @@
     <div class="auth-right-inner">
       <!-- Retour au portail -->
       <a href="<?= BASE_PATH ?>/" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#888;margin-bottom:28px;text-decoration:none;transition:color 0.2s">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
         Retour au portail
       </a>
 
@@ -196,7 +196,7 @@
         <!-- Email -->
         <div class="float-input-wrap">
           <span class="input-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <i data-lucide="mail" style="width:16px;height:16px;"></i>
           </span>
           <input type="email" name="email" id="login-email" placeholder=" " required autocomplete="email">
           <label for="login-email">Adresse email</label>
@@ -205,12 +205,12 @@
         <!-- Password -->
         <div class="float-input-wrap">
           <span class="input-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <i data-lucide="lock" style="width:16px;height:16px;"></i>
           </span>
           <input type="password" name="password" id="login-password" placeholder=" " required autocomplete="current-password">
           <label for="login-password">Mot de passe</label>
           <button type="button" class="eye-toggle" onclick="togglePassword()">
-            <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <i data-lucide="eye" style="width:16px;height:16px;"></i>
           </button>
         </div>
 
@@ -225,7 +225,7 @@
 
         <!-- Submit -->
         <button type="submit" class="login-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <i data-lucide="log-in" style="width:18px;height:18px;"></i>
           Se connecter
         </button>
       </form>

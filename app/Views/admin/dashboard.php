@@ -408,17 +408,7 @@ function formatCurrency($amount) {
             <a href="<?= BASE_PATH ?><?= htmlspecialchars($stat['href'] ?? '#') ?>" class="stat-card">
                 <div class="stat-card-header">
                     <div class="stat-icon-wrap" style="background: <?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>20;">
-                        <?php if (($stat['icon'] ?? '') === 'user-check'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <?php elseif (($stat['icon'] ?? '') === 'car'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                        <?php elseif (($stat['icon'] ?? '') === 'credit-card'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                        <?php elseif (($stat['icon'] ?? '') === 'dollar'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <?php else: ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <?php endif; ?>
+                        <i data-lucide="<?= htmlspecialchars(($stat['icon'] ?? '') === 'dollar' ? 'dollar-sign' : ($stat['icon'] ?? 'dollar-sign')) ?>" style="color:<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>;"></i>
                     </div>
                     <?php if (isset($stat['delta'])): ?>
                         <span class="stat-delta <?= $stat['delta'] >= 0 ? 'positive' : 'negative' ?>">
@@ -435,20 +425,14 @@ function formatCurrency($amount) {
     <!-- Brevet Stats -->
     <?php if (!empty($brevetStats)): ?>
         <div class="brevet-section-title">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <i data-lucide="file-text"></i>
             Suivi des Brevets
         </div>
         <div class="brevet-stats-grid">
             <?php foreach ($brevetStats as $brevet): ?>
                 <a href="<?= BASE_PATH ?><?= htmlspecialchars($brevet['href'] ?? '#') ?>" class="brevet-card">
                     <div class="brevet-icon-wrap" style="background: <?= htmlspecialchars($brevet['color'] ?? '#6366F1') ?>15;">
-                        <?php if (($brevet['icon'] ?? '') === 'file-plus'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($brevet['color']) ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <?php elseif (($brevet['icon'] ?? '') === 'printer'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($brevet['color']) ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                        <?php elseif (($brevet['icon'] ?? '') === 'check-circle'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="<?= htmlspecialchars($brevet['color']) ?>"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <?php endif; ?>
+                        <i data-lucide="<?= htmlspecialchars(($brevet['icon'] ?? '') === 'check-circle' ? 'circle-check-big' : ($brevet['icon'] ?? 'file-plus')) ?>" style="color:<?= htmlspecialchars($brevet['color'] ?? '#6366F1') ?>;"></i>
                     </div>
                     <div>
                         <div class="brevet-card-label"><?= htmlspecialchars($brevet['label'] ?? '') ?></div>
@@ -466,21 +450,7 @@ function formatCurrency($amount) {
             <div class="quick-actions-list">
                 <?php foreach ($quickActions as $action): ?>
                     <a href="<?= BASE_PATH ?><?= htmlspecialchars($action['href'] ?? '#') ?>" class="quick-action-btn" style="--action-color: <?= htmlspecialchars($action['color'] ?? '#3B82F6') ?>; --action-bg: <?= htmlspecialchars($action['color'] ?? '#3B82F6') ?>10;">
-                        <?php if (($action['icon'] ?? '') === 'user-plus'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'car-front'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'wallet'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'users'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'trending-up'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'printer'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                        <?php elseif (($action['icon'] ?? '') === 'clipboard-check'): ?>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                        <?php endif; ?>
+                        <i data-lucide="<?= htmlspecialchars($action['icon'] ?? 'circle') ?>"></i>
                         <?= htmlspecialchars($action['label'] ?? '') ?>
                     </a>
                 <?php endforeach; ?>
@@ -500,23 +470,7 @@ function formatCurrency($amount) {
                 <?php foreach ($recentActivity as $activity): ?>
                     <div class="activity-item">
                         <div class="activity-icon" style="background: <?= htmlspecialchars($activity['color'] ?? '#3B82F6') ?>20; color: <?= htmlspecialchars($activity['color'] ?? '#3B82F6') ?>;">
-                            <?php if (($activity['icon'] ?? '') === 'user-check'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'car'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'credit-card'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'wallet'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'file-plus'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'printer'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                            <?php elseif (($activity['icon'] ?? '') === 'check-circle'): ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <?php else: ?>
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            <?php endif; ?>
+                            <i data-lucide="<?= htmlspecialchars(($activity['icon'] ?? '') === 'check-circle' ? 'circle-check-big' : ($activity['icon'] ?? 'triangle-alert')) ?>"></i>
                         </div>
                         <div class="activity-content">
                             <div class="activity-label"><?= htmlspecialchars($activity['label'] ?? '') ?></div>

@@ -209,7 +209,7 @@ function formatCurrency($amount) {
         <form class="search-form" method="GET" action="<?= BASE_PATH ?>/admin/paiement">
             <input type="text" name="search" placeholder="Rechercher nom, téléphone, permis..." value="<?= htmlspecialchars($search) ?>">
             <button type="submit">
-                <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <i data-lucide="search" style="width:16px;height:16px;"></i>
                 Rechercher
             </button>
         </form>
@@ -217,12 +217,12 @@ function formatCurrency($amount) {
 
     <div class="imp-tabs">
         <button class="imp-tab active" onclick="switchTab('enregistrer')" id="tabEnregistrer">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            <i data-lucide="plus" style="width:16px;height:16px;"></i>
             Enregistrer paiement
             <span class="tab-count"><?= count($conducteurs) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('historique')" id="tabHistorique">
-            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <i data-lucide="clipboard" style="width:16px;height:16px;"></i>
             Historique paiements
             <span class="tab-count" id="countHistorique"><?= count($paiementsValides) ?></span>
         </button>
@@ -232,13 +232,13 @@ function formatCurrency($amount) {
     <div class="tab-panel active" id="panelEnregistrer">
         <?php if (empty($search)): ?>
             <div class="empty-state">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <i data-lucide="search"></i>
                 <h3>Rechercher un conducteur</h3>
                 <p>Entrez un nom, téléphone ou numéro de permis pour enregistrer un paiement</p>
             </div>
         <?php elseif (empty($conducteurs)): ?>
             <div class="empty-state">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <i data-lucide="printer"></i>
                 <h3>Aucun conducteur trouvé</h3>
                 <p>Aucun conducteur ne correspond à votre recherche</p>
             </div>
@@ -275,7 +275,7 @@ function formatCurrency($amount) {
                                 <td>
                                     <?php if ($aPaiement): ?>
                                         <span class="badge badge-paye">
-                                            <svg style="width:12px;height:12px;margin-right:4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            <i data-lucide="check" style="width:12px;height:12px;margin-right:4px;"></i>
                                             Payé: <?= formatCurrency($c['paiement_montant']) ?>
                                         </span>
                                     <?php else: ?>
@@ -284,7 +284,7 @@ function formatCurrency($amount) {
                                 </td>
                                 <td>
                                     <button class="btn btn-success btn-sm" onclick="openPaiementModal(<?= $c['id'] ?>, '<?= htmlspecialchars(($c['prenom'] ?? '') . ' ' . ($c['nom'] ?? '')) ?>', '<?= htmlspecialchars($c['numero_permis'] ?? '') ?>', '<?= $aPaiement ? $c['paiement_montant'] : '' ?>', '<?= $aPaiement ? $c['paiement_reference'] : '' ?>')">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                        <i data-lucide="plus"></i>
                                         <?= $aPaiement ? 'Modifier' : 'Enregistrer' ?>
                                     </button>
                                 </td>
@@ -309,7 +309,7 @@ function formatCurrency($amount) {
                 <button type="submit" class="btn btn-primary btn-sm">Filtrer</button>
             </form>
             <a href="<?= BASE_PATH ?>/admin/paiement/export-excel?date_debut=<?= urlencode($date_debut) ?>&date_fin=<?= urlencode($date_fin) ?>" class="btn btn-success btn-sm" id="exportExcelBtn" title="Télécharger le fichier Excel (.xlsx)">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <i data-lucide="download"></i>
                 Exporter XLSX
             </a>
         </div>
@@ -317,7 +317,7 @@ function formatCurrency($amount) {
         <div class="table-container">
             <?php if (empty($paiementsValides)): ?>
                 <div class="empty-state">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <i data-lucide="clipboard"></i>
                     <h3>Aucun paiement enregistré</h3>
                     <p>Aucun paiement pour cette période</p>
                 </div>
@@ -366,7 +366,7 @@ function formatCurrency($amount) {
         <div class="modal-header">
             <h3>Enregistrer le paiement</h3>
             <button class="modal-close" onclick="closePaiementModal()">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <i data-lucide="x" style="width:20px;height:20px;"></i>
             </button>
         </div>
         <div class="modal-body">
@@ -395,7 +395,7 @@ function formatCurrency($amount) {
         <div class="modal-footer">
             <button class="btn btn-outline" onclick="closePaiementModal()">Annuler</button>
             <button class="btn btn-success" onclick="submitPaiement()">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <i data-lucide="check"></i>
                 Enregistrer
             </button>
         </div>
@@ -458,11 +458,12 @@ function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     const icons = {
-        success: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-        error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+        success: '<i data-lucide="circle-check-big"></i>',
+        error: '<i data-lucide="circle-alert"></i>'
     };
     toast.innerHTML = icons[type] + '<span>' + message + '</span>';
     container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
     setTimeout(() => {
         toast.style.animation = 'toastOut 0.3s forwards';
         setTimeout(() => toast.remove(), 350);

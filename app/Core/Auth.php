@@ -20,6 +20,14 @@ class Auth
 
     public static function login($user)
     {
+        // Rotate the session ID on every (re-)authentication so a session ID
+        // an attacker planted before login (session fixation) can't be reused
+        // to inherit the now-authenticated session; keeps the same session
+        // data/store, just swaps the identifier and drops the old one.
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
+
         // Never keep the bcrypt hash in the session - $_SESSION['user'] is read
         // all over the app (views, Auth::user(), role checks) and there's no
         // reason any of that needs the password hash sitting in memory/session

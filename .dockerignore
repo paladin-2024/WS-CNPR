@@ -1,0 +1,41 @@
+# Keep the Docker build context (and therefore build cache invalidation)
+# lean: exclude anything the Dockerfile doesn't need to COPY into the image.
+
+# VCS / editor / agent metadata
+.git
+.gitignore
+.claude
+.dockerignore
+
+# Composer deps are (re)installed inside the image by the `vendor` build
+# stage — never trust a host-installed vendor/ into the image.
+vendor
+
+# Front-end tooling, if any ever gets added; harmless if it never exists.
+node_modules
+
+# Secrets — must never end up baked into an image layer.
+.env
+.env.*
+!.env.example
+!.env.docker.example
+
+# Runtime data: written at container runtime into named volumes (see
+# docker-compose.yml), not build input. Baking stale logs/uploads from the
+# host into the image would be actively wrong.
+storage/logs/*.log
+public/uploads/conducteurs/*
+public/uploads/signatures/*
+public/uploads/logos/*
+!public/uploads/conducteurs/.gitkeep
+!public/uploads/signatures/.gitkeep
+!public/uploads/logos/.gitkeep
+
+# deploy/ is bind-mounted straight into the nginx container at runtime by
+# docker-compose.yml (services.nginx.volumes) — it's never COPY'd into any
+# image, so it has no business being sent to the build context at all.
+deploy
+
+# Docs not needed inside the image.
+CLAUDE.md
+README.md

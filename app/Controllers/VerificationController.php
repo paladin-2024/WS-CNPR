@@ -73,6 +73,7 @@ class VerificationController extends Controller
             );
             $this->json(['success' => true]);
         } catch (\Exception $e) {
+            error_log('[VerificationController::signalerFraude] ' . $e->getMessage());
             $this->json(['error' => 'Erreur lors de l\'envoi du signalement'], 500);
         }
     }

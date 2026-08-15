@@ -376,6 +376,26 @@ CREATE TRIGGER trg_signalements_date_modification
     FOR EACH ROW EXECUTE FUNCTION set_date_modification();
 
 -- =====================================================
+-- TABLE: signalements_fraude
+-- Utilisée par VerificationController::signalerFraude() — table distincte de
+-- `signalements` (celle-ci vient de la page publique de vérification de
+-- brevet, sans citoyen_id/type_probleme requis ; l'auteur y est identifié par
+-- nom/téléphone en texte libre, pas par un compte utilisateur).
+-- =====================================================
+CREATE TABLE IF NOT EXISTS signalements_fraude (
+    id SERIAL PRIMARY KEY,
+    conducteur_id INT,
+    nom_verificateur VARCHAR(150) NOT NULL,
+    telephone_verificateur VARCHAR(20),
+    description TEXT NOT NULL,
+    photo_url VARCHAR(255),
+    statut VARCHAR(20) DEFAULT 'nouveau' CHECK (statut IN ('nouveau', 'en_cours', 'traite', 'rejete')),
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conducteur_id) REFERENCES conducteurs(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_signalements_fraude_conducteur ON signalements_fraude (conducteur_id);
+
+-- =====================================================
 -- TABLE: articles (CMS)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS articles (

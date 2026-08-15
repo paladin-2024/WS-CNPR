@@ -1,10 +1,13 @@
 {
+    "name": "paladin-2024/ws-cnpr",
+    "description": "Portail Numerique du Ministere des Transports (RDC) - admin/citizen portal",
+    "license": "proprietary",
     "require": {
         "php": ">=8.1",
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*",
         "ext-curl": "*",
-        "phpoffice/phpspreadsheet": "^5.5"
+        "phpoffice/phpspreadsheet": "^5.9"
     },
     "autoload": {
         "psr-4": {

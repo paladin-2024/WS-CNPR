@@ -71,6 +71,19 @@ FROM php:8.3-fpm AS app
 #
 # opcache is installed too (standard production performance win for PHP-FPM).
 # intl and bcmath added for potential future needs (currency, i18n)
+#
+# NOTE: earlier this stage purged the -dev packages after compiling (via
+# apt-get purge --auto-remove) to shrink the image. That's a known footgun:
+# apt's autoremove doesn't stop at the -dev/header-only packages, it cascades
+# to the RUNTIME shared libraries too (libpq.so.5, libpng16.so.16,
+# libicuio.so.<ver>, libzip.so.<ver>, etc.) since nothing else in the image
+# declares a dependency on them once the -dev package is gone - the compiled
+# extensions were then left with no shared library to dlopen at runtime
+# ("Unable to load dynamic library ... cannot open shared object file"),
+# reproduced live on the deploy VPS. Simplest reliable fix: don't purge.
+# Costs a bit of image size, guarantees correctness across base-image updates
+# (the exact runtime package names/versions - e.g. libicu72 vs libicu76 -
+# vary by Debian release and would silently break this again otherwise).
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpq-dev \
         libpng-dev \
@@ -92,9 +105,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         intl \
         bcmath \
         opcache \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-        libpq-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
-        libzip-dev libonig-dev libcurl4-openssl-dev libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Recommended production opcache settings. validate_timestamps=0 means PHP

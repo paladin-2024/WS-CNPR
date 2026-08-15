@@ -415,9 +415,9 @@ function renderAttente(conducteurs) {
         return `<tr id="row-${c.id}">
             <td><input type="checkbox" class="conducteur-check" value="${c.id}" onchange="updateSelectionCount()"></td>
             <td><strong>${c.id}</strong></td>
-            <td><div class="conducteur-info"><div class="conducteur-avatar">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
-            <td>${c.numero_permis || '-'}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
+            <td><div class="conducteur-info"><div class="conducteur-avatar">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
+            <td>${escapeHtml(c.numero_permis || '-')}</td>
+            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-pending" id="badge-${c.id}">En cours</span></td>
             <td><button class="btn btn-success btn-sm" id="btn-${c.id}" onclick="confirmerUn(${c.id})"><i data-lucide="check"></i> OK</button></td>
@@ -448,9 +448,9 @@ function renderRecus(conducteurs) {
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
         return `<tr>
             <td><strong>${c.id}</strong></td>
-            <td><div class="conducteur-info"><div class="conducteur-avatar green">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
-            <td>${c.numero_permis || '-'}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
+            <td><div class="conducteur-info"><div class="conducteur-avatar green">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
+            <td>${escapeHtml(c.numero_permis || '-')}</td>
+            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-confirmed">Réceptionné ✓</span></td>
         </tr>`;

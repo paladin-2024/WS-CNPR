@@ -564,10 +564,10 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
         const carteIcon = `<i data-lucide="id-card" style="width:12px;height:12px;"></i>`;
         return `<tr>
             <td><strong>${c.id}</strong></td>
-            <td><div class="conducteur-info"><div class="conducteur-avatar">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
-            <td>${c.telephone || '-'}</td>
-            <td>${c.numero_permis || '-'}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
+            <td><div class="conducteur-info"><div class="conducteur-avatar">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
+            <td>${escapeHtml(c.telephone || '-')}</td>
+            <td>${escapeHtml(c.numero_permis || '-')}</td>
+            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td>${hasPhoto}</td>
             <td><a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Carte brevet" style="padding:4px 8px;">${carteIcon}</a></td>
@@ -595,10 +595,10 @@ function renderEncours(conducteurs) {
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
         return `<tr>
             <td><strong>${c.id}</strong></td>
-            <td><div class="conducteur-info"><div class="conducteur-avatar orange">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
-            <td>${c.telephone || '-'}</td>
-            <td>${c.numero_permis || '-'}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
+            <td><div class="conducteur-info"><div class="conducteur-avatar orange">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
+            <td>${escapeHtml(c.telephone || '-')}</td>
+            <td>${escapeHtml(c.numero_permis || '-')}</td>
+            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-encours">En cours d'impression</span></td>
         </tr>`;
@@ -625,10 +625,10 @@ function renderImprimes(conducteurs) {
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
         return `<tr>
             <td><strong>${c.id}</strong></td>
-            <td><div class="conducteur-info"><div class="conducteur-avatar green">${initials}</div><span class="conducteur-name">${(c.prenom||'')} ${(c.nom||'')}</span></div></td>
-            <td>${c.telephone || '-'}</td>
-            <td>${c.numero_permis || '-'}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${c.categorie_permis || '-'}</span></td>
+            <td><div class="conducteur-info"><div class="conducteur-avatar green">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
+            <td>${escapeHtml(c.telephone || '-')}</td>
+            <td>${escapeHtml(c.numero_permis || '-')}</td>
+            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-imprime">Imprimé ✓</span></td>
         </tr>`;

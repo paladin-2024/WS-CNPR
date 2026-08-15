@@ -956,20 +956,20 @@ function showDriver(id) {
                 modalBody.innerHTML = `
                     <div style="display:flex;flex-direction:column;gap:20px;">
                         <div style="display:flex;align-items:center;gap:20px;border-bottom:1px solid #eee;padding-bottom:20px;">
-                            ${photoUrl 
-                                ? `<img src="${photoUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;background:#f0f0f0;" alt="Photo">`
+                            ${photoUrl
+                                ? `<img src="${escapeHtml(photoUrl)}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;background:#f0f0f0;" alt="Photo">`
                                 : `<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#007FFF,#005FCC);display:flex;align-items:center;justify-content:center;color:white;font-size:28px;font-weight:bold;">
-                                    ${driver.prenom ? driver.prenom.charAt(0).toUpperCase() : ''}${driver.nom ? driver.nom.charAt(0).toUpperCase() : ''}
+                                    ${escapeHtml((driver.prenom ? driver.prenom.charAt(0).toUpperCase() : '') + (driver.nom ? driver.nom.charAt(0).toUpperCase() : ''))}
                                 </div>`
                             }
                             <div>
-                                <h2 style="margin:0 0 8px 0;font-size:22px;color:#1a1a2e;">${driver.nom || ''} ${driver.prenom || ''}</h2>
+                                <h2 style="margin:0 0 8px 0;font-size:22px;color:#1a1a2e;">${escapeHtml((driver.nom || '') + ' ' + (driver.prenom || ''))}</h2>
                                 <span style="display:inline-block;padding:4px 12px;background:${statutMeta.bg};color:${statutMeta.color};border-radius:20px;font-size:13px;font-weight:600;">
                                     ${statutMeta.label}
                                 </span>
                             </div>
                         </div>
-                        
+
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">DATE DE NAISSANCE</label>
@@ -977,23 +977,23 @@ function showDriver(id) {
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">LIEU DE NAISSANCE</label>
-                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${driver.lieu_naissance || '-'}</p>
+                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${escapeHtml(driver.lieu_naissance || '-')}</p>
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">TÉLÉPHONE</label>
-                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${driver.telephone || '-'}</p>
+                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${escapeHtml(driver.telephone || '-')}</p>
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">ADRESSE</label>
-                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${driver.adresse || '-'}</p>
+                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${escapeHtml(driver.adresse || '-')}</p>
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">NUMÉRO PERMIS</label>
-                                <p style="margin:4px 0 0 0;color:#1a1a2e;font-weight:600;">${driver.numero_permis || '-'}</p>
+                                <p style="margin:4px 0 0 0;color:#1a1a2e;font-weight:600;">${escapeHtml(driver.numero_permis || '-')}</p>
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">CATÉGORIE PERMIS</label>
-                                <p style="margin:4px 0 0 0;"><span style="display:inline-block;padding:2px 10px;background:#007FFF20;color:#007FFF;border-radius:4px;font-weight:600;">${driver.categorie_permis || '-'}</span></p>
+                                <p style="margin:4px 0 0 0;"><span style="display:inline-block;padding:2px 10px;background:#007FFF20;color:#007FFF;border-radius:4px;font-weight:600;">${escapeHtml(driver.categorie_permis || '-')}</span></p>
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">EXPIRATION PERMIS</label>
@@ -1001,7 +1001,7 @@ function showDriver(id) {
                             </div>
                             <div>
                                 <label style="font-size:12px;color:#64748b;font-weight:600;">ASSOCIATION</label>
-                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${driver.association || '-'}</p>
+                                <p style="margin:4px 0 0 0;color:#1a1a2e;">${escapeHtml(driver.association || '-')}</p>
                             </div>
                         </div>
                         

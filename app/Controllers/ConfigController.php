@@ -8,14 +8,28 @@ use App\Core\Database;
 
 class ConfigController extends Controller
 {
+    // Don't trust the client-supplied MIME type ($file['type']) or filename
+    // extension - both are request fields the client fully controls.
+    // getimagesize() parses the file's real header bytes, so a non-image
+    // (or a polyglot, e.g. a .php payload disguised via a spoofed MIME type)
+    // is rejected instead of trusted.
+    private const ALLOWED_UPLOAD_MIMES = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp',
+    ];
+
     private function handleLogoUpload($file, $prefix = 'logo')
     {
         if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
             return null;
         }
 
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-        if (!in_array($file['type'], $allowedTypes)) {
+        $info = @getimagesize($file['tmp_name']);
+        $detectedMime = $info['mime'] ?? null;
+
+        if (!$detectedMime || !isset(self::ALLOWED_UPLOAD_MIMES[$detectedMime])) {
             return null;
         }
 
@@ -24,8 +38,8 @@ class ConfigController extends Controller
             mkdir($uploadDir, 0755, true);
         }
 
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = $prefix . '_' . time() . '.' . $extension;
+        $extension = self::ALLOWED_UPLOAD_MIMES[$detectedMime];
+        $filename = $prefix . '_' . uniqid() . '_' . time() . '.' . $extension;
         $destination = $uploadDir . '/' . $filename;
 
         if (move_uploaded_file($file['tmp_name'], $destination)) {
@@ -41,8 +55,10 @@ class ConfigController extends Controller
             return null;
         }
 
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-        if (!in_array($file['type'], $allowedTypes)) {
+        $info = @getimagesize($file['tmp_name']);
+        $detectedMime = $info['mime'] ?? null;
+
+        if (!$detectedMime || !isset(self::ALLOWED_UPLOAD_MIMES[$detectedMime])) {
             return null;
         }
 
@@ -51,8 +67,8 @@ class ConfigController extends Controller
             mkdir($uploadDir, 0755, true);
         }
 
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = 'signature_' . time() . '.' . $extension;
+        $extension = self::ALLOWED_UPLOAD_MIMES[$detectedMime];
+        $filename = 'signature_' . uniqid() . '_' . time() . '.' . $extension;
         $destination = $uploadDir . '/' . $filename;
 
         if (move_uploaded_file($file['tmp_name'], $destination)) {

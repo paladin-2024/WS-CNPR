@@ -6,6 +6,17 @@
 // CSRF token for AJAX requests (see <meta name="csrf-token"> in layouts)
 const CSRF_TOKEN = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
 
+// Escape untrusted values before interpolating them into innerHTML template
+// strings (e.g. record fields coming back from /admin/api/* endpoints).
+window.escapeHtml = function(value) {
+    return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+};
+
 // Mobile menu toggle
 document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.getElementById('mobile-menu-btn');

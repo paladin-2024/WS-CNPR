@@ -20,6 +20,13 @@ class Auth
 
     public static function login($user)
     {
+        // Never keep the bcrypt hash in the session - $_SESSION['user'] is read
+        // all over the app (views, Auth::user(), role checks) and there's no
+        // reason any of that needs the password hash sitting in memory/session
+        // storage. Callers that need the hash (login's own password_verify(),
+        // ProfileController's password-change flow) already fetch it fresh
+        // from the DB rather than through Auth::user().
+        unset($user['mot_de_passe']);
         $_SESSION['user'] = $user;
     }
 

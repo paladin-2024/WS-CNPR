@@ -87,7 +87,14 @@ class BrevetController extends Controller
             $params[] = $dateFin;
         }
         $sql .= " ORDER BY date_enregistrement DESC";
-        $conducteurs = $db->fetchAll($sql, $params);
+
+        try {
+            $conducteurs = $db->fetchAll($sql, $params);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadExcel] ' . $e->getMessage());
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors de la génération du fichier Excel.'));
+            exit;
+        }
 
         $cheminPhotos = $_GET['chemin_photos'] ?? '';
         $cheminQrcodes = $_GET['chemin_qrcodes'] ?? '';
@@ -252,31 +259,51 @@ class BrevetController extends Controller
             $params[] = $dateFin;
         }
         $sql .= " ORDER BY id";
-        $conducteurs = $db->fetchAll($sql, $params);
+
+        try {
+            $conducteurs = $db->fetchAll($sql, $params);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadPhotos] ' . $e->getMessage());
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors de la récupération des photos.'));
+            exit;
+        }
 
         $filename = "photos_conducteurs_{$dateDebut}_{$dateFin}.zip";
         $tmpFile = tempnam(sys_get_temp_dir(), 'photos_');
 
         $zip = new \ZipArchive();
-        $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
-        foreach ($conducteurs as $c) {
-            $photoPath = ROOT_DIR . '/public/' . $c['photo_url'];
-            if (file_exists($photoPath)) {
-                $extension = pathinfo($c['photo_url'], PATHINFO_EXTENSION);
-                $zip->addFile($photoPath, $c['id'] . '.' . $extension);
-            }
+        $openResult = $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        if ($openResult !== true) {
+            error_log('[BrevetController::downloadPhotos] ZipArchive::open failed with code ' . $openResult);
+            @unlink($tmpFile);
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors de la création de l\'archive ZIP.'));
+            exit;
         }
 
-        $zip->close();
+        // tmpFile is cleaned up on every exit path (success, exception, or early
+        // return) via finally - previously only the happy path unlink()ed it.
+        try {
+            foreach ($conducteurs as $c) {
+                $photoPath = ROOT_DIR . '/public/' . $c['photo_url'];
+                if (file_exists($photoPath)) {
+                    $extension = pathinfo($c['photo_url'], PATHINFO_EXTENSION);
+                    $zip->addFile($photoPath, $c['id'] . '.' . $extension);
+                }
+            }
 
-        header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Content-Length: ' . filesize($tmpFile));
-        header('Cache-Control: no-cache, no-store, must-revalidate');
+            $zip->close();
 
-        readfile($tmpFile);
-        unlink($tmpFile);
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . filesize($tmpFile));
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+
+            readfile($tmpFile);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadPhotos] ' . $e->getMessage());
+        } finally {
+            @unlink($tmpFile);
+        }
         exit;
     }
 
@@ -294,40 +321,60 @@ class BrevetController extends Controller
             $params[] = $dateFin;
         }
         $sql .= " ORDER BY id";
-        $conducteurs = $db->fetchAll($sql, $params);
+
+        try {
+            $conducteurs = $db->fetchAll($sql, $params);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadQrcodes] ' . $e->getMessage());
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors de la récupération des conducteurs.'));
+            exit;
+        }
 
         $filename = "qrcodes_conducteurs_{$dateDebut}_{$dateFin}.zip";
         $tmpFile = tempnam(sys_get_temp_dir(), 'qrcodes_');
 
         $zip = new \ZipArchive();
-        $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $openResult = $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        if ($openResult !== true) {
+            error_log('[BrevetController::downloadQrcodes] ZipArchive::open failed with code ' . $openResult);
+            @unlink($tmpFile);
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors de la création de l\'archive ZIP.'));
+            exit;
+        }
 
         // Construire l'URL de base du site pour les QR codes
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $siteUrl = $protocol . '://' . $host . BASE_PATH;
 
-        foreach ($conducteurs as $c) {
-            $verificationUrl = $siteUrl . '/verification/' . $c['id'];
+        // tmpFile is cleaned up on every exit path (success, exception, or early
+        // return) via finally - previously only the happy path unlink()ed it.
+        try {
+            foreach ($conducteurs as $c) {
+                $verificationUrl = $siteUrl . '/verification/' . $c['id'];
 
-            $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
-            $ctx = stream_context_create(['http' => ['timeout' => 10]]);
-            $qrImage = @file_get_contents($qrUrl, false, $ctx);
+                $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
+                $ctx = stream_context_create(['http' => ['timeout' => 10]]);
+                $qrImage = @file_get_contents($qrUrl, false, $ctx);
 
-            if ($qrImage !== false) {
-                $zip->addFromString($c['id'] . '.png', $qrImage);
+                if ($qrImage !== false) {
+                    $zip->addFromString($c['id'] . '.png', $qrImage);
+                }
             }
+
+            $zip->close();
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . filesize($tmpFile));
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+
+            readfile($tmpFile);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadQrcodes] ' . $e->getMessage());
+        } finally {
+            @unlink($tmpFile);
         }
-
-        $zip->close();
-
-        header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Content-Length: ' . filesize($tmpFile));
-        header('Cache-Control: no-cache, no-store, must-revalidate');
-
-        readfile($tmpFile);
-        unlink($tmpFile);
         exit;
     }
 
@@ -517,7 +564,14 @@ class BrevetController extends Controller
     public function carteBrevet($id)
     {
         $db = Database::getInstance();
-        $conducteur = $db->fetchOne("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+
+        try {
+            $conducteur = $db->fetchOne("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::carteBrevet] ' . $e->getMessage());
+            header('Location: ' . BASE_PATH . '/admin/imprimeur?error=' . urlencode('Erreur lors du chargement du conducteur.'));
+            exit;
+        }
 
         if (!$conducteur) {
             header('Location: ' . BASE_PATH . '/admin/imprimeur?error=Conducteur introuvable');
@@ -619,7 +673,15 @@ class BrevetController extends Controller
     public function downloadSinglePhoto($id)
     {
         $db = Database::getInstance();
-        $conducteur = $db->fetch("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+
+        try {
+            $conducteur = $db->fetch("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadSinglePhoto] ' . $e->getMessage());
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors du chargement du conducteur.'];
+            $this->redirect('/admin/imprimeur');
+            return;
+        }
 
         if (!$conducteur || empty($conducteur['photo_url'])) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Photo non trouvée pour ce conducteur.'];
@@ -651,7 +713,15 @@ class BrevetController extends Controller
     public function downloadSingleQrcode($id)
     {
         $db = Database::getInstance();
-        $conducteur = $db->fetch("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+
+        try {
+            $conducteur = $db->fetch("SELECT * FROM conducteurs WHERE id = ?", [$id]);
+        } catch (\Exception $e) {
+            error_log('[BrevetController::downloadSingleQrcode] ' . $e->getMessage());
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors du chargement du conducteur.'];
+            $this->redirect('/admin/imprimeur');
+            return;
+        }
 
         if (!$conducteur) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Conducteur non trouvé.'];

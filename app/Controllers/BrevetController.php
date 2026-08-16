@@ -283,22 +283,32 @@ class BrevetController extends Controller
         // tmpFile is cleaned up on every exit path (success, exception, or early
         // return) via finally - previously only the happy path unlink()ed it.
         try {
+            $addedCount = 0;
             foreach ($conducteurs as $c) {
                 $photoPath = ROOT_DIR . '/public/' . $c['photo_url'];
                 if (file_exists($photoPath)) {
                     $extension = pathinfo($c['photo_url'], PATHINFO_EXTENSION);
-                    $zip->addFile($photoPath, $c['id'] . '.' . $extension);
+                    if ($zip->addFile($photoPath, $c['id'] . '.' . $extension)) {
+                        $addedCount++;
+                    }
                 }
             }
 
             $zip->close();
 
             // ZipArchive::close() deletes the temp file instead of writing a
-            // valid empty archive when zero entries were added (e.g. no
-            // conducteur in range still has its photo on disk) - write a
+            // valid empty archive when zero entries were added - write a
             // minimal empty ZIP by hand so the response stays a well-formed
-            // archive instead of a missing file / broken Content-Length.
+            // archive instead of a missing file / broken Content-Length. Only
+            // expected when $addedCount is genuinely 0 (no conducteur in
+            // range still has its photo on disk); if entries were added but
+            // the file is still missing, something else destroyed it (e.g.
+            // disk full during close()) - log that distinctly rather than
+            // silently serving an empty archive as if it were the normal case.
             if (!file_exists($tmpFile)) {
+                if ($addedCount > 0) {
+                    error_log("[BrevetController::downloadPhotos] temp ZIP missing after close() despite {$addedCount} entries added - possible disk/IO failure");
+                }
                 file_put_contents($tmpFile, "PK\x05\x06" . str_repeat("\x00", 18));
             }
 
@@ -359,6 +369,7 @@ class BrevetController extends Controller
         // tmpFile is cleaned up on every exit path (success, exception, or early
         // return) via finally - previously only the happy path unlink()ed it.
         try {
+            $addedCount = 0;
             foreach ($conducteurs as $c) {
                 $verificationUrl = $siteUrl . '/verification/' . $c['id'];
 
@@ -367,7 +378,9 @@ class BrevetController extends Controller
                 $qrImage = @file_get_contents($qrUrl, false, $ctx);
 
                 if ($qrImage !== false) {
-                    $zip->addFromString($c['id'] . '.png', $qrImage);
+                    if ($zip->addFromString($c['id'] . '.png', $qrImage)) {
+                        $addedCount++;
+                    }
                 }
             }
 
@@ -376,7 +389,13 @@ class BrevetController extends Controller
             // Same empty-archive quirk as downloadPhotos(): close() removes
             // the temp file rather than writing a valid empty ZIP when no
             // QR code was successfully generated for any conducteur in range.
+            // Only expected when $addedCount is genuinely 0 - see comment in
+            // downloadPhotos() for why entries-added-but-file-missing is
+            // logged distinctly instead of silently treated the same way.
             if (!file_exists($tmpFile)) {
+                if ($addedCount > 0) {
+                    error_log("[BrevetController::downloadQrcodes] temp ZIP missing after close() despite {$addedCount} entries added - possible disk/IO failure");
+                }
                 file_put_contents($tmpFile, "PK\x05\x06" . str_repeat("\x00", 18));
             }
 

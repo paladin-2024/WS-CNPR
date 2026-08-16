@@ -5,6 +5,7 @@ $brevetStats = $brevetStats ?? [];
 $recentActivity = $recentActivity ?? [];
 $vehicleDistribution = $vehicleDistribution ?? [];
 $registrationTrend = $registrationTrend ?? [];
+$registrationTrendEnabled = $registrationTrendEnabled ?? !empty($registrationTrend);
 $quickActions = $quickActions ?? [];
 
 // Fixed color per vehicle type (not per array position, which depends on the
@@ -531,24 +532,28 @@ function formatCurrency($amount) {
     </div>
 
     <!-- Row 3: Registration trend -->
-    <?php if (!empty($registrationTrend)): ?>
+    <?php if ($registrationTrendEnabled): ?>
         <div class="dashboard-row3">
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
                     <span class="dashboard-card-title">Nouveaux conducteurs enregistrés (6 derniers mois)</span>
                 </div>
-                <div class="chart-canvas-wrap">
-                    <canvas id="registrationTrendChart" role="img" aria-label="Nombre de conducteurs enregistrés par mois, six derniers mois"></canvas>
-                </div>
-                <div class="chart-value-legend">
-                    <?php foreach ($registrationTrend as $i => $t): ?>
-                        <span class="chart-value-legend-item">
-                            <span class="chart-value-legend-dot" style="background: #3B82F6;"></span>
-                            <?= htmlspecialchars($dashboardChartData['registrationTrend']['labels'][$i] ?? '') ?>
-                            <span class="chart-value-legend-count"><?= number_format($t['count'] ?? 0, 0, ',', ' ') ?></span>
-                        </span>
-                    <?php endforeach; ?>
-                </div>
+                <?php if (!empty($registrationTrend)): ?>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="registrationTrendChart" role="img" aria-label="Nombre de conducteurs enregistrés par mois, six derniers mois"></canvas>
+                    </div>
+                    <div class="chart-value-legend">
+                        <?php foreach ($registrationTrend as $i => $t): ?>
+                            <span class="chart-value-legend-item">
+                                <span class="chart-value-legend-dot" style="background: #3B82F6;"></span>
+                                <?= htmlspecialchars($dashboardChartData['registrationTrend']['labels'][$i] ?? '') ?>
+                                <span class="chart-value-legend-count"><?= number_format($t['count'] ?? 0, 0, ',', ' ') ?></span>
+                            </span>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="chart-empty-state">Aucune donnée disponible</p>
+                <?php endif; ?>
             </div>
         </div>
     <?php endif; ?>

@@ -78,6 +78,7 @@ class AdminController extends Controller
         $recentActivity = [];
         $vehicleDistribution = [];
         $registrationTrend = [];
+        $registrationTrendEnabled = in_array($role, ['admin', 'minister_admin', 'agent'], true);
         $quickActions = [];
         $dashboardTitle = 'Tableau de bord';
         $dashboardSubtitle = 'Bienvenue sur le portail d\'administration du Ministère des Transports';
@@ -369,6 +370,7 @@ class AdminController extends Controller
             'recentActivity' => $recentActivity,
             'vehicleDistribution' => $vehicleDistribution,
             'registrationTrend' => $registrationTrend,
+            'registrationTrendEnabled' => $registrationTrendEnabled,
             'quickActions' => $quickActions,
             'dashboardSubtitle' => $dashboardSubtitle,
         ], 'admin');

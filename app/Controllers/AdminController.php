@@ -341,7 +341,7 @@ class AdminController extends Controller
                 $trendRows = $db->fetchAll(
                     "SELECT TO_CHAR(date_enregistrement, 'YYYY-MM') as mois, COUNT(*) as cnt
                      FROM conducteurs
-                     WHERE date_enregistrement >= (CURRENT_DATE - INTERVAL '5 months')
+                     WHERE date_enregistrement >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '5 months')
                      GROUP BY mois ORDER BY mois"
                 );
                 $trendByMonth = [];
@@ -349,7 +349,10 @@ class AdminController extends Controller
                     $trendByMonth[$r['mois']] = (int)$r['cnt'];
                 }
                 for ($i = 5; $i >= 0; $i--) {
-                    $m = date('Y-m', strtotime("-{$i} months"));
+                    // Anchored to the 1st of the month before subtracting - strtotime('-N
+                    // months') on a raw "today" rolls invalid dates (e.g. Feb 31) forward,
+                    // which silently duplicates/skips months around the 29th-31st.
+                    $m = date('Y-m', strtotime(date('Y-m-01') . " -{$i} months"));
                     $registrationTrend[] = ['mois' => $m, 'count' => $trendByMonth[$m] ?? 0];
                 }
             }

@@ -4,7 +4,36 @@ $stats = $stats ?? [];
 $brevetStats = $brevetStats ?? [];
 $recentActivity = $recentActivity ?? [];
 $vehicleDistribution = $vehicleDistribution ?? [];
+$registrationTrend = $registrationTrend ?? [];
+$registrationTrendEnabled = $registrationTrendEnabled ?? !empty($registrationTrend);
 $quickActions = $quickActions ?? [];
+
+// Fixed color per vehicle type (not per array position, which depends on the
+// unspecified GROUP BY/ORDER BY result order) so a given type always reads the
+// same color across dashboard and statistiques pages.
+$vehicleTypeColors = [
+    'Taxi' => '#3B82F6',
+    'Bus' => '#8B5CF6',
+    'Camion' => '#D97706',
+    'Moto' => '#10B981',
+    'Voiture' => '#6366F1',
+];
+
+$dashboardChartData = [
+    'vehicleDistribution' => [
+        'labels' => array_map(fn($v) => (string)($v['type'] ?? ''), $vehicleDistribution),
+        'values' => array_map(fn($v) => (int)($v['count'] ?? 0), $vehicleDistribution),
+        'colors' => array_map(fn($v) => $vehicleTypeColors[$v['type'] ?? ''] ?? ($v['color'] ?? '#3B82F6'), $vehicleDistribution),
+    ],
+    'registrationTrend' => [
+        'labels' => array_map(function ($t) {
+            $moisMap = ['01' => 'Jan', '02' => 'Fév', '03' => 'Mar', '04' => 'Avr', '05' => 'Mai', '06' => 'Jun', '07' => 'Jul', '08' => 'Aoû', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Déc'];
+            $parts = explode('-', $t['mois'] ?? '');
+            return isset($parts[1], $moisMap[$parts[1]]) ? $moisMap[$parts[1]] . ' ' . $parts[0] : ($t['mois'] ?? '');
+        }, $registrationTrend),
+        'values' => array_map(fn($t) => (int)($t['count'] ?? 0), $registrationTrend),
+    ],
+];
 
 // Fonction helper pour formater les nombres
 function formatNumber($num, $isCurrency = false) {
@@ -274,55 +303,51 @@ function formatCurrency($amount) {
         flex-shrink: 0;
     }
 
-    /* Vehicle Distribution */
-    .vehicle-dist-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    /* Vehicle Distribution chart */
+    .chart-canvas-wrap {
+        position: relative;
+        height: 220px;
     }
 
-    .vehicle-dist-item {
+    .chart-empty-state {
+        color: #64748B;
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 13px;
+    }
+
+    .chart-value-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #F1F5F9;
+    }
+
+    .chart-value-legend-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-    }
-
-    .vehicle-dist-label {
-        width: 70px;
+        gap: 6px;
         font-size: 13px;
         color: #334155;
+    }
+
+    .chart-value-legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
         flex-shrink: 0;
     }
 
-    .vehicle-dist-bar-wrap {
-        flex: 1;
-        height: 24px;
-        background: #E2E8F0;
-        border-radius: 4px;
-        overflow: hidden;
+    .chart-value-legend-count {
+        font-weight: 700;
+        color: #1A2744;
     }
 
-    .vehicle-dist-bar {
-        height: 100%;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 8px;
-    }
-
-    .vehicle-dist-value {
-        font-size: 11px;
-        font-weight: 600;
-        color: white;
-    }
-
-    .vehicle-dist-count {
-        width: 50px;
-        text-align: right;
-        font-size: 13px;
-        color: #64748B;
-        flex-shrink: 0;
+    /* Row 3: registration trend */
+    .dashboard-row3 {
+        margin-bottom: 24px;
     }
 
     /* Quick Actions */
@@ -487,26 +512,147 @@ function formatCurrency($amount) {
             <div class="dashboard-card-header">
                 <span class="dashboard-card-title">Répartition des véhicules</span>
             </div>
-            <div class="vehicle-dist-list">
-                <?php 
-                $colors = ['#3B82F6', '#8B5CF6', '#059669', '#D97706', '#EF4444'];
-                $i = 0;
-                foreach ($vehicleDistribution as $vehicle): 
-                ?>
-                    <div class="vehicle-dist-item">
-                        <div class="vehicle-dist-label"><?= htmlspecialchars($vehicle['type'] ?? '') ?></div>
-                        <div class="vehicle-dist-bar-wrap">
-                            <div class="vehicle-dist-bar" style="width: <?= htmlspecialchars($vehicle['percent'] ?? 0) ?>%; background: <?= $colors[$i % count($colors)] ?>;">
-                                <span class="vehicle-dist-value"><?= htmlspecialchars($vehicle['percent'] ?? 0) ?>%</span>
-                            </div>
-                        </div>
-                        <div class="vehicle-dist-count"><?= number_format($vehicle['count'] ?? 0, 0, ',', ' ') ?></div>
-                    </div>
-                <?php 
-                $i++;
-                endforeach; 
-                ?>
-            </div>
+            <?php if (!empty($vehicleDistribution)): ?>
+                <div class="chart-canvas-wrap">
+                    <canvas id="vehicleDistributionChart" role="img" aria-label="Répartition des véhicules par type"></canvas>
+                </div>
+                <div class="chart-value-legend">
+                    <?php foreach ($vehicleDistribution as $vehicle): ?>
+                        <span class="chart-value-legend-item">
+                            <span class="chart-value-legend-dot" style="background: <?= htmlspecialchars($vehicleTypeColors[$vehicle['type'] ?? ''] ?? ($vehicle['color'] ?? '#3B82F6')) ?>;"></span>
+                            <?= htmlspecialchars($vehicle['type'] ?? '') ?>
+                            <span class="chart-value-legend-count"><?= number_format($vehicle['count'] ?? 0, 0, ',', ' ') ?></span>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="chart-empty-state">Aucune donnée disponible</p>
+            <?php endif; ?>
         </div>
     </div>
+
+    <!-- Row 3: Registration trend -->
+    <?php if ($registrationTrendEnabled): ?>
+        <div class="dashboard-row3">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <span class="dashboard-card-title">Nouveaux conducteurs enregistrés (6 derniers mois)</span>
+                </div>
+                <?php if (!empty($registrationTrend)): ?>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="registrationTrendChart" role="img" aria-label="Nombre de conducteurs enregistrés par mois, six derniers mois"></canvas>
+                    </div>
+                    <div class="chart-value-legend">
+                        <?php foreach ($registrationTrend as $i => $t): ?>
+                            <span class="chart-value-legend-item">
+                                <span class="chart-value-legend-dot" style="background: #3B82F6;"></span>
+                                <?= htmlspecialchars($dashboardChartData['registrationTrend']['labels'][$i] ?? '') ?>
+                                <span class="chart-value-legend-count"><?= number_format($t['count'] ?? 0, 0, ',', ' ') ?></span>
+                            </span>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="chart-empty-state">Aucune donnée disponible</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
+
+<script type="application/json" id="dashboard-chart-data"><?= json_encode($dashboardChartData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    if (typeof Chart === 'undefined') { return; }
+
+    var dataEl = document.getElementById('dashboard-chart-data');
+    var chartData = {};
+    try {
+        chartData = JSON.parse((dataEl && dataEl.textContent) || '{}');
+    } catch (e) {
+        chartData = {};
+    }
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var animation = reduceMotion ? false : { duration: 700, easing: 'easeOutQuart' };
+
+    var dist = chartData.vehicleDistribution || { labels: [], values: [], colors: [] };
+    var distCanvas = document.getElementById('vehicleDistributionChart');
+    if (distCanvas && dist.labels && dist.labels.length) {
+        new Chart(distCanvas, {
+            type: 'bar',
+            data: {
+                labels: dist.labels,
+                datasets: [{
+                    label: 'Véhicules',
+                    data: dist.values,
+                    backgroundColor: dist.colors,
+                    borderRadius: 4,
+                    maxBarThickness: 32
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.label + ': ' + ctx.parsed.x.toLocaleString('fr-FR') + ' véhicule(s)';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#F1F5F9' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    var trend = chartData.registrationTrend || { labels: [], values: [] };
+    var trendCanvas = document.getElementById('registrationTrendChart');
+    if (trendCanvas && trend.labels && trend.labels.length) {
+        new Chart(trendCanvas, {
+            type: 'line',
+            data: {
+                labels: trend.labels,
+                datasets: [{
+                    label: 'Conducteurs enregistrés',
+                    data: trend.values,
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#3B82F6',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.parsed.y.toLocaleString('fr-FR') + ' conducteur(s)';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#F1F5F9' } }
+                }
+            }
+        });
+    }
+})();
+</script>

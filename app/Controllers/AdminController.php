@@ -77,6 +77,8 @@ class AdminController extends Controller
         $brevetStats = [];
         $recentActivity = [];
         $vehicleDistribution = [];
+        $registrationTrend = [];
+        $registrationTrendEnabled = in_array($role, ['admin', 'minister_admin', 'agent'], true);
         $quickActions = [];
         $dashboardTitle = 'Tableau de bord';
         $dashboardSubtitle = 'Bienvenue sur le portail d\'administration du Ministère des Transports';
@@ -333,6 +335,27 @@ class AdminController extends Controller
                         'color' => $distColors[$i % count($distColors)],
                     ];
                 }
+
+                // Registration trend — conducteurs enregistrés par mois, 6 derniers mois.
+                // Cheap grouped count over an indexed date column; gaps are filled with 0
+                // below so the trend line always has 6 evenly-spaced points.
+                $trendRows = $db->fetchAll(
+                    "SELECT TO_CHAR(date_enregistrement, 'YYYY-MM') as mois, COUNT(*) as cnt
+                     FROM conducteurs
+                     WHERE date_enregistrement >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '5 months')
+                     GROUP BY mois ORDER BY mois"
+                );
+                $trendByMonth = [];
+                foreach ($trendRows as $r) {
+                    $trendByMonth[$r['mois']] = (int)$r['cnt'];
+                }
+                for ($i = 5; $i >= 0; $i--) {
+                    // Anchored to the 1st of the month before subtracting - strtotime('-N
+                    // months') on a raw "today" rolls invalid dates (e.g. Feb 31) forward,
+                    // which silently duplicates/skips months around the 29th-31st.
+                    $m = date('Y-m', strtotime(date('Y-m-01') . " -{$i} months"));
+                    $registrationTrend[] = ['mois' => $m, 'count' => $trendByMonth[$m] ?? 0];
+                }
             }
         } catch (\Exception $e) {
             error_log('[AdminController::dashboard] ' . $e->getMessage());
@@ -346,6 +369,8 @@ class AdminController extends Controller
             'brevetStats' => $brevetStats,
             'recentActivity' => $recentActivity,
             'vehicleDistribution' => $vehicleDistribution,
+            'registrationTrend' => $registrationTrend,
+            'registrationTrendEnabled' => $registrationTrendEnabled,
             'quickActions' => $quickActions,
             'dashboardSubtitle' => $dashboardSubtitle,
         ], 'admin');

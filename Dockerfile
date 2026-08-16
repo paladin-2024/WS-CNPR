@@ -131,10 +131,19 @@ RUN { \
 # payload otherwise) - keep both nginx's client_max_body_size (nginx/conf.d/
 # cnpr.wscsarl.info.conf) and the VPS's own system-Nginx limit in sync with
 # these or uploads will 413 before ever reaching PHP.
+# max_execution_time: no set_time_limit()/ini_set() call exists anywhere in
+# AdminController.php or BrevetController.php, so this php.ini value is the
+# ONLY thing bounding a request's runtime. downloadQrcodes() is the known
+# worst case (serial outbound HTTP call per row, ~10s timeout each) - the
+# PHP default of 30s isn't enough for more than a couple of rows. 300s
+# matches nginx/conf.d/cnpr.wscsarl.info.conf's fastcgi_read_timeout and
+# deploy/php-fpm-pool.conf.example's equivalent setting for the bare-metal
+# deploy path - keep all three in sync if this changes.
 RUN { \
         echo 'upload_max_filesize=50M'; \
         echo 'post_max_size=55M'; \
         echo 'memory_limit=256M'; \
+        echo 'max_execution_time=300'; \
     } > /usr/local/etc/php/conf.d/app-uploads.ini
 
 # Don't leak the PHP version via the X-Powered-By response header

@@ -24,11 +24,6 @@ function formatCurrency($amount) {
     return number_format($amount, 0, ',', ' ') . ' CDF';
 }
 
-function getRandomColor($index) {
-    $colors = ['#3B82F6', '#8B5CF6', '#059669', '#D97706', '#EF4444', '#EC4899', '#14B8A6', '#F97316'];
-    return $colors[$index % count($colors)];
-}
-
 $brevetStatusLabels = [
     'nouveau' => 'Nouveaux',
     'en_cours_impression' => 'En cours',
@@ -38,6 +33,75 @@ $brevetStatusColors = [
     'nouveau' => '#6366F1',
     'en_cours_impression' => '#F59E0B',
     'imprime' => '#10B981',
+];
+
+// Fixed color per vehicle type (not per array position, which depends on the
+// unspecified GROUP BY result order) so a given type reads the same color here
+// and on the main dashboard's "Répartition des véhicules" chart.
+$vehicleTypeColors = [
+    'taxi' => '#3B82F6',
+    'bus' => '#8B5CF6',
+    'camion' => '#D97706',
+    'moto' => '#10B981',
+    'voiture' => '#6366F1',
+];
+
+// Status-shaped data (actif/suspendu/expire) gets a fixed semantic color rather
+// than an arbitrary rotation — active reads as "good", suspended as "warning",
+// expired as "critical", consistent with how the rest of the admin UI uses color.
+$conducteurStatusColors = [
+    'actif' => '#059669',
+    'suspendu' => '#D97706',
+    'expire' => '#EF4444',
+];
+
+$moisLabelMap = ['01' => 'Jan', '02' => 'Fév', '03' => 'Mar', '04' => 'Avr', '05' => 'Mai', '06' => 'Jun', '07' => 'Jul', '08' => 'Aoû', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Déc'];
+function formatMoisLabel($mois, $map) {
+    $parts = explode('-', $mois ?? '');
+    return (isset($parts[1], $map[$parts[1]])) ? $map[$parts[1]] . ' ' . $parts[0] : ($mois ?? '');
+}
+
+// --- Chart.js data, built once here and consumed by the script block at the
+// bottom of this view. Labels are plain strings (never raw HTML), so this is
+// safe to json_encode and parse with JSON.parse() client-side.
+$chartVehicules = ['labels' => [], 'values' => [], 'colors' => []];
+foreach ($vehiculesByType as $v) {
+    $type = $v['type_vehicule'] ?? '';
+    $chartVehicules['labels'][] = ucfirst($type ?: '-');
+    $chartVehicules['values'][] = (int)($v['total'] ?? 0);
+    $chartVehicules['colors'][] = $vehicleTypeColors[$type] ?? '#3B82F6';
+}
+
+$chartConducteurs = ['labels' => [], 'values' => [], 'colors' => []];
+foreach ($conducteursByStatus as $c) {
+    $statut = $c['statut'] ?? '';
+    $chartConducteurs['labels'][] = ucfirst($statut ?: '-');
+    $chartConducteurs['values'][] = (int)($c['total'] ?? 0);
+    $chartConducteurs['colors'][] = $conducteurStatusColors[$statut] ?? '#8B5CF6';
+}
+
+$chartBrevets = ['labels' => [], 'values' => [], 'colors' => []];
+foreach ($brevetsByStatus as $b) {
+    $statut = $b['statut_brevet'] ?? 'nouveau';
+    $chartBrevets['labels'][] = $brevetStatusLabels[$statut] ?? $statut;
+    $chartBrevets['values'][] = (int)($b['total'] ?? 0);
+    $chartBrevets['colors'][] = $brevetStatusColors[$statut] ?? '#6366F1';
+}
+
+// Query returns most-recent-month-first (DESC LIMIT 12); a trend line reads
+// left-to-right chronologically, so reverse just for the chart.
+$paiementsChrono = array_reverse($paiementsByMonth);
+$chartPaiements = ['labels' => [], 'values' => []];
+foreach ($paiementsChrono as $p) {
+    $chartPaiements['labels'][] = formatMoisLabel($p['mois'] ?? '', $moisLabelMap);
+    $chartPaiements['values'][] = (float)($p['total'] ?? 0);
+}
+
+$statistiquesChartData = [
+    'vehicules' => $chartVehicules,
+    'conducteurs' => $chartConducteurs,
+    'brevets' => $chartBrevets,
+    'paiements' => $chartPaiements,
 ];
 ?>
 
@@ -150,68 +214,29 @@ $brevetStatusColors = [
 
     .chart-title { font-size: 16px; font-weight: 600; color: #1A2744; margin: 0 0 20px 0; }
 
-    /* Bar Chart */
-    .bar-chart { display: flex; flex-direction: column; gap: 12px; }
-
-    .bar-item { display: flex; align-items: center; gap: 12px; }
-
-    .bar-label {
-        width: 100px;
-        font-size: 13px;
-        color: #334155;
-        flex-shrink: 0;
+    /* Chart.js canvas container */
+    .chart-canvas-wrap {
+        position: relative;
+        height: 240px;
     }
 
-    .bar-track {
-        flex: 1;
-        height: 32px;
-        background: #F1F5F9;
-        border-radius: 6px;
-        overflow: hidden;
+    .chart-canvas-wrap.chart-canvas-wrap--donut {
+        height: 200px;
+        width: 200px;
+        margin: 0 auto;
     }
 
-    .bar-fill {
-        height: 100%;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 12px;
-        min-width: 40px;
-        transition: width 0.6s ease;
+    .chart-empty-state {
+        color: #64748B;
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
     }
 
-    .bar-value { font-size: 12px; font-weight: 600; color: white; }
-
-    /* Donut Chart */
+    /* Donut Chart layout (canvas + legend) */
     .donut-chart-container { display: flex; align-items: center; gap: 24px; }
 
-    .donut-chart {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        position: relative;
-    }
-
-    .donut-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        background: white;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .donut-center-value { font-size: 24px; font-weight: 700; color: #1A2744; }
-    .donut-center-label { font-size: 12px; color: #64748B; }
-    .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+    .donut-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
 
     .legend-item {
         display: flex;
@@ -221,8 +246,31 @@ $brevetStatusColors = [
         color: #334155;
     }
 
-    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
     .legend-value { margin-left: auto; font-weight: 600; }
+
+    /* Value legend used under bar/line charts */
+    .chart-value-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #F1F5F9;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .chart-value-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #334155;
+    }
+
+    .chart-value-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .chart-value-legend-count { font-weight: 700; color: #1A2744; }
 
     /* Brevet Progress */
     .brevet-progress-card {
@@ -464,33 +512,22 @@ $brevetStatusColors = [
         <!-- Véhicules par type -->
         <div class="chart-card">
             <h3 class="chart-title">Véhicules par type</h3>
-            <div class="bar-chart">
-                <?php 
-                $maxCount = 0;
-                foreach ($vehiculesByType as $v) {
-                    if (($v['total'] ?? 0) > $maxCount) $maxCount = $v['total'];
-                }
-                $i = 0;
-                foreach ($vehiculesByType as $vehicule): 
-                    $percent = $maxCount > 0 ? round(($vehicule['total'] ?? 0) / $maxCount * 100) : 0;
-                    $color = getRandomColor($i);
-                ?>
-                    <div class="bar-item">
-                        <div class="bar-label"><?= htmlspecialchars(ucfirst($vehicule['type_vehicule'] ?? '-')) ?></div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width: <?= $percent ?>%; background: <?= $color ?>;">
-                                <span class="bar-value"><?= formatNumber($vehicule['total'] ?? 0) ?></span>
-                            </div>
-                        </div>
-                    </div>
-                <?php 
-                $i++;
-                endforeach; 
-                ?>
-                <?php if (empty($vehiculesByType)): ?>
-                    <p style="color: #64748B; text-align: center; padding: 20px;">Aucune donnée disponible</p>
-                <?php endif; ?>
-            </div>
+            <?php if (!empty($vehiculesByType)): ?>
+                <div class="chart-canvas-wrap">
+                    <canvas id="vehiculesByTypeChart" role="img" aria-label="Véhicules par type"></canvas>
+                </div>
+                <div class="chart-value-legend">
+                    <?php foreach ($vehiculesByType as $i => $vehicule): ?>
+                        <span class="chart-value-legend-item">
+                            <span class="chart-value-legend-dot" style="background: <?= htmlspecialchars($chartVehicules['colors'][$i] ?? '#3B82F6') ?>;"></span>
+                            <?= htmlspecialchars(ucfirst($vehicule['type_vehicule'] ?? '-')) ?>
+                            <span class="chart-value-legend-count"><?= formatNumber($vehicule['total'] ?? 0) ?></span>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="chart-empty-state">Aucune donnée disponible</p>
+            <?php endif; ?>
         </div>
 
         <!-- Conducteurs par statut -->
@@ -500,45 +537,27 @@ $brevetStatusColors = [
                 <?php
                 $total = 0;
                 foreach ($conducteursByStatus as $c) { $total += $c['total'] ?? 0; }
-                $cumulDeg = 0;
-                $gradientParts = [];
-                $i = 0;
-                foreach ($conducteursByStatus as $conducteur) {
-                    $color = getRandomColor($i);
-                    $pct = $total > 0 ? ($conducteur['total'] ?? 0) / $total * 360 : 0;
-                    $start = $cumulDeg;
-                    $cumulDeg += $pct;
-                    $gradientParts[] = "{$color} {$start}deg {$cumulDeg}deg";
-                    $i++;
-                }
-                $gradient = implode(', ', $gradientParts);
                 ?>
                 <div class="donut-chart-container">
-                    <div class="donut-chart" style="background: conic-gradient(<?= $gradient ?>);">
-                        <div class="donut-center">
-                            <div class="donut-center-value"><?= formatNumber($total) ?></div>
-                            <div class="donut-center-label">Total</div>
-                        </div>
+                    <div class="chart-canvas-wrap chart-canvas-wrap--donut">
+                        <canvas id="conducteursByStatusChart" role="img" aria-label="Conducteurs par statut"></canvas>
                     </div>
                     <div class="donut-legend">
-                        <?php 
-                        $i = 0;
-                        foreach ($conducteursByStatus as $conducteur): 
-                            $color = getRandomColor($i);
-                        ?>
+                        <?php foreach ($conducteursByStatus as $i => $conducteur): ?>
                             <div class="legend-item">
-                                <div class="legend-dot" style="background: <?= $color ?>;"></div>
+                                <div class="legend-dot" style="background: <?= htmlspecialchars($chartConducteurs['colors'][$i] ?? '#8B5CF6') ?>;"></div>
                                 <span><?= htmlspecialchars(ucfirst($conducteur['statut'] ?? '-')) ?></span>
                                 <span class="legend-value"><?= formatNumber($conducteur['total'] ?? 0) ?></span>
                             </div>
-                        <?php 
-                        $i++;
-                        endforeach; 
-                        ?>
+                        <?php endforeach; ?>
+                        <div class="legend-item" style="border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 2px;">
+                            <span style="font-weight: 600; color: #1A2744;">Total</span>
+                            <span class="legend-value"><?= formatNumber($total) ?></span>
+                        </div>
                     </div>
                 </div>
             <?php else: ?>
-                <p style="color: #64748B; text-align: center; padding: 20px;">Aucune donnée disponible</p>
+                <p class="chart-empty-state">Aucune donnée disponible</p>
             <?php endif; ?>
         </div>
 
@@ -546,73 +565,250 @@ $brevetStatusColors = [
         <div class="chart-card">
             <h3 class="chart-title">Brevets par statut</h3>
             <?php if (!empty($brevetsByStatus)): ?>
-                <?php
-                $cumulDeg = 0;
-                $gradientParts = [];
-                foreach ($brevetsByStatus as $b) {
-                    $statut = $b['statut_brevet'] ?? 'nouveau';
-                    $color = $brevetStatusColors[$statut] ?? '#6366F1';
-                    $pct = $totalBrevets > 0 ? ($b['total'] ?? 0) / $totalBrevets * 360 : 0;
-                    $start = $cumulDeg;
-                    $cumulDeg += $pct;
-                    $gradientParts[] = "{$color} {$start}deg {$cumulDeg}deg";
-                }
-                $gradient = implode(', ', $gradientParts);
-                ?>
                 <div class="donut-chart-container">
-                    <div class="donut-chart" style="background: conic-gradient(<?= $gradient ?>);">
-                        <div class="donut-center">
-                            <div class="donut-center-value"><?= formatNumber($totalBrevets) ?></div>
-                            <div class="donut-center-label">Total</div>
-                        </div>
+                    <div class="chart-canvas-wrap chart-canvas-wrap--donut">
+                        <canvas id="brevetsByStatusChart" role="img" aria-label="Brevets par statut"></canvas>
                     </div>
                     <div class="donut-legend">
-                        <?php foreach ($brevetsByStatus as $b):
+                        <?php foreach ($brevetsByStatus as $i => $b):
                             $statut = $b['statut_brevet'] ?? 'nouveau';
-                            $color = $brevetStatusColors[$statut] ?? '#6366F1';
                             $label = $brevetStatusLabels[$statut] ?? $statut;
                         ?>
                             <div class="legend-item">
-                                <div class="legend-dot" style="background: <?= $color ?>;"></div>
+                                <div class="legend-dot" style="background: <?= htmlspecialchars($chartBrevets['colors'][$i] ?? '#6366F1') ?>;"></div>
                                 <span><?= htmlspecialchars($label) ?></span>
                                 <span class="legend-value"><?= formatNumber($b['total'] ?? 0) ?></span>
                             </div>
                         <?php endforeach; ?>
+                        <div class="legend-item" style="border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 2px;">
+                            <span style="font-weight: 600; color: #1A2744;">Total</span>
+                            <span class="legend-value"><?= formatNumber($totalBrevets) ?></span>
+                        </div>
                     </div>
                 </div>
             <?php else: ?>
-                <p style="color: #64748B; text-align: center; padding: 20px;">Aucune donnée disponible</p>
+                <p class="chart-empty-state">Aucune donnée disponible</p>
             <?php endif; ?>
         </div>
 
         <!-- Paiements par mois (chart) -->
-        <?php if (!empty($paiementsByMonth)): ?>
-            <div class="chart-card">
-                <h3 class="chart-title">Paiements par mois</h3>
-                <div class="bar-chart">
-                    <?php
-                    $maxMontant = 0;
-                    foreach ($paiementsByMonth as $p) {
-                        if (($p['total'] ?? 0) > $maxMontant) $maxMontant = $p['total'];
-                    }
-                    $i = 0;
-                    foreach ($paiementsByMonth as $paiement):
-                        $percent = $maxMontant > 0 ? round(($paiement['total'] ?? 0) / $maxMontant * 100) : 0;
-                    ?>
-                        <div class="bar-item">
-                            <div class="bar-label"><?= htmlspecialchars($paiement['mois'] ?? '-') ?></div>
-                            <div class="bar-track">
-                                <div class="bar-fill" style="width: <?= $percent ?>%; background: #D97706;">
-                                    <span class="bar-value"><?= formatNumber($paiement['total'] ?? 0) ?></span>
-                                </div>
-                            </div>
-                        </div>
-                    <?php
-                    $i++;
-                    endforeach;
-                    ?>
+        <div class="chart-card">
+            <h3 class="chart-title">Paiements par mois</h3>
+            <?php if (!empty($paiementsByMonth)): ?>
+                <div class="chart-canvas-wrap">
+                    <canvas id="paiementsByMonthChart" role="img" aria-label="Paiements par mois"></canvas>
                 </div>
-            </div>
-        <?php endif; ?>
+                <div class="chart-value-legend">
+                    <?php foreach ($paiementsChrono as $i => $paiement): ?>
+                        <span class="chart-value-legend-item">
+                            <span class="chart-value-legend-dot" style="background: #D97706;"></span>
+                            <?= htmlspecialchars($chartPaiements['labels'][$i] ?? '-') ?>
+                            <span class="chart-value-legend-count"><?= formatCurrency($paiement['total'] ?? 0) ?></span>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="chart-empty-state">Aucune donnée disponible</p>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
+
+<script type="application/json" id="statistiques-chart-data"><?= json_encode($statistiquesChartData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    if (typeof Chart === 'undefined') { return; }
+
+    var dataEl = document.getElementById('statistiques-chart-data');
+    var chartData = {};
+    try {
+        chartData = JSON.parse((dataEl && dataEl.textContent) || '{}');
+    } catch (e) {
+        chartData = {};
+    }
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var animation = reduceMotion ? false : { duration: 700, easing: 'easeOutQuart' };
+
+    // Small plugin to draw a "total" label in the center of a doughnut, mirroring
+    // the look of the previous CSS-donut center label.
+    var centerTextPlugin = {
+        id: 'centerText',
+        afterDraw: function (chart) {
+            var opts = chart.config.options.plugins && chart.config.options.plugins.centerText;
+            if (!opts || !opts.text) { return; }
+            var ctx = chart.ctx;
+            var area = chart.chartArea;
+            var cx = (area.left + area.right) / 2;
+            var cy = (area.top + area.bottom) / 2;
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '700 20px sans-serif';
+            ctx.fillStyle = '#1A2744';
+            ctx.fillText(opts.text, cx, cy - 9);
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText(opts.subtext || '', cx, cy + 12);
+            ctx.restore();
+        }
+    };
+
+    var veh = chartData.vehicules || { labels: [], values: [], colors: [] };
+    var vehCanvas = document.getElementById('vehiculesByTypeChart');
+    if (vehCanvas && veh.labels && veh.labels.length) {
+        new Chart(vehCanvas, {
+            type: 'bar',
+            data: {
+                labels: veh.labels,
+                datasets: [{
+                    label: 'Véhicules',
+                    data: veh.values,
+                    backgroundColor: veh.colors,
+                    borderRadius: 4,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.label + ': ' + ctx.parsed.y.toLocaleString('fr-FR');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#F1F5F9' } }
+                }
+            }
+        });
+    }
+
+    var cond = chartData.conducteurs || { labels: [], values: [], colors: [] };
+    var condCanvas = document.getElementById('conducteursByStatusChart');
+    if (condCanvas && cond.labels && cond.labels.length) {
+        var condTotal = cond.values.reduce(function (a, b) { return a + b; }, 0);
+        new Chart(condCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: cond.labels,
+                datasets: [{
+                    data: cond.values,
+                    backgroundColor: cond.colors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    centerText: { text: condTotal.toLocaleString('fr-FR'), subtext: 'Total' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.label + ': ' + ctx.parsed.toLocaleString('fr-FR');
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [centerTextPlugin]
+        });
+    }
+
+    var brev = chartData.brevets || { labels: [], values: [], colors: [] };
+    var brevCanvas = document.getElementById('brevetsByStatusChart');
+    if (brevCanvas && brev.labels && brev.labels.length) {
+        var brevTotal = brev.values.reduce(function (a, b) { return a + b; }, 0);
+        new Chart(brevCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: brev.labels,
+                datasets: [{
+                    data: brev.values,
+                    backgroundColor: brev.colors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    centerText: { text: brevTotal.toLocaleString('fr-FR'), subtext: 'Total' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.label + ': ' + ctx.parsed.toLocaleString('fr-FR');
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [centerTextPlugin]
+        });
+    }
+
+    var pai = chartData.paiements || { labels: [], values: [] };
+    var paiCanvas = document.getElementById('paiementsByMonthChart');
+    if (paiCanvas && pai.labels && pai.labels.length) {
+        new Chart(paiCanvas, {
+            type: 'line',
+            data: {
+                labels: pai.labels,
+                datasets: [{
+                    label: 'Paiements (CDF)',
+                    data: pai.values,
+                    borderColor: '#D97706',
+                    backgroundColor: 'rgba(217, 119, 6, 0.12)',
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#D97706',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: animation,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                return ctx.parsed.y.toLocaleString('fr-FR') + ' CDF';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#F1F5F9' },
+                        ticks: {
+                            callback: function (value) { return value.toLocaleString('fr-FR'); }
+                        }
+                    }
+                }
+            }
+        });
+    }
+})();
+</script>

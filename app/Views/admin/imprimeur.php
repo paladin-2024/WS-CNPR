@@ -561,7 +561,6 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
         const initials = ((c.prenom||'').charAt(0) + (c.nom||'').charAt(0)).toUpperCase();
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
         const hasPhoto = c.photo_url ? '<span class="badge" style="background:#ECFDF5;color:#059669;">✓</span>' : '<span class="badge" style="background:#FEF2F2;color:#DC2626;">✗</span>';
-        const carteIcon = `<i data-lucide="id-card" style="width:12px;height:12px;"></i>`;
         return `<tr>
             <td><strong>${c.id}</strong></td>
             <td><div class="conducteur-info"><div class="conducteur-avatar">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
@@ -570,10 +569,24 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
             <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td>${hasPhoto}</td>
-            <td><a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Carte brevet" style="padding:4px 8px;">${carteIcon}</a></td>
+            <td>${renderRowActions(c)}</td>
         </tr>`;
     }).join('');
     if (window.lucide) lucide.createIcons();
+}
+
+// Shared per-row action buttons (carte brevet / photo / QR code), used by
+// all three tabs' AJAX re-render so they match the PHP-rendered initial
+// page load instead of dropping buttons after a date-filter refresh.
+function renderRowActions(c) {
+    let html = `<div style="display:flex;gap:4px;">`;
+    html += `<a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;"><i data-lucide="id-card" style="width:12px;height:12px;"></i></a>`;
+    if (c.photo_url) {
+        html += `<a href="${BASE_PATH}/admin/imprimeur/download-photo/${c.id}" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;"><i data-lucide="image" style="width:12px;height:12px;"></i></a>`;
+    }
+    html += `<a href="${BASE_PATH}/admin/imprimeur/download-qrcode/${c.id}" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;"><i data-lucide="qr-code" style="width:12px;height:12px;"></i></a>`;
+    html += `</div>`;
+    return html;
 }
 
 function renderEncours(conducteurs) {
@@ -601,6 +614,7 @@ function renderEncours(conducteurs) {
             <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-encours">En cours d'impression</span></td>
+            <td>${renderRowActions(c)}</td>
         </tr>`;
     }).join('');
     if (window.lucide) lucide.createIcons();
@@ -631,6 +645,7 @@ function renderImprimes(conducteurs) {
             <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-imprime">Imprimé ✓</span></td>
+            <td>${renderRowActions(c)}</td>
         </tr>`;
     }).join('');
     if (window.lucide) lucide.createIcons();

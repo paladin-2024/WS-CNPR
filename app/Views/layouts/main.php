@@ -166,7 +166,7 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
         </footer>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="<?= ASSETS_PATH ?>/js/vendor/lucide.min.js"></script>
     <script src="<?= ASSETS_PATH ?>/js/app.js"></script>
     <script>
         // Top Progress Bar

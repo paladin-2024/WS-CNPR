@@ -455,7 +455,7 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
         </div>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="<?= ASSETS_PATH ?>/js/vendor/lucide.min.js"></script>
     <script>
         // Top Progress Bar
         const progressBar = document.getElementById('top-progress-bar');

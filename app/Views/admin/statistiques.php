@@ -173,7 +173,6 @@ $statistiquesChartData = [
         text-decoration: none;
         color: inherit;
         transition: transform 0.2s, box-shadow 0.2s;
-        border-left: 4px solid transparent;
     }
 
     .brevet-stat-card:hover {
@@ -438,7 +437,7 @@ $statistiquesChartData = [
     </div>
 
     <div class="brevet-stats-row">
-        <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card" style="border-left-color: #6366F1;">
+        <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card">
             <div class="brevet-stat-icon" style="background: #EEF2FF; color: #6366F1;">
                 <i data-lucide="file-plus"></i>
             </div>
@@ -447,7 +446,7 @@ $statistiquesChartData = [
                 <div class="brevet-stat-value"><?= formatNumber($brevetsNouveau) ?></div>
             </div>
         </a>
-        <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card" style="border-left-color: #F59E0B;">
+        <a href="<?= BASE_PATH ?>/admin/imprimeur" class="brevet-stat-card">
             <div class="brevet-stat-icon" style="background: #FFFBEB; color: #F59E0B;">
                 <i data-lucide="printer"></i>
             </div>
@@ -456,7 +455,7 @@ $statistiquesChartData = [
                 <div class="brevet-stat-value"><?= formatNumber($brevetsEnCours) ?></div>
             </div>
         </a>
-        <a href="<?= BASE_PATH ?>/admin/receptionnaire" class="brevet-stat-card" style="border-left-color: #10B981;">
+        <a href="<?= BASE_PATH ?>/admin/receptionnaire" class="brevet-stat-card">
             <div class="brevet-stat-icon" style="background: #ECFDF5; color: #10B981;">
                 <i data-lucide="circle-check-big"></i>
             </div>

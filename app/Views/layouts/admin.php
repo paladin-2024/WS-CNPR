@@ -88,9 +88,6 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
     <?php endif; ?>
     <link rel="manifest" href="<?= BASE_PATH ?>/public/manifest.json">
     <meta name="theme-color" content="#007FFF">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= ASSETS_PATH ?>/css/globals.css">
     <style>
         * { box-sizing: border-box; }

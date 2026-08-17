@@ -315,6 +315,14 @@ function formatDateBrevet($date) {
 
     <!-- ═══ ONGLET 2 : Brevets en cours d'impression ═══ -->
     <div class="tab-panel" id="panelEncours">
+        <?php if (\App\Core\Auth::hasRole(['admin', 'minister_admin'])): ?>
+            <div class="imp-actions" id="actionsEncours" style="<?= empty($conducteursEnCours) ? 'display:none' : '' ?>">
+                <button class="btn btn-success" onclick="confirmerMarquerImprime()">
+                    <i data-lucide="check-circle"></i>
+                    Marquer "Imprimé"
+                </button>
+            </div>
+        <?php endif; ?>
         <div class="table-container">
             <div id="emptyEncours" style="<?= empty($conducteursEnCours) ? '' : 'display:none' ?>">
                 <div class="empty-state">
@@ -593,15 +601,18 @@ function renderEncours(conducteurs) {
     const tbody = document.getElementById('bodyEncours');
     const table = document.getElementById('tableEncours');
     const empty = document.getElementById('emptyEncours');
+    const actions = document.getElementById('actionsEncours');
 
     document.getElementById('countEncours').textContent = conducteurs.length;
 
     if (conducteurs.length === 0) {
         table.style.display = 'none'; empty.style.display = '';
+        if (actions) actions.style.display = 'none';
         tbody.innerHTML = ''; return;
     }
 
     table.style.display = ''; empty.style.display = 'none';
+    if (actions) actions.style.display = '';
 
     tbody.innerHTML = conducteurs.map(c => {
         const initials = ((c.prenom||'').charAt(0) + (c.nom||'').charAt(0)).toUpperCase();
@@ -687,6 +698,48 @@ function confirmerMarquerImpression(total) {
             document.getElementById('formMarquerImpression').submit();
         }
     });
+}
+
+// ── Marquer imprimé (admin/minister_admin uniquement) ──
+function confirmerMarquerImprime() {
+    const total = document.getElementById('countEncours').textContent;
+    Swal.fire({
+        title: 'Confirmer le changement',
+        html: `<p style="font-size:14px;">Marquer <strong>${total} conducteur(s)</strong> comme <span style="color:#10B981;font-weight:600;">imprimé(s)</span> ?</p>
+               <p style="font-size:12px;color:#64748B;margin-top:6px;">Les brevets seront transférés vers l'onglet "Déjà imprimés".</p>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#10B981',
+        cancelButtonColor: '#64748B',
+        confirmButtonText: 'Oui, marquer',
+        cancelButtonText: 'Annuler',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            marquerImprime();
+        }
+    });
+}
+
+async function marquerImprime() {
+    const dateDebut = document.getElementById('filterDateDebut').value;
+    const dateFin = document.getElementById('filterDateFin').value;
+    try {
+        const resp = await fetch(BASE_PATH + '/admin/receptionnaire/confirmer-lot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF_TOKEN },
+            body: JSON.stringify({ date_debut: dateDebut, date_fin: dateFin })
+        });
+        const data = await resp.json();
+        if (data.success) {
+            showToast('Brevets marqués comme imprimés avec succès.', 'success');
+            filtrerParDate();
+        } else {
+            showToast(data.error || 'Erreur lors du marquage.', 'error');
+        }
+    } catch (e) {
+        showToast('Erreur lors du marquage.', 'error');
+    }
 }
 
 // ── Toast ──

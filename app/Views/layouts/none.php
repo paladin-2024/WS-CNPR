@@ -40,7 +40,7 @@ $appLogo = ConfigController::get('app_logo', '');
         </div>
     </div>
     <?= $content ?>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="<?= ASSETS_PATH ?>/js/vendor/lucide.min.js"></script>
     <script>
         // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', function() {

@@ -528,7 +528,7 @@ function formatDate($date) {
                     <tr>
                         <th>Conducteur</th>
                         <th>Téléphone</th>
-                        <th>Numéro Permis</th>
+                        <th>Identifiant</th>
                         <th>Catégorie</th>
                         <th>Association</th>
                         <th>Date Enregistrement</th>
@@ -988,7 +988,7 @@ function showDriver(id) {
                                 <p style="margin:4px 0 0 0;color:#1a1a2e;">${escapeHtml(driver.adresse || '-')}</p>
                             </div>
                             <div>
-                                <label style="font-size:12px;color:#64748b;font-weight:600;">NUMÉRO PERMIS</label>
+                                <label style="font-size:12px;color:#64748b;font-weight:600;">IDENTIFIANT</label>
                                 <p style="margin:4px 0 0 0;color:#1a1a2e;font-weight:600;">${escapeHtml(driver.numero_permis || '-')}</p>
                             </div>
                             <div>

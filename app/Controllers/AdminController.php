@@ -648,8 +648,8 @@ class AdminController extends Controller
         $sheet->getRowDimension(3)->setRowHeight(6);
 
         // ── En-têtes de colonnes (ligne 4) — 7 colonnes ──────────────────
-        // A=ID  B=Conducteur  C=Téléphone  D=N°Permis  E=Montant  F=Référence  G=Date
-        $headers = ['#', 'Conducteur', 'Téléphone', 'N° Permis', 'Montant (USD)', 'Référence', 'Date paiement'];
+        // A=ID  B=Conducteur  C=Téléphone  D=Identifiant  E=Montant  F=Référence  G=Date
+        $headers = ['#', 'Conducteur', 'Téléphone', 'Identifiant', 'Montant (USD)', 'Référence', 'Date paiement'];
         $col = 'A';
         foreach ($headers as $h) {
             $sheet->setCellValue($col . '4', $h);
@@ -863,11 +863,11 @@ class AdminController extends Controller
         if (empty($date_naissance)) $errors[] = 'La date de naissance est obligatoire';
 
         
-        // Vérifier si le numéro de permis existe déjà (pour un autre conducteur)
+        // Vérifier si l'identifiant existe déjà (pour un autre conducteur)
         if (!empty($numero_permis)) {
             $existing = $db->fetchOne("SELECT id FROM conducteurs WHERE numero_permis = ? AND id != ?", [$numero_permis, $id ?? 0]);
             if ($existing) {
-                $errors[] = 'Ce numéro de permis existe déjà';
+                $errors[] = 'Cet identifiant existe déjà';
             }
         } else {
             $numero_permis = null;

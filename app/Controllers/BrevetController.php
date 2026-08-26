@@ -144,7 +144,7 @@ class BrevetController extends Controller
             'E' => 'Lieu de naissance',
             'F' => 'Téléphone',
             'G' => 'Adresse',
-            'H' => 'N° Permis',
+            'H' => 'Identifiant',
             'I' => 'Catégorie',
             'J' => 'Expiration Permis',
             'K' => 'Association',

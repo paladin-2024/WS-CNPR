@@ -504,7 +504,7 @@ function formatDate($date) {
     <div class="filters-bar">
         <div class="search-box">
             <i data-lucide="search"></i>
-            <input type="text" placeholder="Rechercher par nom, téléphone, numéro de permis..." id="searchInput">
+            <input type="text" placeholder="Rechercher par nom, téléphone, identifiant..." id="searchInput">
         </div>
         <select class="filter-select" id="statusFilter">
             <option value="">Tous les statuts</option>
@@ -638,8 +638,8 @@ function formatDate($date) {
                     <input type="text" name="adresse" id="adresse" placeholder="Adresse complète">
                 </div>
                 <div class="form-group">
-                    <label>Numéro de permis *</label>
-                    <input type="text" name="numero_permis" id="numero_permis" required placeholder="N° permis de conduire">
+                    <label>Identifiant *</label>
+                    <input type="text" name="numero_permis" id="numero_permis" required placeholder="Identifiant (ex: ROC-A030)">
                 </div>
                 <div class="form-group">
                     <label>Catégorie permis *</label>

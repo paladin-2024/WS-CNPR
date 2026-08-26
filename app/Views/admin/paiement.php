@@ -207,7 +207,7 @@ function formatCurrency($amount) {
         <h1 class="imp-toolbar-title">Paiement Brevet</h1>
         <div class="imp-toolbar-sep"></div>
         <form class="search-form" method="GET" action="<?= BASE_PATH ?>/admin/paiement">
-            <input type="text" name="search" placeholder="Rechercher nom, téléphone, permis..." value="<?= htmlspecialchars($search) ?>">
+            <input type="text" name="search" placeholder="Rechercher nom, téléphone, identifiant..." value="<?= htmlspecialchars($search) ?>">
             <button type="submit">
                 <i data-lucide="search" style="width:16px;height:16px;"></i>
                 Rechercher
@@ -234,7 +234,7 @@ function formatCurrency($amount) {
             <div class="empty-state">
                 <i data-lucide="search"></i>
                 <h3>Rechercher un conducteur</h3>
-                <p>Entrez un nom, téléphone ou numéro de permis pour enregistrer un paiement</p>
+                <p>Entrez un nom, téléphone ou identifiant pour enregistrer un paiement</p>
             </div>
         <?php elseif (empty($conducteurs)): ?>
             <div class="empty-state">
@@ -250,7 +250,7 @@ function formatCurrency($amount) {
                             <th>ID</th>
                             <th>Conducteur</th>
                             <th>Téléphone</th>
-                            <th>N° Permis</th>
+                            <th>Identifiant</th>
                             <th>Catégorie</th>
                             <th>Statut paiement</th>
                             <th>Actions</th>
@@ -328,7 +328,7 @@ function formatCurrency($amount) {
                             <th>ID</th>
                             <th>Conducteur</th>
                             <th>Téléphone</th>
-                            <th>N° Permis</th>
+                            <th>Identifiant</th>
                             <th>Montant</th>
                             <th>Référence</th>
                             <th>Date paiement</th>
@@ -376,7 +376,7 @@ function formatCurrency($amount) {
                     <span class="paiement-details-value" id="modalConducteur">-</span>
                 </div>
                 <div class="paiement-details-row">
-                    <span class="paiement-details-label">N° Permis:</span>
+                    <span class="paiement-details-label">Identifiant:</span>
                     <span class="paiement-details-value" id="modalPermis">-</span>
                 </div>
             </div>

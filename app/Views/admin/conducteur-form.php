@@ -391,8 +391,8 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                 <h3 class="form-section-title">Permis de conduire</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Numéro de permis</label>
-                        <input type="text" name="numero_permis" id="numero_permis" value="<?= htmlspecialchars($conducteur['numero_permis'] ?? '') ?>" placeholder="N° permis de conduire">
+                        <label>Identifiant</label>
+                        <input type="text" name="numero_permis" id="numero_permis" value="<?= htmlspecialchars($conducteur['numero_permis'] ?? '') ?>" placeholder="Identifiant (ex: ROC-A030)">
                     </div>
                     <div class="form-group">
                         <label>Catégorie <span class="required">*</span></label>

@@ -193,7 +193,7 @@ function formatDateBrevet($date) {
         <div class="imp-toolbar-sep"></div>
         <div class="imp-search">
             <i data-lucide="search"></i>
-            <input type="text" id="searchInput" placeholder="Rechercher nom, permis...">
+            <input type="text" id="searchInput" placeholder="Rechercher nom, identifiant...">
         </div>
         <span class="imp-badge-count">
             <i data-lucide="printer" style="width:14px;height:14px;"></i>
@@ -261,7 +261,7 @@ function formatDateBrevet($date) {
                         <th>ID</th>
                         <th>Conducteur</th>
                         <th>Téléphone</th>
-                        <th>N° Permis</th>
+                        <th>Identifiant</th>
                         <th>Cat.</th>
                         <th>Enregistrement</th>
                         <th>Photo</th>
@@ -337,7 +337,7 @@ function formatDateBrevet($date) {
                         <th>ID</th>
                         <th>Conducteur</th>
                         <th>Téléphone</th>
-                        <th>N° Permis</th>
+                        <th>Identifiant</th>
                         <th>Cat.</th>
                         <th>Enregistrement</th>
                         <th>Statut</th>
@@ -399,7 +399,7 @@ function formatDateBrevet($date) {
                         <th>ID</th>
                         <th>Conducteur</th>
                         <th>Téléphone</th>
-                        <th>N° Permis</th>
+                        <th>Identifiant</th>
                         <th>Cat.</th>
                         <th>Enregistrement</th>
                         <th>Statut</th>

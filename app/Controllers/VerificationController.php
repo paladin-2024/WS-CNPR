@@ -7,7 +7,7 @@ use App\Core\Database;
 
 class VerificationController extends Controller
 {
-    public function show($id)
+    public function show($identifiant)
     {
         $db = Database::getInstance();
 
@@ -17,8 +17,8 @@ class VerificationController extends Controller
                         numero_permis, categorie_permis, date_expiration_permis, photo_url,
                         association, syndicat, date_enregistrement, date_expiration,
                         statut, statut_brevet
-                 FROM conducteurs WHERE id = ?",
-                [$id]
+                 FROM conducteurs WHERE numero_permis = ?",
+                [$identifiant]
             );
         } catch (\Exception $e) {
             $conducteur = null;

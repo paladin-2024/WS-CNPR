@@ -188,7 +188,7 @@ function formatDateRecep($date) {
         <div class="recep-toolbar-sep"></div>
         <div class="recep-search">
             <i data-lucide="search"></i>
-            <input type="text" id="searchInput" placeholder="Rechercher nom, permis...">
+            <input type="text" id="searchInput" placeholder="Rechercher nom, identifiant...">
         </div>
         <span class="recep-badge-count" id="badgeCount">
             <i data-lucide="clock" style="width:14px;height:14px;"></i>
@@ -239,7 +239,7 @@ function formatDateRecep($date) {
                         <th style="width:30px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
                         <th>ID</th>
                         <th>Conducteur</th>
-                        <th>N° Permis</th>
+                        <th>Identifiant</th>
                         <th>Cat.</th>
                         <th>Enregistrement</th>
                         <th>Statut</th>
@@ -291,7 +291,7 @@ function formatDateRecep($date) {
                     <tr>
                         <th>ID</th>
                         <th>Conducteur</th>
-                        <th>N° Permis</th>
+                        <th>Identifiant</th>
                         <th>Cat.</th>
                         <th>Enregistrement</th>
                         <th>Statut</th>

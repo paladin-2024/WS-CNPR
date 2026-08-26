@@ -687,7 +687,7 @@ body {
                     <?php endif; ?>
                     <?php if ($numeroPermis): ?>
                     <div class="r-row">
-                        <span class="r-lbl">N° Permis</span>
+                        <span class="r-lbl">Identifiant</span>
                         <span class="r-val strong"><?= htmlspecialchars($numeroPermis) ?></span>
                     </div>
                     <?php endif; ?>
@@ -771,7 +771,7 @@ body {
                     <?php if ($numeroPermis): ?>
                     <div class="v-micro-sep"></div>
                     <div>
-                        <div class="v-permis-lbl">N° Permis de conduire</div>
+                        <div class="v-permis-lbl">Identifiant</div>
                         <div class="v-permis-val"><?= htmlspecialchars($numeroPermis) ?></div>
                     </div>
                     <?php endif; ?>

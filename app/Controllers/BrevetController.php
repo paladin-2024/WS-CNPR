@@ -371,7 +371,10 @@ class BrevetController extends Controller
         try {
             $addedCount = 0;
             foreach ($conducteurs as $c) {
-                $verificationUrl = $siteUrl . '/verification/' . $c['id'];
+                if (empty($c['numero_permis'])) {
+                    continue;
+                }
+                $verificationUrl = $siteUrl . '/verification/' . $c['numero_permis'];
 
                 $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
                 $ctx = stream_context_create(['http' => ['timeout' => 10]]);
@@ -617,16 +620,21 @@ class BrevetController extends Controller
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $siteUrl  = $protocol . '://' . $host . BASE_PATH;
-        $verificationUrl = $siteUrl . '/verification/' . $id;
-
-        // QR code en base64 (évite CORS avec html2canvas)
-        $qrApiUrl  = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
-        $qrCodeUrl = $qrApiUrl; // fallback src
+        $verificationUrl = null;
+        $qrCodeUrl = null;
         $qrBase64  = null;
-        $ctx = stream_context_create(['http' => ['timeout' => 8]]);
-        $qrRaw = @file_get_contents($qrApiUrl, false, $ctx);
-        if ($qrRaw !== false) {
-            $qrBase64 = 'data:image/png;base64,' . base64_encode($qrRaw);
+
+        if (!empty($conducteur['numero_permis'])) {
+            $verificationUrl = $siteUrl . '/verification/' . $conducteur['numero_permis'];
+
+            // QR code en base64 (évite CORS avec html2canvas)
+            $qrApiUrl  = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
+            $qrCodeUrl = $qrApiUrl; // fallback src
+            $ctx = stream_context_create(['http' => ['timeout' => 8]]);
+            $qrRaw = @file_get_contents($qrApiUrl, false, $ctx);
+            if ($qrRaw !== false) {
+                $qrBase64 = 'data:image/png;base64,' . base64_encode($qrRaw);
+            }
         }
 
         // Photo conducteur
@@ -764,11 +772,17 @@ class BrevetController extends Controller
             return;
         }
 
+        if (empty($conducteur['numero_permis'])) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Ce conducteur n\'a pas d\'identifiant - impossible de générer le QR code.'];
+            $this->redirect('/admin/imprimeur');
+            return;
+        }
+
         // Construire l'URL de vérification
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $siteUrl = $protocol . '://' . $host . BASE_PATH;
-        $verificationUrl = $siteUrl . '/verification/' . $id;
+        $verificationUrl = $siteUrl . '/verification/' . $conducteur['numero_permis'];
 
         $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&data=' . urlencode($verificationUrl);
         $ctx = stream_context_create(['http' => ['timeout' => 10]]);

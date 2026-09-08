@@ -318,8 +318,8 @@ function formatDateTime($date) {
             <?php if (empty($paiements)): ?>
                 <div class="empty-state">
                     <i data-lucide="credit-card"></i>
-                    <h4>Aucun paiement enregistré</h4>
-                    <p>Les paiements apparaîtront ici</p>
+                    <h4>Fonctionnalité bientôt disponible</h4>
+                    <p>L'enregistrement des paiements de taxes n'est pas encore actif dans l'application. Les paiements de brevet se gèrent séparément dans <a href="<?= BASE_PATH ?>/admin/paiement">Paiement Brevet</a>.</p>
                 </div>
             <?php else: ?>
                 <table class="data-table">

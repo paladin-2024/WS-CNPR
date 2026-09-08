@@ -481,10 +481,22 @@ class AdminController extends Controller
             // Rechercher des conducteurs (pour l'enregistrement de paiement)
             $conducteurs = [];
             if (!empty($search)) {
+                // A conducteur can now have more than one paiements_brevets
+                // row (validerPaiement() below records each payment instead
+                // of overwriting the last one), but this is a
+                // search-to-pick-a-conducteur list that still needs exactly
+                // one row per conducteur - the CTE takes only their most
+                // recent payment before joining, so the outer query's own
+                // ordering (newest conducteur first) is unaffected.
                 $conducteurs = $db->fetchAll(
-                    "SELECT c.*, pb.montant as paiement_montant, pb.reference_paiement as paiement_reference, pb.date_paiement as paiement_date
+                    "WITH latest_paiement AS (
+                        SELECT DISTINCT ON (conducteur_id) conducteur_id, montant, reference_paiement, date_paiement
+                        FROM paiements_brevets
+                        ORDER BY conducteur_id, date_paiement DESC, id DESC
+                     )
+                     SELECT c.*, lp.montant as paiement_montant, lp.reference_paiement as paiement_reference, lp.date_paiement as paiement_date
                      FROM conducteurs c
-                     LEFT JOIN paiements_brevets pb ON c.id = pb.conducteur_id
+                     LEFT JOIN latest_paiement lp ON c.id = lp.conducteur_id
                      WHERE c.nom ILIKE ? OR c.prenom ILIKE ? OR c.telephone ILIKE ? OR c.numero_permis ILIKE ?
                      ORDER BY c.date_creation DESC
                      LIMIT 20",
@@ -544,23 +556,18 @@ class AdminController extends Controller
         }
 
         try {
-            // Vérifier si un paiement existe déjà
-            $existing = $db->fetchOne("SELECT id FROM paiements_brevets WHERE conducteur_id = ?", [$conducteur_id]);
-            
-            if ($existing) {
-                // Mettre à jour
-                $db->query(
-                    "UPDATE paiements_brevets SET montant = ?, reference_paiement = ?, date_paiement = CURRENT_DATE WHERE id = ?",
-                    [$montant, $reference, $existing['id']]
-                );
-            } else {
-                // Créer nouveau
-                $db->query(
-                    "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURRENT_DATE)",
-                    [$conducteur_id, $montant, $reference]
-                );
-            }
-            
+            // Always record a new row - a driver's second/renewal payment
+            // used to UPDATE the one existing row here, silently destroying
+            // the prior payment's montant/reference/date. There's no unique
+            // constraint on conducteur_id forcing one-row-per-driver, so
+            // nothing else relies on that shape (see the CTE in paiement()
+            // above, which already handles a conducteur having several
+            // payment rows for its own search list).
+            $db->query(
+                "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURRENT_DATE)",
+                [$conducteur_id, $montant, $reference]
+            );
+
             header('Location: ' . BASE_PATH . '/admin/paiement?success=Paiement enregistré avec succès');
             exit;
         } catch (\Exception $e) {
@@ -771,14 +778,25 @@ class AdminController extends Controller
     public function parkings()
     {
         $db = Database::getInstance();
+        $user = Auth::user();
 
         try {
-            $parkings = $db->fetchAll(
-                "SELECT p.*, u.nom as responsable_nom, u.prenom as responsable_prenom
-                 FROM parkings p
-                 LEFT JOIN utilisateurs u ON p.responsable_id = u.id
-                 ORDER BY p.date_creation DESC"
-            );
+            $sql = "SELECT p.*, u.nom as responsable_nom, u.prenom as responsable_prenom
+                    FROM parkings p
+                    LEFT JOIN utilisateurs u ON p.responsable_id = u.id";
+            $params = [];
+
+            // gestionnaire_parking only ever sees "Mes parkings" (matches the
+            // dashboard's own scoping for this role, dashboard() above) -
+            // admin/minister_admin (the route's other allowed roles) see all.
+            if (($user['role'] ?? null) === 'gestionnaire_parking') {
+                $sql .= " WHERE p.responsable_id = ?";
+                $params[] = $user['id'];
+            }
+
+            $sql .= " ORDER BY p.date_creation DESC";
+
+            $parkings = $db->fetchAll($sql, $params);
         } catch (\Exception $e) {
             error_log('[AdminController::parkings] ' . $e->getMessage());
             $parkings = [];
@@ -827,7 +845,23 @@ class AdminController extends Controller
         $n = (int) $db->fetchOne("SELECT nextval('identifiant_conducteur_seq') AS n")['n'];
         $letterIndex = intdiv($n - 1, 999);
         $num = (($n - 1) % 999) + 1;
-        return 'ROC-' . chr(65 + $letterIndex) . str_pad((string) $num, 3, '0', STR_PAD_LEFT);
+        return 'ROC-' . $this->letterSuffix($letterIndex) . str_pad((string) $num, 3, '0', STR_PAD_LEFT);
+    }
+
+    // Spreadsheet-column-style letter suffix with no upper bound: 0->A,
+    // 25->Z, 26->AA, 27->AB, ... - replaces plain chr(65 + $index), which
+    // only works up to Z (index 25); past that (the 25,975th generated
+    // identifiant) it silently produced malformed output like "ROC-[001".
+    private function letterSuffix(int $index): string
+    {
+        $letters = '';
+        $index++;
+        while ($index > 0) {
+            $index--;
+            $letters = chr(65 + ($index % 26)) . $letters;
+            $index = intdiv($index, 26);
+        }
+        return $letters;
     }
 
     public function saveConducteur()

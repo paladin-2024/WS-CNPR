@@ -408,12 +408,12 @@ $statistiquesChartData = [
             <div class="stat-value"><?= formatNumber($totalCartes) ?></div>
             <div class="stat-label">Cartes Pro.</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" title="Le paiement des taxes (distinct des paiements de brevet) n'est pas encore une fonctionnalité active de l'application.">
             <div class="stat-icon" style="background: #FFFBEB; color: #D97706;">
                 <i data-lucide="dollar-sign"></i>
             </div>
-            <div class="stat-value"><?= formatNumber($totalPaiements) ?></div>
-            <div class="stat-label">Taxes (CDF)</div>
+            <div class="stat-value">—</div>
+            <div class="stat-label">Taxes (bientôt disponible)</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background: #F0F9FF; color: #0369A1;">

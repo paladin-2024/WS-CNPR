@@ -1,5 +1,6 @@
 <?php
 $conducteur = $conducteur ?? null;
+$rateLimited = $rateLimited ?? false;
 $isAuthentique = $conducteur && $conducteur['statut_brevet'] === 'imprime' && $conducteur['statut'] === 'actif';
 $isFound = $conducteur !== null;
 ?>
@@ -295,7 +296,17 @@ $isFound = $conducteur !== null;
             <div class="flag-bar"><span></span><span></span><span></span></div>
         </div>
 
-        <?php if (!$isFound): ?>
+        <?php if ($rateLimited): ?>
+            <!-- Trop de tentatives -->
+            <div class="status-banner not-printed">
+                <i data-lucide="clock"></i>
+                <div class="status-text">
+                    <h3>Trop de tentatives</h3>
+                    <p>Trop de vérifications depuis cette connexion. Merci de réessayer dans quelques minutes.</p>
+                </div>
+            </div>
+
+        <?php elseif (!$isFound): ?>
             <!-- Non trouvé -->
             <div class="status-banner not-found">
                 <i data-lucide="x"></i>
@@ -401,30 +412,6 @@ $isFound = $conducteur !== null;
                 </div>
                 <div class="verif-card-body">
                     <div class="verif-grid">
-                        <div class="verif-field">
-                            <div class="verif-field-label">Date de naissance</div>
-                            <div class="verif-field-value"><?= $conducteur['date_naissance'] ? date('d/m/Y', strtotime($conducteur['date_naissance'])) : '-' ?></div>
-                        </div>
-                        <div class="verif-field">
-                            <div class="verif-field-label">Lieu de naissance</div>
-                            <div class="verif-field-value"><?= htmlspecialchars($conducteur['lieu_naissance'] ?? '-') ?></div>
-                        </div>
-                        <div class="verif-field">
-                            <div class="verif-field-label">Téléphone</div>
-                            <div class="verif-field-value"><?= htmlspecialchars($conducteur['telephone'] ?? '-') ?></div>
-                        </div>
-                        <div class="verif-field">
-                            <div class="verif-field-label">Adresse</div>
-                            <div class="verif-field-value"><?= htmlspecialchars($conducteur['adresse'] ?? '-') ?></div>
-                        </div>
-                        <div class="verif-field">
-                            <div class="verif-field-label">Association</div>
-                            <div class="verif-field-value"><?= htmlspecialchars($conducteur['association'] ?? '-') ?></div>
-                        </div>
-                        <div class="verif-field">
-                            <div class="verif-field-label">Syndicat</div>
-                            <div class="verif-field-value"><?= htmlspecialchars($conducteur['syndicat'] ?? '-') ?></div>
-                        </div>
                         <div class="verif-field">
                             <div class="verif-field-label">Enregistrement</div>
                             <div class="verif-field-value"><?= $conducteur['date_enregistrement'] ? date('d/m/Y', strtotime($conducteur['date_enregistrement'])) : '-' ?></div>

@@ -1,8 +1,12 @@
 <?php
 $utilisateurs = $utilisateurs ?? [];
 
-function getRoleMeta($role) {
-    $metas = [
+// Single source of truth for every role the `utilisateurs.role` CHECK
+// constraint allows (database/schema.sql) - getRoleMeta() (badge display)
+// and getAllRoles() (the add/edit user role <select>) both read from this
+// so the dropdown can never again silently omit a valid role.
+function getRoleMetas() {
+    return [
         'admin' => ['label' => 'Administrateur', 'color' => '#DC2626', 'bg' => '#FEF2F2'],
         'minister_admin' => ['label' => 'Admin Ministère', 'color' => '#7C3AED', 'bg' => '#F5F3FF'],
         'agent' => ['label' => 'Agent', 'color' => '#0369A1', 'bg' => '#F0F9FF'],
@@ -18,7 +22,15 @@ function getRoleMeta($role) {
         'receveur' => ['label' => 'Receveur', 'color' => '#059669', 'bg' => '#D1FAE5'],
         'instructeur' => ['label' => 'Instructeur', 'color' => '#D97706', 'bg' => '#FEF3C7'],
     ];
+}
+
+function getRoleMeta($role) {
+    $metas = getRoleMetas();
     return $metas[$role] ?? ['label' => $role, 'color' => '#64748B', 'bg' => '#F1F5F9'];
+}
+
+function getAllRoles() {
+    return array_map(fn($meta) => $meta['label'], getRoleMetas());
 }
 
 function getStatutMeta($statut) {
@@ -511,14 +523,9 @@ function formatDateTime($date) {
                     <div class="form-group">
                         <label for="role">Rôle</label>
                         <select id="role" name="role">
-                            <option value="minister_admin">Admin Ministère</option>
-                            <option value="admin">Administrateur</option>
-                            <option value="imprimeur">Imprimeur</option>
-                            <option value="receptionnaire">Réceptionnaire</option>
-                            <option value="operateur_saisie">Opérateur Saisie</option>
-                            <option value="validateur">Validateur</option>
-                            <option value="receveur">Receveur</option>
-                            <option value="instructeur">Instructeur</option>
+                            <?php foreach (getAllRoles() as $roleKey => $roleLabel): ?>
+                                <option value="<?= htmlspecialchars($roleKey) ?>"><?= htmlspecialchars($roleLabel) ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group" id="statutGroup" style="display:none;">

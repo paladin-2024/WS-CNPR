@@ -392,7 +392,11 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Identifiant</label>
-                        <input type="text" name="numero_permis" id="numero_permis" value="<?= htmlspecialchars($conducteur['numero_permis'] ?? '') ?>" placeholder="Identifiant (ex: ROC-A030)">
+                        <?php if (!empty($conducteur['numero_permis'])): ?>
+                            <input type="text" value="<?= htmlspecialchars($conducteur['numero_permis']) ?>" readonly disabled style="background:#F1F5F9; color:#64748B;">
+                        <?php else: ?>
+                            <input type="text" value="Généré automatiquement à la création" readonly disabled style="background:#F1F5F9; color:#94A3B8; font-style:italic;">
+                        <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label>Catégorie <span class="required">*</span></label>

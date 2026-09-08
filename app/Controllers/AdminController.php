@@ -813,18 +813,34 @@ class AdminController extends Controller
         ], 'admin');
     }
 
+    /**
+     * ROC-A001 style identifiant (mirroring the sibling PST-A001 scheme
+     * e-taxe-kisangani/DGPSPT uses for its own transport identifiant),
+     * written into the existing numero_permis column - that column keeps
+     * its name (already relabeled "Identifiant" in the UI), but is now
+     * system-generated instead of manually typed by staff. Generated from
+     * a real Postgres sequence (nextval() is atomic - no
+     * SELECT-MAX-then-format race window).
+     */
+    private function genererIdentifiantConducteur(Database $db): string
+    {
+        $n = (int) $db->fetchOne("SELECT nextval('identifiant_conducteur_seq') AS n")['n'];
+        $letterIndex = intdiv($n - 1, 999);
+        $num = (($n - 1) % 999) + 1;
+        return 'ROC-' . chr(65 + $letterIndex) . str_pad((string) $num, 3, '0', STR_PAD_LEFT);
+    }
+
     public function saveConducteur()
     {
         $db = Database::getInstance();
         $id = $_POST['id'] ?? null;
-        
+
         $nom = trim($_POST['nom'] ?? '');
         $prenom = trim($_POST['prenom'] ?? '');
         $date_naissance = $_POST['date_naissance'] ?? null;
         $lieu_naissance = trim($_POST['lieu_naissance'] ?? '');
         $adresse = trim($_POST['adresse'] ?? '');
         $telephone = trim($_POST['telephone'] ?? '');
-        $numero_permis = trim($_POST['numero_permis'] ?? '');
         $categorie_permis = $_POST['categorie_permis'] ?? 'B';
         $date_expiration_permis = trim($_POST['date_expiration_permis'] ?? '');
         $date_expiration_permis = $date_expiration_permis !== '' ? $date_expiration_permis : null;
@@ -862,17 +878,6 @@ class AdminController extends Controller
         if (empty($prenom)) $errors[] = 'Le prénom est obligatoire';
         if (empty($date_naissance)) $errors[] = 'La date de naissance est obligatoire';
 
-        
-        // Vérifier si l'identifiant existe déjà (pour un autre conducteur)
-        if (!empty($numero_permis)) {
-            $existing = $db->fetchOne("SELECT id FROM conducteurs WHERE numero_permis = ? AND id != ?", [$numero_permis, $id ?? 0]);
-            if ($existing) {
-                $errors[] = 'Cet identifiant existe déjà';
-            }
-        } else {
-            $numero_permis = null;
-        }
-        
         if (!empty($errors)) {
             $this->render('admin/conducteur-form', [
                 'pageTitle' => $id ? 'Modifier Conducteur' : 'Nouveau Conducteur',
@@ -885,14 +890,17 @@ class AdminController extends Controller
         
         try {
             if ($id) {
-                // Mise à jour
+                // Mise à jour - numero_permis (l'identifiant) is system-generated
+                // once at creation and never editable here, so it's simply
+                // absent from this UPDATE rather than re-derived or re-checked.
                 $db->query(
-                    "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, numero_permis=?, categorie_permis=?, date_expiration_permis=?, photo_url=?, photo_piece_identite=?, association=?, syndicat=?, statut=? WHERE id=?",
-                    [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $numero_permis, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat, $statut, $id]
+                    "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, categorie_permis=?, date_expiration_permis=?, photo_url=?, photo_piece_identite=?, association=?, syndicat=?, statut=? WHERE id=?",
+                    [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat, $statut, $id]
                 );
                 $message = 'Conducteur mis à jour avec succès!';
             } else {
                 // Création
+                $numero_permis = $this->genererIdentifiantConducteur($db);
                 $db->query(
                     "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
@@ -1026,10 +1034,8 @@ class AdminController extends Controller
                 }
                 
                 try {
-                    $numeroPermis = $data['numero_permis'] ?? '';
-                    if ($numeroPermis === '') {
-                        $numeroPermis = null;
-                    }
+                    // System-generated (ROC-A001) - never taken from the request.
+                    $numeroPermis = $this->genererIdentifiantConducteur($db);
                     $dateNaissance = $data['date_naissance'] ?? '';
                     if ($dateNaissance === '') {
                         $dateNaissance = null;
@@ -1064,12 +1070,15 @@ class AdminController extends Controller
                     return;
                 }
                 try {
+                    // numero_permis (the identifiant) is system-generated once
+                    // at creation and never editable - omitted here rather
+                    // than taken from the request, same as saveConducteur().
                     $db->query(
-                        "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, numero_permis=?, categorie_permis=?, date_expiration_permis=?, association=?, syndicat=?, statut=? WHERE id=?",
+                        "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, categorie_permis=?, date_expiration_permis=?, association=?, syndicat=?, statut=? WHERE id=?",
                         [
                             $data['nom'] ?? '', $data['prenom'] ?? '', $data['date_naissance'] ?? null,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',
-                            $data['numero_permis'] ?? '', $data['categorie_permis'] ?? 'B',
+                            $data['categorie_permis'] ?? 'B',
                             $data['date_expiration_permis'] ?? null, $data['association'] ?? '',
                             $data['syndicat'] ?? '', $data['statut'] ?? 'actif', $id,
                         ]

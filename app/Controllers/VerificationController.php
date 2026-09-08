@@ -4,14 +4,21 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Database;
+use App\Core\Env;
 
 class VerificationController extends Controller
 {
     // Requests allowed per IP in the trailing window before this public,
     // unauthenticated lookup starts refusing - see verification_attempts in
-    // database/schema.sql for why this exists.
+    // database/schema.sql for why this exists. Only applies to show() below
+    // (the public HTML page) - showApi() is a separate, shared-secret-gated
+    // surface with a different threat model, see its own comment.
     private const RATE_LIMIT_MAX_ATTEMPTS = 15;
     private const RATE_LIMIT_WINDOW_MINUTES = 10;
+
+    // Header e-taxe-kisangani's quittance.info portal sends its shared
+    // secret in when calling showApi() below.
+    private const API_KEY_HEADER = 'HTTP_X_CNPR_API_KEY';
 
     public function show($identifiant)
     {
@@ -38,12 +45,73 @@ class VerificationController extends Controller
 
         $db->query("INSERT INTO verification_attempts (ip) VALUES (?)", [$ip]);
 
-        // Only what's needed to visually/administratively confirm a brevet
-        // is genuine and see who it belongs to - phone/adresse/date et lieu
-        // de naissance/association/syndicat are not required for that and
-        // were being exposed to anyone who could guess or enumerate an
-        // identifiant (identifiant_conducteur_seq generates sequential,
-        // guessable values), so they're intentionally left out here.
+        $conducteur = $this->publicSafeFields($identifiant);
+
+        $this->render('verification/show', [
+            'pageTitle' => 'Vérification de brevet',
+            'conducteur' => $conducteur,
+        ], 'none');
+    }
+
+    /**
+     * Server-to-server counterpart of show() - same lookup, same public-safe
+     * field list (via publicSafeFields() below), JSON instead of HTML. Built
+     * for e-taxe-kisangani's quittance.info portal to verify a ROC- driver
+     * identifiant without either app touching the other's database directly.
+     *
+     * Deliberately NOT gated by the show()/verification_attempts per-IP
+     * throttle above: every call here arrives from e-taxe-kisangani's own
+     * server, never the end user's browser, so an IP-based limit would only
+     * ever measure "how much has that one server called us" - it would
+     * either never trip under real traffic, or trip once and lock out every
+     * quittance.info visitor simultaneously. The real defense against abuse
+     * is quittance.info's own per-end-user rate limit (already in place
+     * before it ever reaches this route) plus the shared-secret gate below,
+     * which is the only thing standing between this route and the public
+     * internet - fails closed if unconfigured, never silently open.
+     */
+    public function showApi($identifiant)
+    {
+        $apiKey = Env::get('CNPR_VERIFICATION_API_KEY', '');
+
+        if ($apiKey === '') {
+            error_log('[VerificationController::showApi] CNPR_VERIFICATION_API_KEY non configuré - requête refusée.');
+            $this->json(['error' => 'Service indisponible'], 503);
+            return;
+        }
+
+        $providedKey = $_SERVER[self::API_KEY_HEADER] ?? '';
+
+        if (!hash_equals($apiKey, $providedKey)) {
+            $this->json(['error' => 'Non autorisé'], 401);
+            return;
+        }
+
+        $conducteur = $this->publicSafeFields($identifiant);
+
+        if ($conducteur === null) {
+            $this->json(['found' => false], 404);
+            return;
+        }
+
+        $this->json(['found' => true, 'conducteur' => $conducteur]);
+    }
+
+    /**
+     * Single source of truth for what a public, unauthenticated caller -
+     * whether a human on show() or e-taxe-kisangani's server on showApi() -
+     * is allowed to see about a conducteur. phone/adresse/date et lieu de
+     * naissance/association/syndicat are deliberately excluded: they're not
+     * needed to visually/administratively confirm a brevet is genuine, and
+     * were previously exposed to anyone who could guess or enumerate an
+     * identifiant (identifiant_conducteur_seq generates sequential,
+     * guessable values). Keeping both callers on this one method means a
+     * future PII trim here can't accidentally apply to only one of them.
+     */
+    private function publicSafeFields(string $identifiant): ?array
+    {
+        $db = Database::getInstance();
+
         try {
             $conducteur = $db->fetchOne(
                 "SELECT id, nom, prenom, numero_permis, categorie_permis,
@@ -53,22 +121,12 @@ class VerificationController extends Controller
                 [$identifiant]
             );
         } catch (\Exception $e) {
-            $conducteur = null;
+            return null;
         }
 
         // PDOStatement::fetch() (Database::fetchOne()) returns false, not
-        // null, when no row matches - the view's "not found" branch checks
-        // for null, so without this a real "brevet not found" lookup was
-        // silently falling into the "found" rendering path instead and
-        // throwing warnings trying to read fields off `false`.
-        if ($conducteur === false) {
-            $conducteur = null;
-        }
-
-        $this->render('verification/show', [
-            'pageTitle' => 'Vérification de brevet',
-            'conducteur' => $conducteur,
-        ], 'none');
+        // null, when no row matches.
+        return $conducteur === false ? null : $conducteur;
     }
 
     public function signalerFraude()

@@ -75,6 +75,10 @@ $router->post('/contact', 'ContactController@send');
 $router->get('/verification/{id}', 'VerificationController@show');
 $router->post('/verification/signaler', 'VerificationController@signalerFraude');
 
+// ── API interne (appel serveur-à-serveur depuis quittance.info, clé
+//    partagée vérifiée dans le contrôleur - voir showApi()) ────────────────
+$router->get('/api/verification/{id}', 'VerificationController@showApi');
+
 // ── Auth ─────────────────────────────────────────────────────────────────
 $router->get('/login', 'AuthController@loginForm');
 $router->post('/login', 'AuthController@login');

@@ -37,12 +37,13 @@ $dashboardChartData = [
 
 // Fonction helper pour formater les nombres
 function formatNumber($num, $isCurrency = false) {
+    $suffix = $isCurrency ? ' USD' : '';
     if ($num >= 1000000000) {
-        return round($num / 1000000000, 1) . ' Md';
+        return round($num / 1000000000, 1) . ' Md' . $suffix;
     } elseif ($num >= 1000000) {
-        return round($num / 1000000, 1) . ' M';
+        return round($num / 1000000, 1) . ' M' . $suffix;
     } elseif ($num >= 1000) {
-        return round($num / 1000, 1) . ' K';
+        return round($num / 1000, 1) . ' K' . $suffix;
     }
     if ($isCurrency) {
         return number_format($num, 2, ',', ' ') . ' USD';
@@ -433,7 +434,7 @@ function formatCurrency($amount) {
             <a href="<?= BASE_PATH ?><?= htmlspecialchars($stat['href'] ?? '#') ?>" class="stat-card">
                 <div class="stat-card-header">
                     <div class="stat-icon-wrap" style="background: <?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>20;">
-                        <i data-lucide="<?= htmlspecialchars(($stat['icon'] ?? '') === 'dollar' ? 'dollar-sign' : ($stat['icon'] ?? 'dollar-sign')) ?>" style="color:<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>;"></i>
+                        <i data-lucide="<?= htmlspecialchars($stat['icon'] ?? 'dollar-sign') ?>" style="color:<?= htmlspecialchars($stat['color'] ?? '#3B82F6') ?>;"></i>
                     </div>
                     <?php if (isset($stat['delta'])): ?>
                         <span class="stat-delta <?= $stat['delta'] >= 0 ? 'positive' : 'negative' ?>">
@@ -442,7 +443,7 @@ function formatCurrency($amount) {
                     <?php endif; ?>
                 </div>
                 <div class="stat-label"><?= htmlspecialchars($stat['label'] ?? '') ?></div>
-                <div class="stat-value"><?= formatNumber($stat['value'] ?? 0, ($stat['icon'] ?? '') === 'dollar') ?></div>
+                <div class="stat-value"><?= formatNumber($stat['value'] ?? 0, ($stat['icon'] ?? '') === 'dollar-sign') ?></div>
             </a>
         <?php endforeach; ?>
     </div>

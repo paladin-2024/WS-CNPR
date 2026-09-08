@@ -409,6 +409,21 @@ CREATE TABLE IF NOT EXISTS signalements_fraude (
 CREATE INDEX IF NOT EXISTS idx_signalements_fraude_conducteur ON signalements_fraude (conducteur_id);
 
 -- =====================================================
+-- TABLE: verification_attempts
+-- Rate limiting for the public, unauthenticated /verification/{identifiant}
+-- lookup: since identifiant_conducteur_seq generates sequential, guessable
+-- values (ROC-A001, ROC-A002, ...), an unthrottled endpoint would let anyone
+-- enumerate the whole driver base. No cache layer (Redis etc.) exists in this
+-- app, hence a plain table instead.
+-- =====================================================
+CREATE TABLE IF NOT EXISTS verification_attempts (
+    id SERIAL PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_verification_attempts_ip_created ON verification_attempts (ip, created_at);
+
+-- =====================================================
 -- TABLE: articles (CMS)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS articles (

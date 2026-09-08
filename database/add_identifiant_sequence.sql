@@ -22,12 +22,27 @@ DECLARE
     letter_index INTEGER;
     num INTEGER;
     code TEXT;
+    letters TEXT;
+    li INTEGER;
 BEGIN
     FOR r IN SELECT id FROM conducteurs WHERE numero_permis IS NULL ORDER BY id LOOP
         n := nextval('identifiant_conducteur_seq');
         letter_index := (n - 1) / 999;
         num := ((n - 1) % 999) + 1;
-        code := 'ROC-' || chr(65 + letter_index) || lpad(num::text, 3, '0');
+
+        -- Spreadsheet-column-style letters (A, B, ..., Z, AA, AB, ...) -
+        -- plain chr(65 + letter_index) only works up to Z (index 25); past
+        -- that (the 25,975th backfilled row) it produces malformed output
+        -- like "ROC-[001" instead of continuing to "ROC-AA001".
+        letters := '';
+        li := letter_index + 1;
+        WHILE li > 0 LOOP
+            li := li - 1;
+            letters := chr(65 + (li % 26)) || letters;
+            li := li / 26;
+        END LOOP;
+
+        code := 'ROC-' || letters || lpad(num::text, 3, '0');
         UPDATE conducteurs SET numero_permis = code WHERE id = r.id;
     END LOOP;
 END

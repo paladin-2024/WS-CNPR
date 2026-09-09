@@ -481,10 +481,22 @@ class AdminController extends Controller
             // Rechercher des conducteurs (pour l'enregistrement de paiement)
             $conducteurs = [];
             if (!empty($search)) {
+                // A conducteur can now have more than one paiements_brevets
+                // row (validerPaiement() below records each payment instead
+                // of overwriting the last one), but this is a
+                // search-to-pick-a-conducteur list that still needs exactly
+                // one row per conducteur - the CTE takes only their most
+                // recent payment before joining, so the outer query's own
+                // ordering (newest conducteur first) is unaffected.
                 $conducteurs = $db->fetchAll(
-                    "SELECT c.*, pb.montant as paiement_montant, pb.reference_paiement as paiement_reference, pb.date_paiement as paiement_date
+                    "WITH latest_paiement AS (
+                        SELECT DISTINCT ON (conducteur_id) conducteur_id, montant, reference_paiement, date_paiement
+                        FROM paiements_brevets
+                        ORDER BY conducteur_id, date_paiement DESC, id DESC
+                     )
+                     SELECT c.*, lp.montant as paiement_montant, lp.reference_paiement as paiement_reference, lp.date_paiement as paiement_date
                      FROM conducteurs c
-                     LEFT JOIN paiements_brevets pb ON c.id = pb.conducteur_id
+                     LEFT JOIN latest_paiement lp ON c.id = lp.conducteur_id
                      WHERE c.nom ILIKE ? OR c.prenom ILIKE ? OR c.telephone ILIKE ? OR c.numero_permis ILIKE ?
                      ORDER BY c.date_creation DESC
                      LIMIT 20",
@@ -544,23 +556,18 @@ class AdminController extends Controller
         }
 
         try {
-            // Vérifier si un paiement existe déjà
-            $existing = $db->fetchOne("SELECT id FROM paiements_brevets WHERE conducteur_id = ?", [$conducteur_id]);
-            
-            if ($existing) {
-                // Mettre à jour
-                $db->query(
-                    "UPDATE paiements_brevets SET montant = ?, reference_paiement = ?, date_paiement = CURRENT_DATE WHERE id = ?",
-                    [$montant, $reference, $existing['id']]
-                );
-            } else {
-                // Créer nouveau
-                $db->query(
-                    "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURRENT_DATE)",
-                    [$conducteur_id, $montant, $reference]
-                );
-            }
-            
+            // Always record a new row - a driver's second/renewal payment
+            // used to UPDATE the one existing row here, silently destroying
+            // the prior payment's montant/reference/date. There's no unique
+            // constraint on conducteur_id forcing one-row-per-driver, so
+            // nothing else relies on that shape (see the CTE in paiement()
+            // above, which already handles a conducteur having several
+            // payment rows for its own search list).
+            $db->query(
+                "INSERT INTO paiements_brevets (conducteur_id, montant, reference_paiement, date_paiement) VALUES (?, ?, ?, CURRENT_DATE)",
+                [$conducteur_id, $montant, $reference]
+            );
+
             header('Location: ' . BASE_PATH . '/admin/paiement?success=Paiement enregistré avec succès');
             exit;
         } catch (\Exception $e) {
@@ -771,14 +778,25 @@ class AdminController extends Controller
     public function parkings()
     {
         $db = Database::getInstance();
+        $user = Auth::user();
 
         try {
-            $parkings = $db->fetchAll(
-                "SELECT p.*, u.nom as responsable_nom, u.prenom as responsable_prenom
-                 FROM parkings p
-                 LEFT JOIN utilisateurs u ON p.responsable_id = u.id
-                 ORDER BY p.date_creation DESC"
-            );
+            $sql = "SELECT p.*, u.nom as responsable_nom, u.prenom as responsable_prenom
+                    FROM parkings p
+                    LEFT JOIN utilisateurs u ON p.responsable_id = u.id";
+            $params = [];
+
+            // gestionnaire_parking only ever sees "Mes parkings" (matches the
+            // dashboard's own scoping for this role, dashboard() above) -
+            // admin/minister_admin (the route's other allowed roles) see all.
+            if (($user['role'] ?? null) === 'gestionnaire_parking') {
+                $sql .= " WHERE p.responsable_id = ?";
+                $params[] = $user['id'];
+            }
+
+            $sql .= " ORDER BY p.date_creation DESC";
+
+            $parkings = $db->fetchAll($sql, $params);
         } catch (\Exception $e) {
             error_log('[AdminController::parkings] ' . $e->getMessage());
             $parkings = [];
@@ -813,18 +831,50 @@ class AdminController extends Controller
         ], 'admin');
     }
 
+    /**
+     * ROC-A001 style identifiant (mirroring the sibling PST-A001 scheme
+     * e-taxe-kisangani/DGPSPT uses for its own transport identifiant),
+     * written into the existing numero_permis column - that column keeps
+     * its name (already relabeled "Identifiant" in the UI), but is now
+     * system-generated instead of manually typed by staff. Generated from
+     * a real Postgres sequence (nextval() is atomic - no
+     * SELECT-MAX-then-format race window).
+     */
+    private function genererIdentifiantConducteur(Database $db): string
+    {
+        $n = (int) $db->fetchOne("SELECT nextval('identifiant_conducteur_seq') AS n")['n'];
+        $letterIndex = intdiv($n - 1, 999);
+        $num = (($n - 1) % 999) + 1;
+        return 'ROC-' . $this->letterSuffix($letterIndex) . str_pad((string) $num, 3, '0', STR_PAD_LEFT);
+    }
+
+    // Spreadsheet-column-style letter suffix with no upper bound: 0->A,
+    // 25->Z, 26->AA, 27->AB, ... - replaces plain chr(65 + $index), which
+    // only works up to Z (index 25); past that (the 25,975th generated
+    // identifiant) it silently produced malformed output like "ROC-[001".
+    private function letterSuffix(int $index): string
+    {
+        $letters = '';
+        $index++;
+        while ($index > 0) {
+            $index--;
+            $letters = chr(65 + ($index % 26)) . $letters;
+            $index = intdiv($index, 26);
+        }
+        return $letters;
+    }
+
     public function saveConducteur()
     {
         $db = Database::getInstance();
         $id = $_POST['id'] ?? null;
-        
+
         $nom = trim($_POST['nom'] ?? '');
         $prenom = trim($_POST['prenom'] ?? '');
         $date_naissance = $_POST['date_naissance'] ?? null;
         $lieu_naissance = trim($_POST['lieu_naissance'] ?? '');
         $adresse = trim($_POST['adresse'] ?? '');
         $telephone = trim($_POST['telephone'] ?? '');
-        $numero_permis = trim($_POST['numero_permis'] ?? '');
         $categorie_permis = $_POST['categorie_permis'] ?? 'B';
         $date_expiration_permis = trim($_POST['date_expiration_permis'] ?? '');
         $date_expiration_permis = $date_expiration_permis !== '' ? $date_expiration_permis : null;
@@ -862,17 +912,6 @@ class AdminController extends Controller
         if (empty($prenom)) $errors[] = 'Le prénom est obligatoire';
         if (empty($date_naissance)) $errors[] = 'La date de naissance est obligatoire';
 
-        
-        // Vérifier si l'identifiant existe déjà (pour un autre conducteur)
-        if (!empty($numero_permis)) {
-            $existing = $db->fetchOne("SELECT id FROM conducteurs WHERE numero_permis = ? AND id != ?", [$numero_permis, $id ?? 0]);
-            if ($existing) {
-                $errors[] = 'Cet identifiant existe déjà';
-            }
-        } else {
-            $numero_permis = null;
-        }
-        
         if (!empty($errors)) {
             $this->render('admin/conducteur-form', [
                 'pageTitle' => $id ? 'Modifier Conducteur' : 'Nouveau Conducteur',
@@ -885,14 +924,17 @@ class AdminController extends Controller
         
         try {
             if ($id) {
-                // Mise à jour
+                // Mise à jour - numero_permis (l'identifiant) is system-generated
+                // once at creation and never editable here, so it's simply
+                // absent from this UPDATE rather than re-derived or re-checked.
                 $db->query(
-                    "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, numero_permis=?, categorie_permis=?, date_expiration_permis=?, photo_url=?, photo_piece_identite=?, association=?, syndicat=?, statut=? WHERE id=?",
-                    [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $numero_permis, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat, $statut, $id]
+                    "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, categorie_permis=?, date_expiration_permis=?, photo_url=?, photo_piece_identite=?, association=?, syndicat=?, statut=? WHERE id=?",
+                    [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat, $statut, $id]
                 );
                 $message = 'Conducteur mis à jour avec succès!';
             } else {
                 // Création
+                $numero_permis = $this->genererIdentifiantConducteur($db);
                 $db->query(
                     "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
@@ -1026,10 +1068,8 @@ class AdminController extends Controller
                 }
                 
                 try {
-                    $numeroPermis = $data['numero_permis'] ?? '';
-                    if ($numeroPermis === '') {
-                        $numeroPermis = null;
-                    }
+                    // System-generated (ROC-A001) - never taken from the request.
+                    $numeroPermis = $this->genererIdentifiantConducteur($db);
                     $dateNaissance = $data['date_naissance'] ?? '';
                     if ($dateNaissance === '') {
                         $dateNaissance = null;
@@ -1064,12 +1104,15 @@ class AdminController extends Controller
                     return;
                 }
                 try {
+                    // numero_permis (the identifiant) is system-generated once
+                    // at creation and never editable - omitted here rather
+                    // than taken from the request, same as saveConducteur().
                     $db->query(
-                        "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, numero_permis=?, categorie_permis=?, date_expiration_permis=?, association=?, syndicat=?, statut=? WHERE id=?",
+                        "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, categorie_permis=?, date_expiration_permis=?, association=?, syndicat=?, statut=? WHERE id=?",
                         [
                             $data['nom'] ?? '', $data['prenom'] ?? '', $data['date_naissance'] ?? null,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',
-                            $data['numero_permis'] ?? '', $data['categorie_permis'] ?? 'B',
+                            $data['categorie_permis'] ?? 'B',
                             $data['date_expiration_permis'] ?? null, $data['association'] ?? '',
                             $data['syndicat'] ?? '', $data['statut'] ?? 'actif', $id,
                         ]

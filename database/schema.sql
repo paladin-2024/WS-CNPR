@@ -95,6 +95,12 @@ CREATE INDEX IF NOT EXISTS idx_conducteurs_permis ON conducteurs (numero_permis)
 CREATE INDEX IF NOT EXISTS idx_conducteurs_statut ON conducteurs (statut);
 CREATE INDEX IF NOT EXISTS idx_conducteurs_statut_brevet ON conducteurs (statut_brevet);
 CREATE INDEX IF NOT EXISTS idx_conducteurs_date_enregistrement ON conducteurs (date_enregistrement);
+
+-- Backs the system-generated ROC-A001 style identifiant now written into
+-- numero_permis at creation time (see AdminController::genererIdentifiantConducteur()
+-- and database/add_identifiant_sequence.sql for the same change applied to
+-- an already-existing database).
+CREATE SEQUENCE IF NOT EXISTS identifiant_conducteur_seq START 1;
 DROP TRIGGER IF EXISTS trg_conducteurs_date_modification ON conducteurs;
 CREATE TRIGGER trg_conducteurs_date_modification
     BEFORE UPDATE ON conducteurs
@@ -401,6 +407,21 @@ CREATE TABLE IF NOT EXISTS signalements_fraude (
     FOREIGN KEY (conducteur_id) REFERENCES conducteurs(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS idx_signalements_fraude_conducteur ON signalements_fraude (conducteur_id);
+
+-- =====================================================
+-- TABLE: verification_attempts
+-- Rate limiting for the public, unauthenticated /verification/{identifiant}
+-- lookup: since identifiant_conducteur_seq generates sequential, guessable
+-- values (ROC-A001, ROC-A002, ...), an unthrottled endpoint would let anyone
+-- enumerate the whole driver base. No cache layer (Redis etc.) exists in this
+-- app, hence a plain table instead.
+-- =====================================================
+CREATE TABLE IF NOT EXISTS verification_attempts (
+    id SERIAL PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_verification_attempts_ip_created ON verification_attempts (ip, created_at);
 
 -- =====================================================
 -- TABLE: articles (CMS)

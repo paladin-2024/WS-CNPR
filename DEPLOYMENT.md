@@ -358,6 +358,22 @@ sudo chmod -R 775 storage/logs public/uploads
   always wins over `.env`) is missing. Production `.env` must set all of
   `DB_HOST`/`DB_PORT`/`DB_DATABASE`/`DB_USERNAME`/`DB_PASSWORD` explicitly.
 
+## Cross-system verification (quittance.info)
+
+`GET /api/verification/{id}` is a JSON-only, server-to-server endpoint
+called by e-taxe-kisangani's public quittance.info portal to verify a
+`ROC-` driver identifiant — it never touches this app's database directly.
+Gated by a shared secret, not the usual session/CSRF middleware:
+
+- **`CNPR_VERIFICATION_API_KEY`** — required for the endpoint to accept
+  any requests at all; it fails closed (503) if unset. Must match
+  `CNPR_API_KEY` on the e-taxe-kisangani server exactly. Generate with
+  `openssl rand -hex 32` and set the same value on both servers.
+
+See e-taxe-kisangani's `docs/superpowers/specs/2026-09-09-production-deployment-runbook.md`
+for the full cross-system rollout checklist (order of operations, smoke
+tests covering both systems).
+
 ---
 
 ## Pre-launch checklist

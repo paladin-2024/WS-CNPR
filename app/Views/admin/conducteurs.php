@@ -638,8 +638,8 @@ function formatDate($date) {
                     <input type="text" name="adresse" id="adresse" placeholder="Adresse complète">
                 </div>
                 <div class="form-group">
-                    <label>Identifiant *</label>
-                    <input type="text" name="numero_permis" id="numero_permis" required placeholder="Identifiant (ex: ROC-A030)">
+                    <label>Identifiant</label>
+                    <input type="text" id="numero_permis" readonly disabled placeholder="Généré automatiquement à la création" style="background:#F1F5F9; color:#64748B;">
                 </div>
                 <div class="form-group">
                     <label>Catégorie permis *</label>

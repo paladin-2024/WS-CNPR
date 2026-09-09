@@ -75,6 +75,10 @@ $router->post('/contact', 'ContactController@send');
 $router->get('/verification/{id}', 'VerificationController@show');
 $router->post('/verification/signaler', 'VerificationController@signalerFraude');
 
+// ── API interne (appel serveur-à-serveur depuis quittance.info, clé
+//    partagée vérifiée dans le contrôleur - voir showApi()) ────────────────
+$router->get('/api/verification/{id}', 'VerificationController@showApi');
+
 // ── Auth ─────────────────────────────────────────────────────────────────
 $router->get('/login', 'AuthController@loginForm');
 $router->post('/login', 'AuthController@login');
@@ -127,6 +131,9 @@ $router->get('/admin/api/conducteurs', 'AdminController@apiConducteurs', ['auth'
 $router->put('/admin/api/conducteurs', 'AdminController@apiConducteurs', ['auth', 'role:admin,minister_admin,agent,operateur_saisie']);
 $router->delete('/admin/api/conducteurs', 'AdminController@apiConducteurs', ['auth', 'role:admin,minister_admin,agent,operateur_saisie']);
 $router->post('/admin/api/vehicules', 'AdminController@apiVehicules', ['auth', 'role:admin,minister_admin,agent']);
+$router->get('/admin/api/vehicules', 'AdminController@apiVehicules', ['auth', 'role:admin,minister_admin,agent']);
+$router->put('/admin/api/vehicules', 'AdminController@apiVehicules', ['auth', 'role:admin,minister_admin,agent']);
+$router->delete('/admin/api/vehicules', 'AdminController@apiVehicules', ['auth', 'role:admin,minister_admin,agent']);
 $router->get('/admin/api/utilisateurs', 'AdminController@apiUtilisateurs', ['auth', 'role:admin,minister_admin']);
 $router->post('/admin/api/utilisateurs', 'AdminController@apiUtilisateurs', ['auth', 'role:admin,minister_admin']);
 $router->put('/admin/api/utilisateurs', 'AdminController@apiUtilisateurs', ['auth', 'role:admin,minister_admin']);

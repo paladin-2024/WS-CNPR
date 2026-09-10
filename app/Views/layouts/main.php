@@ -44,7 +44,7 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
 
     <!-- Back to Top -->
     <button id="back-to-top" style="display:none; position:fixed; bottom:24px; right:24px; width:46px; height:46px; border-radius:50%; background:#007FFF; color:white; border:none; cursor:pointer; z-index:1000; box-shadow:0 4px 12px rgba(0,127,255,0.3); align-items:center; justify-content:center;">
-        <i data-lucide="chevron-up" style="width:22px;height:22px;"></i>
+        <i data-lucide="chevron-up" style="width:var(--icon-lg);height:var(--icon-lg);"></i>
     </button>
 
     <!-- Search Modal -->
@@ -52,10 +52,10 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
         <div onclick="event.stopPropagation()" style="background:white; border-radius:14px; width:100%; max-width:560px; box-shadow:0 24px 64px rgba(0,0,0,0.2); overflow:hidden; animation:fadeInUp 0.2s ease; margin:0 16px;">
             <!-- Input -->
             <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid #eee;">
-                <i data-lucide="search" style="width:18px;height:18px;color:#aaa;flex-shrink:0;"></i>
-                <input id="search-input" type="text" placeholder="Rechercher un service, une page…" oninput="filterSearchResults()" style="flex:1; border:none; outline:none; font-size:16px; color:#333; background:transparent; font-family:Poppins,sans-serif;">
+                <i data-lucide="search" style="width:var(--icon-md);height:var(--icon-md);color:#aaa;flex-shrink:0;"></i>
+                <input id="search-input" type="text" placeholder="Rechercher un service, une page…" oninput="filterSearchResults()" style="flex:1; border:none; outline:none; font-size:16px; color:#333; background:transparent; font-family:var(--font-primary);">
                 <button onclick="closeSearchModal()" style="background:none; border:none; cursor:pointer; color:#aaa; display:flex;">
-                    <i data-lucide="x" style="width:18px;height:18px;"></i>
+                    <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
                 </button>
             </div>
             <!-- Results -->
@@ -90,34 +90,34 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
                     <?php if (!empty($appLogo)): ?>
                     <img src="<?= BASE_PATH ?>/public/<?= htmlspecialchars($appLogo) ?>" alt="<?= htmlspecialchars($appName) ?>" style="width:40px;height:40px;object-fit:contain;">
                     <?php else: ?>
-                    <div style="width:40px;height:40px;background:linear-gradient(135deg,#007FFF,#005FCC);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:16px;font-family:Poppins,sans-serif;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,127,255,0.3);">MT</div>
+                    <div style="width:40px;height:40px;background:linear-gradient(135deg,#007FFF,#005FCC);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:16px;font-family:var(--font-primary);letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,127,255,0.3);">MT</div>
                     <?php endif; ?>
                     <span class="logo-text"><?= htmlspecialchars($appName) ?></span>
                 </a>
 
                 <nav class="main-nav" id="main-nav">
                     <ul class="nav-menu">
-                        <li><a href="<?= BASE_PATH ?>/" class="nav-link<?= ($currentPage ?? '') === '/' ? ' nav-link-active' : '' ?>"><i data-lucide="home" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i> Accueil</a></li>
-                        <li><a href="<?= BASE_PATH ?>/services" class="nav-link<?= ($currentPage ?? '') === '/services' ? ' nav-link-active' : '' ?>"><i data-lucide="layers" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i> Services</a></li>
-                        <li><a href="<?= BASE_PATH ?>/about" class="nav-link<?= ($currentPage ?? '') === '/about' ? ' nav-link-active' : '' ?>"><i data-lucide="info" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i> À propos</a></li>
-                        <li><a href="<?= BASE_PATH ?>/contact" class="nav-link<?= ($currentPage ?? '') === '/contact' ? ' nav-link-active' : '' ?>"><i data-lucide="phone" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i> Contact</a></li>
+                        <li><a href="<?= BASE_PATH ?>/" class="nav-link<?= ($currentPage ?? '') === '/' ? ' nav-link-active' : '' ?>"><i data-lucide="home" style="width:var(--icon-sm);height:var(--icon-sm);"></i>Accueil</a></li>
+                        <li><a href="<?= BASE_PATH ?>/services" class="nav-link<?= ($currentPage ?? '') === '/services' ? ' nav-link-active' : '' ?>"><i data-lucide="layers" style="width:var(--icon-sm);height:var(--icon-sm);"></i>Services</a></li>
+                        <li><a href="<?= BASE_PATH ?>/about" class="nav-link<?= ($currentPage ?? '') === '/about' ? ' nav-link-active' : '' ?>"><i data-lucide="info" style="width:var(--icon-sm);height:var(--icon-sm);"></i>À propos</a></li>
+                        <li><a href="<?= BASE_PATH ?>/contact" class="nav-link<?= ($currentPage ?? '') === '/contact' ? ' nav-link-active' : '' ?>"><i data-lucide="phone" style="width:var(--icon-sm);height:var(--icon-sm);"></i>Contact</a></li>
 
                         <?php if (Auth::check()): ?>
-                            <li><a href="<?= BASE_PATH ?>/admin" class="nav-link<?= strpos($currentPage ?? '', '/admin') === 0 ? ' nav-link-active' : '' ?>"><i data-lucide="layout-dashboard" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i> Tableau de bord</a></li>
-                            <li><a href="<?= BASE_PATH ?>/logout" class="btn btn-ghost" style="color:#CE1021;gap:6px;font-size:14px;"><i data-lucide="log-out" style="width:14px;height:14px;"></i> Déconnexion</a></li>
+                            <li><a href="<?= BASE_PATH ?>/admin" class="nav-link<?= strpos($currentPage ?? '', '/admin') === 0 ? ' nav-link-active' : '' ?>"><i data-lucide="layout-dashboard" style="width:var(--icon-sm);height:var(--icon-sm);"></i>Tableau de bord</a></li>
+                            <li><a href="<?= BASE_PATH ?>/logout" class="btn btn-ghost" style="color:#CE1021;gap:6px;font-size:14px;"><i data-lucide="log-out" style="width:var(--icon-sm);height:var(--icon-sm);"></i> Déconnexion</a></li>
                         <?php else: ?>
-                            <li><a href="<?= BASE_PATH ?>/login" class="btn btn-primary" style="gap:6px;font-size:14px;"><i data-lucide="log-in" style="width:14px;height:14px;"></i> Connexion</a></li>
+                            <li><a href="<?= BASE_PATH ?>/login" class="btn btn-primary" style="gap:6px;font-size:14px;"><i data-lucide="log-in" style="width:var(--icon-sm);height:var(--icon-sm);"></i> Connexion</a></li>
                         <?php endif; ?>
                     </ul>
                 </nav>
 
                 <div class="header-actions">
                     <button onclick="openSearchModal()" class="header-icon-btn" title="Rechercher (Ctrl+K)">
-                        <i data-lucide="search" style="width:18px;height:18px;"></i>
+                        <i data-lucide="search" style="width:var(--icon-md);height:var(--icon-md);"></i>
                         <span class="search-hint">Ctrl K</span>
                     </button>
                     <button class="nav-toggle" aria-label="Menu" id="nav-toggle">
-                        <i data-lucide="menu" style="width:22px;height:22px;color:#444;"></i>
+                        <i data-lucide="menu" style="width:var(--icon-lg);height:var(--icon-lg);color:#444;"></i>
                     </button>
                 </div>
             </div>
@@ -245,12 +245,12 @@ $appSlogan = ConfigController::get('app_slogan', 'Portail Numérique');
 
             list.innerHTML = filtered.map(item => `
                 <li>
-                    <a href="${item.href}" style="width:100%;display:flex;align-items:center;gap:12px;padding:11px 18px;background:none;text-decoration:none;font-size:15px;color:#333;font-family:Poppins,sans-serif;transition:background 0.15s;" onmouseenter="this.style.background='#F0F7FF'" onmouseleave="this.style.background='none'">
+                    <a href="${item.href}" style="width:100%;display:flex;align-items:center;gap:12px;padding:11px 18px;background:none;text-decoration:none;font-size:15px;color:#333;font-family:var(--font-primary);transition:background 0.15s;" onmouseenter="this.style.background='#F0F7FF'" onmouseleave="this.style.background='none'">
                         <span style="width:34px;height:34px;border-radius:8px;background:#007FFF18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i data-lucide="${item.icon}" style="width:16px;height:16px;color:#007FFF;"></i>
+                            <i data-lucide="${item.icon}" style="width:var(--icon-md);height:var(--icon-md);color:#007FFF;"></i>
                         </span>
                         <span style="flex:1;">${item.label}</span>
-                        <i data-lucide="chevron-right" style="width:16px;height:16px;color:#bbb;"></i>
+                        <i data-lucide="chevron-right" style="width:var(--icon-md);height:var(--icon-md);color:#bbb;"></i>
                     </a>
                 </li>
             `).join('');

@@ -68,12 +68,12 @@ function formatCurrency($amount) {
     .dashboard-header h2 {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0 0 4px 0;
     }
 
     .dashboard-header p {
-        color: #64748B;
+        color: var(--admin-slate);
         margin: 0;
     }
 
@@ -128,27 +128,27 @@ function formatCurrency($amount) {
     }
 
     .stat-delta.positive {
-        background: #ECFDF5;
-        color: #059669;
+        background: var(--status-success-bg);
+        color: var(--status-success);
     }
 
     .stat-label {
         font-size: 13px;
-        color: #64748B;
+        color: var(--admin-slate);
         margin-bottom: 4px;
     }
 
     .stat-value {
         font-size: 28px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     /* Brevet Stats */
     .brevet-section-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin-bottom: 16px;
         display: flex;
         align-items: center;
@@ -203,14 +203,14 @@ function formatCurrency($amount) {
 
     .brevet-card-label {
         font-size: 13px;
-        color: #64748B;
+        color: var(--admin-slate);
         margin-bottom: 2px;
     }
 
     .brevet-card-value {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     /* Dashboard Row 2 */
@@ -238,12 +238,12 @@ function formatCurrency($amount) {
     .dashboard-card-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     .dashboard-card-link {
         font-size: 13px;
-        color: #3B82F6;
+        color: var(--admin-accent-blue);
         text-decoration: none;
     }
 
@@ -289,18 +289,18 @@ function formatCurrency($amount) {
 
     .activity-label {
         font-size: 13px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         font-weight: 500;
     }
 
     .activity-name {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .activity-time {
         font-size: 11px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
         flex-shrink: 0;
     }
 
@@ -311,7 +311,7 @@ function formatCurrency($amount) {
     }
 
     .chart-empty-state {
-        color: #64748B;
+        color: var(--admin-slate);
         text-align: center;
         padding: 40px 20px;
         font-size: 13px;
@@ -331,7 +331,7 @@ function formatCurrency($amount) {
         align-items: center;
         gap: 6px;
         font-size: 13px;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .chart-value-legend-dot {
@@ -343,7 +343,7 @@ function formatCurrency($amount) {
 
     .chart-value-legend-count {
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     /* Row 3: registration trend */
@@ -359,7 +359,7 @@ function formatCurrency($amount) {
     .quick-actions-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin-bottom: 16px;
     }
 
@@ -379,7 +379,7 @@ function formatCurrency($amount) {
         border-radius: 10px;
         font-size: 14px;
         font-weight: 500;
-        color: #334155;
+        color: var(--admin-slate-dark);
         text-decoration: none;
         transition: all 0.2s;
     }
@@ -546,7 +546,7 @@ function formatCurrency($amount) {
                     <div class="chart-value-legend">
                         <?php foreach ($registrationTrend as $i => $t): ?>
                             <span class="chart-value-legend-item">
-                                <span class="chart-value-legend-dot" style="background: #3B82F6;"></span>
+                                <span class="chart-value-legend-dot" style="background: var(--admin-accent-blue);"></span>
                                 <?= htmlspecialchars($dashboardChartData['registrationTrend']['labels'][$i] ?? '') ?>
                                 <span class="chart-value-legend-count"><?= number_format($t['count'] ?? 0, 0, ',', ' ') ?></span>
                             </span>
@@ -625,11 +625,11 @@ function formatCurrency($amount) {
                 datasets: [{
                     label: 'Conducteurs enregistrés',
                     data: trend.values,
-                    borderColor: '#3B82F6',
+                    borderColor: 'var(--admin-accent-blue)',
                     backgroundColor: 'rgba(59, 130, 246, 0.12)',
                     fill: true,
                     tension: 0.35,
-                    pointBackgroundColor: '#3B82F6',
+                    pointBackgroundColor: 'var(--admin-accent-blue)',
                     pointRadius: 4,
                     pointHoverRadius: 6
                 }]

@@ -26,7 +26,23 @@
   --gray-dark: #666666;
   --text-color: #444444;
   --text-muted: #888888;
-  
+
+  /* Couleurs admin/dashboard (chrome interne, distinct de la palette
+     publique ci-dessus - un tableau de bord dense en donnees a besoin
+     d'un langage visuel plus neutre que les couleurs du drapeau) */
+  --admin-navy: #1A2744;
+  --admin-slate-dark: #334155;
+  --admin-slate: #64748B;
+  --admin-slate-light: #94A3B8;
+  --admin-accent-blue: #3B82F6;
+
+  /* Couleurs de statut (feedback semantique - succes/erreur - distinctes
+     de la palette de marque, ne pas confondre avec --secondary-red) */
+  --status-danger: #DC2626;
+  --status-danger-bg: #FEF2F2;
+  --status-success: #059669;
+  --status-success-bg: #ECFDF5;
+
   /* Typographie */
   --font-primary: 'Poppins', sans-serif;
   --font-secondary: 'Roboto', sans-serif;
@@ -38,7 +54,12 @@
   --font-size-body: 16px;
   --font-size-small: 14px;
   --font-size-xs: 12px;
-  
+
+  /* Tailles d'icônes */
+  --icon-sm: 14px;
+  --icon-md: 18px;
+  --icon-lg: 22px;
+
   /* Espacements */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -319,6 +340,9 @@ a:hover {
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--text-color);
   font-family: var(--font-primary);
   font-weight: 500;

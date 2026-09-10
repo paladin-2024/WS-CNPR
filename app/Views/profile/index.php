@@ -40,7 +40,7 @@
     font-size: 36px;
     font-weight: 700;
     color: white;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
     flex-shrink: 0;
     position: relative;
     z-index: 2;
@@ -54,7 +54,7 @@
     font-weight: 700;
     color: #1a1a2e;
     margin: 0 0 8px 0;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
 }
 .profile-info .role {
     font-size: 15px;
@@ -93,7 +93,7 @@
     margin: 0 0 20px 0;
     padding-bottom: 12px;
     border-bottom: 2px solid #f1f5f9;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -120,7 +120,7 @@
     font-size: 15px;
     color: #1a1a2e;
     font-weight: 500;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
 }
 .action-buttons {
     display: flex;
@@ -140,7 +140,7 @@
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
     border: none;
 }
 .btn-primary {
@@ -183,7 +183,7 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
             <h1><?= htmlspecialchars(($user['prenom'] ?? '') . ' ' . ($user['nom'] ?? '')) ?></h1>
             <p class="role"><?= htmlspecialchars($roleLabel) ?></p>
             <span class="profile-badge <?= $user['statut'] ?? 'actif' ?>">
-                <i data-lucide="<?= ($user['statut'] ?? 'actif') === 'actif' ? 'check-circle' : 'x-circle' ?>" style="width:14px;height:14px;"></i>
+                <i data-lucide="<?= ($user['statut'] ?? 'actif') === 'actif' ? 'check-circle' : 'x-circle' ?>" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                 <?= $statutLabel ?>
             </span>
         </div>
@@ -192,7 +192,7 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
     <!-- Section informations personnelles -->
     <div class="section-card">
         <h2>
-            <i data-lucide="user" style="width:20px;height:20px;color:#005FCC;"></i>
+            <i data-lucide="user" style="width:var(--icon-md);height:var(--icon-md);color:#005FCC;"></i>
             Informations personnelles
         </h2>
         <div class="info-grid">
@@ -218,7 +218,7 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
     <!-- Section informations du compte -->
     <div class="section-card">
         <h2>
-            <i data-lucide="shield" style="width:20px;height:20px;color:#005FCC;"></i>
+            <i data-lucide="shield" style="width:var(--icon-md);height:var(--icon-md);color:#005FCC;"></i>
             Informations du compte
         </h2>
         <div class="info-grid">
@@ -236,11 +236,11 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
     <!-- Boutons d'action -->
     <div class="action-buttons">
         <a href="<?= BASE_PATH ?>/admin" class="btn btn-secondary">
-            <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+            <i data-lucide="arrow-left" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Retour au tableau de bord
         </a>
         <a href="<?= BASE_PATH ?>/profile/edit" class="btn btn-primary">
-            <i data-lucide="edit" style="width:16px;height:16px;"></i>
+            <i data-lucide="edit" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Modifier le profil
         </a>
     </div>

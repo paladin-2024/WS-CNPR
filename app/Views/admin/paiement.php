@@ -24,7 +24,7 @@ function formatCurrency($amount) {
         padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .imp-toolbar-title {
-        font-size: 18px; font-weight: 700; color: #1A2744; margin: 0;
+        font-size: 18px; font-weight: 700; color: var(--admin-navy); margin: 0;
         white-space: nowrap;
     }
     .imp-toolbar-sep {
@@ -38,9 +38,9 @@ function formatCurrency($amount) {
         flex: 1; padding: 8px 12px; border: 1px solid #E2E8F0;
         border-radius: 6px; font-size: 13px; outline: none;
     }
-    .search-form input:focus { border-color: #3B82F6; }
+    .search-form input:focus { border-color: var(--admin-accent-blue); }
     .search-form button {
-        padding: 8px 16px; background: #3B82F6; color: white; border: none;
+        padding: 8px 16px; background: var(--admin-accent-blue); color: white; border: none;
         border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;
     }
     .search-form button:hover { background: #2563EB; }
@@ -52,20 +52,20 @@ function formatCurrency($amount) {
     }
     .imp-tab {
         flex: 1; padding: 12px 20px; text-align: center; cursor: pointer;
-        font-size: 14px; font-weight: 500; color: #64748B;
+        font-size: 14px; font-weight: 500; color: var(--admin-slate);
         border-bottom: 3px solid transparent; transition: all 0.2s;
         display: flex; align-items: center; justify-content: center; gap: 8px;
         background: none; border: none;
     }
-    .imp-tab:hover { color: #334155; background: #F8FAFC; }
-    .imp-tab.active { color: #3B82F6; border-bottom-color: #3B82F6; font-weight: 600; }
+    .imp-tab:hover { color: var(--admin-slate-dark); background: #F8FAFC; }
+    .imp-tab.active { color: var(--admin-accent-blue); border-bottom-color: var(--admin-accent-blue); font-weight: 600; }
     .imp-tab .tab-count {
         display: inline-flex; align-items: center; justify-content: center;
         min-width: 22px; height: 22px; padding: 0 6px; border-radius: 12px;
         font-size: 12px; font-weight: 600;
     }
-    .imp-tab.active .tab-count { background: #3B82F6; color: white; }
-    .imp-tab:not(.active) .tab-count { background: #E2E8F0; color: #64748B; }
+    .imp-tab.active .tab-count { background: var(--admin-accent-blue); color: white; }
+    .imp-tab:not(.active) .tab-count { background: #E2E8F0; color: var(--admin-slate); }
 
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -77,9 +77,9 @@ function formatCurrency($amount) {
         text-decoration: none;
     }
     .btn svg { width: 16px; height: 16px; }
-    .btn-primary { background: #3B82F6; color: white; }
+    .btn-primary { background: var(--admin-accent-blue); color: white; }
     .btn-primary:hover { background: #2563EB; }
-    .btn-success { background: #059669; color: white; }
+    .btn-success { background: var(--status-success); color: white; }
     .btn-success:hover { background: #047857; }
     .btn-outline { background: white; color: #374151; border: 1px solid #E2E8F0; }
     .btn-outline:hover { background: #F8FAFC; }
@@ -92,12 +92,12 @@ function formatCurrency($amount) {
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th {
         text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600;
-        color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;
+        color: var(--admin-slate); text-transform: uppercase; letter-spacing: 0.5px;
         background: #F8FAFC; border-bottom: 1px solid #E2E8F0;
         position: sticky; top: 0; z-index: 1;
     }
     .data-table td {
-        padding: 8px 12px; font-size: 13px; color: #334155;
+        padding: 8px 12px; font-size: 13px; color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
     .data-table tr:hover td { background: #F8FAFC; }
@@ -105,26 +105,26 @@ function formatCurrency($amount) {
     .conducteur-info { display: flex; align-items: center; gap: 8px; }
     .conducteur-avatar {
         width: 32px; height: 32px; border-radius: 50%;
-        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        background: linear-gradient(135deg, var(--admin-accent-blue), #8B5CF6);
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 600; font-size: 12px; flex-shrink: 0;
     }
-    .conducteur-avatar.green { background: linear-gradient(135deg, #059669, #10B981); }
+    .conducteur-avatar.green { background: linear-gradient(135deg, var(--status-success), #10B981); }
     .conducteur-avatar.orange { background: linear-gradient(135deg, #D97706, #F59E0B); }
-    .conducteur-name { font-weight: 500; color: #1A2744; font-size: 13px; }
+    .conducteur-name { font-weight: 500; color: var(--admin-navy); font-size: 13px; }
 
     .badge {
         display: inline-flex; align-items: center; padding: 2px 8px;
         border-radius: 20px; font-size: 11px; font-weight: 500;
     }
-    .badge-paye { background: #ECFDF5; color: #059669; }
-    .badge-nonpaye { background: #FEE2E2; color: #DC2626; }
+    .badge-paye { background: var(--status-success-bg); color: var(--status-success); }
+    .badge-nonpaye { background: #FEE2E2; color: var(--status-danger); }
 
     .empty-state {
-        text-align: center; padding: 40px 20px; color: #64748B;
+        text-align: center; padding: 40px 20px; color: var(--admin-slate);
     }
     .empty-state svg { width: 48px; height: 48px; color: #CBD5E1; margin-bottom: 12px; }
-    .empty-state h3 { margin: 0 0 4px 0; color: #334155; font-size: 15px; }
+    .empty-state h3 { margin: 0 0 4px 0; color: var(--admin-slate-dark); font-size: 15px; }
     .empty-state p { margin: 0; font-size: 13px; }
 
     .toast-container {
@@ -138,8 +138,8 @@ function formatCurrency($amount) {
         display: flex; align-items: center; gap: 10px; min-width: 280px;
         pointer-events: auto;
     }
-    .toast-success { background: linear-gradient(135deg, #10B981, #059669); }
-    .toast-error { background: linear-gradient(135deg, #EF4444, #DC2626); }
+    .toast-success { background: linear-gradient(135deg, #10B981, var(--status-success)); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, var(--status-danger)); }
     .toast svg { width: 20px; height: 20px; flex-shrink: 0; }
     @keyframes toastIn {
         0% { transform: translateX(120%); opacity: 0; }
@@ -163,11 +163,11 @@ function formatCurrency($amount) {
         padding: 16px 20px; border-bottom: 1px solid #E2E8F0;
         display: flex; align-items: center; justify-content: space-between;
     }
-    .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: #1A2744; }
+    .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--admin-navy); }
     .modal-close {
-        background: none; border: none; cursor: pointer; padding: 4px; color: #64748B;
+        background: none; border: none; cursor: pointer; padding: 4px; color: var(--admin-slate);
     }
-    .modal-close:hover { color: #334155; }
+    .modal-close:hover { color: var(--admin-slate-dark); }
     .modal-body { padding: 20px; }
     .form-group { margin-bottom: 16px; }
     .form-group label {
@@ -177,7 +177,7 @@ function formatCurrency($amount) {
         width: 100%; padding: 10px 12px; border: 1px solid #E2E8F0;
         border-radius: 6px; font-size: 14px; outline: none; box-sizing: border-box;
     }
-    .form-group input:focus { border-color: #3B82F6; }
+    .form-group input:focus { border-color: var(--admin-accent-blue); }
     .modal-footer {
         padding: 16px 20px; border-top: 1px solid #E2E8F0;
         display: flex; gap: 10px; justify-content: flex-end;
@@ -190,8 +190,8 @@ function formatCurrency($amount) {
         font-size: 13px;
     }
     .paiement-details-row:last-child { margin-bottom: 0; }
-    .paiement-details-label { color: #64748B; }
-    .paiement-details-value { font-weight: 500; color: #1A2744; }
+    .paiement-details-label { color: var(--admin-slate); }
+    .paiement-details-value { font-weight: 500; color: var(--admin-navy); }
 
     @media (max-width: 768px) {
         .imp-toolbar { flex-direction: column; align-items: stretch; }
@@ -209,7 +209,7 @@ function formatCurrency($amount) {
         <form class="search-form" method="GET" action="<?= BASE_PATH ?>/admin/paiement">
             <input type="text" name="search" placeholder="Rechercher nom, téléphone, identifiant..." value="<?= htmlspecialchars($search) ?>">
             <button type="submit">
-                <i data-lucide="search" style="width:16px;height:16px;"></i>
+                <i data-lucide="search" style="width:var(--icon-md);height:var(--icon-md);"></i>
                 Rechercher
             </button>
         </form>
@@ -217,12 +217,12 @@ function formatCurrency($amount) {
 
     <div class="imp-tabs">
         <button class="imp-tab active" onclick="switchTab('enregistrer')" id="tabEnregistrer">
-            <i data-lucide="plus" style="width:16px;height:16px;"></i>
+            <i data-lucide="plus" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Enregistrer paiement
             <span class="tab-count"><?= count($conducteurs) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('historique')" id="tabHistorique">
-            <i data-lucide="clipboard" style="width:16px;height:16px;"></i>
+            <i data-lucide="clipboard" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Historique paiements
             <span class="tab-count" id="countHistorique"><?= count($paiementsValides) ?></span>
         </button>
@@ -275,7 +275,7 @@ function formatCurrency($amount) {
                                 <td>
                                     <?php if ($aPaiement): ?>
                                         <span class="badge badge-paye">
-                                            <i data-lucide="check" style="width:12px;height:12px;margin-right:4px;"></i>
+                                            <i data-lucide="check" style="width:var(--icon-sm);height:var(--icon-sm);margin-right:4px;"></i>
                                             Payé: <?= formatCurrency($c['paiement_montant']) ?>
                                         </span>
                                     <?php else: ?>
@@ -302,9 +302,9 @@ function formatCurrency($amount) {
             <form method="GET" action="<?= BASE_PATH ?>/admin/paiement" style="display:flex;gap:8px;align-items:center;">
                 <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                 <input type="hidden" name="tab" value="historique">
-                <span style="font-size:13px;color:#64748B;">Du:</span>
+                <span style="font-size:13px;color:var(--admin-slate);">Du:</span>
                 <input type="date" name="date_debut" value="<?= htmlspecialchars($date_debut) ?>" style="padding:6px 8px;border:1px solid #E2E8F0;border-radius:6px;font-size:13px;">
-                <span style="font-size:13px;color:#64748B;">Au:</span>
+                <span style="font-size:13px;color:var(--admin-slate);">Au:</span>
                 <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>" style="padding:6px 8px;border:1px solid #E2E8F0;border-radius:6px;font-size:13px;">
                 <button type="submit" class="btn btn-primary btn-sm">Filtrer</button>
             </form>
@@ -366,7 +366,7 @@ function formatCurrency($amount) {
         <div class="modal-header">
             <h3>Enregistrer le paiement</h3>
             <button class="modal-close" onclick="closePaiementModal()">
-                <i data-lucide="x" style="width:20px;height:20px;"></i>
+                <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </button>
         </div>
         <div class="modal-body">

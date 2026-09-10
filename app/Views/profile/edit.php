@@ -19,7 +19,7 @@
     font-weight: 700;
     color: #1a1a2e;
     margin: 0 0 8px 0;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -43,9 +43,9 @@
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #334155;
+    color: var(--admin-slate-dark);
     margin-bottom: 8px;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
 }
 .form-group label span {
     color: #dc2626;
@@ -109,7 +109,7 @@
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-family: Poppins, sans-serif;
+    font-family: var(--font-primary);
     border: none;
 }
 .btn-primary {
@@ -175,7 +175,7 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
     <!-- En-tête -->
     <div class="page-header">
         <h1>
-            <i data-lucide="user-cog" style="width:28px;height:28px;color:#005FCC;"></i>
+            <i data-lucide="user-cog" style="width:var(--icon-lg);height:var(--icon-lg);color:#005FCC;"></i>
             Modifier mon profil
         </h1>
         <p>Mettez à jour vos informations personnelles</p>
@@ -230,11 +230,11 @@ $flashType = is_array($flashData) ? ($flashData['type'] ?? 'info') : 'info';
             <!-- Boutons -->
             <div class="btn-group">
                 <a href="<?= BASE_PATH ?>/profile" class="btn btn-secondary">
-                    <i data-lucide="x" style="width:16px;height:16px;"></i>
+                    <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
                     Annuler
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    <i data-lucide="save" style="width:16px;height:16px;"></i>
+                    <i data-lucide="save" style="width:var(--icon-md);height:var(--icon-md);"></i>
                     Enregistrer les modifications
                 </button>
             </div>

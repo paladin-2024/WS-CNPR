@@ -12,24 +12,24 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
     <div style="background:white;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #E5EAF2;">
             <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#007FFF,#005FCC);display:flex;align-items:center;justify-content:center;">
-                <i data-lucide="settings" style="width:20px;height:20px;color:white;"></i>
+                <i data-lucide="settings" style="width:var(--icon-md);height:var(--icon-md);color:white;"></i>
             </div>
             <div>
-                <h2 style="margin:0;font-size:18px;font-weight:700;color:#1A2744;">Configuration de l'application</h2>
+                <h2 style="margin:0;font-size:18px;font-weight:700;color:var(--admin-navy);">Configuration de l'application</h2>
                 <p style="margin:4px 0 0;font-size:13px;color:#6B7280;">Personnalisez le nom et le logo de l'application</p>
             </div>
         </div>
 
         <?php if (isset($_GET['success'])): ?>
-            <div style="background:#ECFDF5;border:1px solid #059669;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-                <i data-lucide="check-circle" style="width:18px;height:18px;color:#059669;"></i>
+            <div style="background:var(--status-success-bg);border:1px solid var(--status-success);border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i data-lucide="check-circle" style="width:var(--icon-md);height:var(--icon-md);color:var(--status-success);"></i>
                 <span style="color:#065F46;font-size:14px;"><?= htmlspecialchars($_GET['success']) ?></span>
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['error'])): ?>
-            <div style="background:#FEF2F2;border:1px solid #DC2626;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-                <i data-lucide="alert-circle" style="width:18px;height:18px;color:#DC2626;"></i>
+            <div style="background:var(--status-danger-bg);border:1px solid var(--status-danger);border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i data-lucide="alert-circle" style="width:var(--icon-md);height:var(--icon-md);color:var(--status-danger);"></i>
                 <span style="color:#991B1B;font-size:14px;"><?= htmlspecialchars($_GET['error']) ?></span>
             </div>
         <?php endif; ?>
@@ -68,7 +68,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                     </div>
                     <?php else: ?>
                     <div style="background:#F9FAFB;border:2px dashed #D1D5DB;border-radius:8px;padding:24px;text-align:center;margin-bottom:12px;">
-                        <i data-lucide="image" style="width:32px;height:32px;color:#9CA3AF;margin-bottom:8px;"></i>
+                        <i data-lucide="image" style="width:var(--icon-lg);height:var(--icon-lg);color:#9CA3AF;margin-bottom:8px;"></i>
                         <p style="margin:0;font-size:13px;color:#6B7280;">Aucun logo configuré</p>
                     </div>
                     <?php endif; ?>
@@ -77,13 +77,13 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                         style="display:none;"
                         onchange="previewLogo(this)">
                     <label for="app_logo" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:white;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;color:#374151;cursor:pointer;transition:all 0.15s;">
-                        <i data-lucide="upload" style="width:16px;height:16px;"></i>
+                        <i data-lucide="upload" style="width:var(--icon-md);height:var(--icon-md);"></i>
                         <?= !empty($appLogo) ? 'Remplacer le logo' : 'Télécharger un logo' ?>
                     </label>
                     <p style="margin:8px 0 0;font-size:12px;color:#6B7280;">Formats acceptés: JPG, PNG, GIF, WebP, SVG. Taille max: 2 Mo</p>
                     
                     <div id="logo-preview" style="display:none;margin-top:12px;padding:12px;background:#F0F7FF;border-radius:8px;">
-                        <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:#1A2744;">Aperçu du nouveau logo:</p>
+                        <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--admin-navy);">Aperçu du nouveau logo:</p>
                         <img id="preview-image" src="" alt="Aperçu" style="max-width:120px;max-height:120px;object-fit:contain;">
                     </div>
                 </div>
@@ -91,11 +91,11 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
 
             <div style="margin-top:32px;padding-top:24px;border-top:2px solid #E5EAF2;">
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-                    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#059669,#047857);display:flex;align-items:center;justify-content:center;">
-                        <i data-lucide="credit-card" style="width:18px;height:18px;color:white;"></i>
+                    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--status-success),#047857);display:flex;align-items:center;justify-content:center;">
+                        <i data-lucide="credit-card" style="width:var(--icon-md);height:var(--icon-md);color:white;"></i>
                     </div>
                     <div>
-                        <h3 style="margin:0;font-size:16px;font-weight:700;color:#1A2744;">Configuration de la carte brevet</h3>
+                        <h3 style="margin:0;font-size:16px;font-weight:700;color:var(--admin-navy);">Configuration de la carte brevet</h3>
                         <p style="margin:4px 0 0;font-size:13px;color:#6B7280;">Logos et signature affichés sur les cartes imprimées</p>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                             </div>
                             <?php else: ?>
                             <div style="background:#F9FAFB;border:2px dashed #D1D5DB;border-radius:8px;padding:20px;text-align:center;margin-bottom:12px;">
-                                <i data-lucide="image" style="width:28px;height:28px;color:#9CA3AF;margin-bottom:6px;"></i>
+                                <i data-lucide="image" style="width:var(--icon-lg);height:var(--icon-lg);color:#9CA3AF;margin-bottom:6px;"></i>
                                 <p style="margin:0;font-size:13px;color:#6B7280;">Aucun logo gauche configuré</p>
                             </div>
                             <?php endif; ?>
@@ -144,12 +144,12 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                                 style="display:none;"
                                 onchange="previewImage(this, 'preview-gauche')">
                             <label for="carte_logo_gauche" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:white;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;color:#374151;cursor:pointer;transition:all 0.15s;">
-                                <i data-lucide="upload" style="width:16px;height:16px;"></i>
+                                <i data-lucide="upload" style="width:var(--icon-md);height:var(--icon-md);"></i>
                                 <?= !empty($carteLogoGauche) ? 'Remplacer' : 'Télécharger' ?>
                             </label>
                             
                             <div id="preview-gauche" style="display:none;margin-top:12px;padding:12px;background:#F0F7FF;border-radius:8px;">
-                                <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:#1A2744;">Aperçu:</p>
+                                <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--admin-navy);">Aperçu:</p>
                                 <img id="preview-gauche-image" src="" alt="Aperçu" style="max-width:80px;max-height:80px;object-fit:contain;">
                             </div>
                         </div>
@@ -167,7 +167,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                             </div>
                             <?php else: ?>
                             <div style="background:#F9FAFB;border:2px dashed #D1D5DB;border-radius:8px;padding:20px;text-align:center;margin-bottom:12px;">
-                                <i data-lucide="image" style="width:28px;height:28px;color:#9CA3AF;margin-bottom:6px;"></i>
+                                <i data-lucide="image" style="width:var(--icon-lg);height:var(--icon-lg);color:#9CA3AF;margin-bottom:6px;"></i>
                                 <p style="margin:0;font-size:13px;color:#6B7280;">Aucun logo droite configuré</p>
                             </div>
                             <?php endif; ?>
@@ -176,12 +176,12 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                                 style="display:none;"
                                 onchange="previewImage(this, 'preview-droite')">
                             <label for="carte_logo_droite" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:white;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;color:#374151;cursor:pointer;transition:all 0.15s;">
-                                <i data-lucide="upload" style="width:16px;height:16px;"></i>
+                                <i data-lucide="upload" style="width:var(--icon-md);height:var(--icon-md);"></i>
                                 <?= !empty($carteLogoDroite) ? 'Remplacer' : 'Télécharger' ?>
                             </label>
                             
                             <div id="preview-droite" style="display:none;margin-top:12px;padding:12px;background:#F0F7FF;border-radius:8px;">
-                                <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:#1A2744;">Aperçu:</p>
+                                <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--admin-navy);">Aperçu:</p>
                                 <img id="preview-droite-image" src="" alt="Aperçu" style="max-width:80px;max-height:80px;object-fit:contain;">
                             </div>
                         </div>
@@ -200,7 +200,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                         </div>
                         <?php else: ?>
                         <div style="background:#F9FAFB;border:2px dashed #D1D5DB;border-radius:8px;padding:24px;text-align:center;margin-bottom:12px;">
-                            <i data-lucide="pen-tool" style="width:32px;height:32px;color:#9CA3AF;margin-bottom:8px;"></i>
+                            <i data-lucide="pen-tool" style="width:var(--icon-lg);height:var(--icon-lg);color:#9CA3AF;margin-bottom:8px;"></i>
                             <p style="margin:0;font-size:13px;color:#6B7280;">Aucune signature configurée</p>
                         </div>
                         <?php endif; ?>
@@ -209,13 +209,13 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                             style="display:none;"
                             onchange="previewImage(this, 'preview-signature')">
                         <label for="carte_signature" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:white;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;color:#374151;cursor:pointer;transition:all 0.15s;">
-                            <i data-lucide="upload" style="width:16px;height:16px;"></i>
+                            <i data-lucide="upload" style="width:var(--icon-md);height:var(--icon-md);"></i>
                             <?= !empty($carteSignature) ? 'Remplacer la signature' : 'Télécharger la signature' ?>
                         </label>
                         <p style="margin:8px 0 0;font-size:12px;color:#6B7280;">Formats acceptés: PNG, JPG avec fond transparent recommandé. Taille max: 2 Mo</p>
                         
                         <div id="preview-signature" style="display:none;margin-top:12px;padding:12px;background:#F0F7FF;border-radius:8px;">
-                            <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:#1A2744;">Aperçu de la signature:</p>
+                            <p style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--admin-navy);">Aperçu de la signature:</p>
                             <img id="preview-signature-image" src="" alt="Aperçu" style="max-width:180px;max-height:80px;object-fit:contain;">
                         </div>
                     </div>
@@ -227,7 +227,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
                     Annuler
                 </a>
                 <button type="submit" style="padding:10px 24px;background:linear-gradient(135deg,#007FFF,#005FCC);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.15s;">
-                    <i data-lucide="save" style="width:16px;height:16px;"></i>
+                    <i data-lucide="save" style="width:var(--icon-md);height:var(--icon-md);"></i>
                     Enregistrer
                 </button>
             </div>
@@ -235,7 +235,7 @@ $carteTitreDroite = $config['carte_titre_droite'] ?? 'Direction Provinciale de l
     </div>
 
     <div style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:12px;padding:16px;display:flex;gap:12px;">
-        <i data-lucide="info" style="width:20px;height:20px;color:#D97706;flex-shrink:0;margin-top:2px;"></i>
+        <i data-lucide="info" style="width:var(--icon-md);height:var(--icon-md);color:#D97706;flex-shrink:0;margin-top:2px;"></i>
         <div>
             <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#92400E;">À savoir</p>
             <p style="margin:0;font-size:13px;color:#92400E;">Le logo téléchargé sera utilisé comme favicon du site et dans l'en-tête de l'application. Assurez-vous d'utiliser une image de bonne qualité.</p>

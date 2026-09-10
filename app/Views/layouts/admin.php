@@ -165,7 +165,7 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
             margin: 0;
             font-size: 16px;
             font-weight: 700;
-            color: #1A2744;
+            color: var(--admin-navy);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -355,7 +355,7 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
                         </div>
                     </a>
                     <button class="sidebar-close-btn" onclick="closeSidebar()">
-                        <i data-lucide="x" style="width:20px;height:20px;"></i>
+                        <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
                     </button>
                 </div>
 
@@ -369,7 +369,7 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
                             <?= htmlspecialchars($userPrenom . ' ' . $userNom) ?>
                         </div>
                         <div style="display:inline-flex;align-items:center;gap:4px;background:<?= $roleColor ?>30;border-radius:20px;padding:2px 8px;margin-top:2px;">
-                            <i data-lucide="shield" style="width:10px;height:10px;color:<?= $roleColor ?>;"></i>
+                            <i data-lucide="shield" style="width:var(--icon-sm);height:var(--icon-sm);color:<?= $roleColor ?>;"></i>
                             <span style="font-size:10px;color:<?= $roleColor ?>;font-weight:600;"><?= htmlspecialchars($roleLabel) ?></span>
                         </div>
                     </div>
@@ -382,10 +382,10 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
                         $isActive = ($currentPage ?? '') === $item['path'];
                     ?>
                         <a href="<?= BASE_PATH . $item['path'] ?>" class="sidebar-nav-link<?= $isActive ? ' active' : '' ?>" style="<?= $isActive ? 'color:#60AFFF;' : '' ?>">
-                            <i data-lucide="<?= $item['icon'] ?>" style="width:18px;height:18px;"></i>
+                            <i data-lucide="<?= $item['icon'] ?>" style="width:var(--icon-md);height:var(--icon-md);"></i>
                             <span style="flex:1;"><?= htmlspecialchars($item['label']) ?></span>
                             <?php if ($isActive): ?>
-                                <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+                                <i data-lucide="chevron-right" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                             <?php endif; ?>
                         </a>
                     <?php endforeach; ?>
@@ -394,15 +394,15 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
                 <!-- Pied de sidebar -->
                 <div class="sidebar-footer">
                     <a href="<?= BASE_PATH ?>/" class="sidebar-footer-link">
-                        <i data-lucide="home" style="width:16px;height:16px;"></i>
+                        <i data-lucide="home" style="width:var(--icon-md);height:var(--icon-md);"></i>
                         <span>Retour au site</span>
                     </a>
                     <a href="<?= BASE_PATH ?>/profile" class="sidebar-footer-link">
-                        <i data-lucide="user" style="width:16px;height:16px;"></i>
+                        <i data-lucide="user" style="width:var(--icon-md);height:var(--icon-md);"></i>
                         <span>Mon Profil</span>
                     </a>
                     <a href="<?= BASE_PATH ?>/logout" class="sidebar-logout-btn">
-                        <i data-lucide="log-out" style="width:16px;height:16px;"></i>
+                        <i data-lucide="log-out" style="width:var(--icon-md);height:var(--icon-md);"></i>
                         <span>Déconnexion</span>
                     </a>
                 </div>
@@ -417,7 +417,7 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
             <header class="admin-topbar">
                 <div class="admin-topbar-left">
                     <button class="mobile-menu-btn" onclick="openSidebar()">
-                        <i data-lucide="menu" style="width:22px;height:22px;color:#333;"></i>
+                        <i data-lucide="menu" style="width:var(--icon-lg);height:var(--icon-lg);color:#333;"></i>
                     </button>
                     <div class="admin-topbar-title">
                         <h1><?= htmlspecialchars($activePageLabel) ?></h1>
@@ -427,11 +427,11 @@ $todayDate = date('j') . ' ' . $french_months[date('n')] . ' ' . date('Y');
 
                 <div class="admin-topbar-right">
                     <button class="topbar-icon-btn" style="width:38px;height:38px;border-radius:8px;border:1px solid #E5EAF2;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;">
-                        <i data-lucide="bell" style="width:18px;height:18px;color:#555;"></i>
+                        <i data-lucide="bell" style="width:var(--icon-md);height:var(--icon-md);color:#555;"></i>
                         <span style="position:absolute;top:6px;right:6px;width:8px;height:8px;background:#EF4444;border-radius:50%;border:2px solid white;"></span>
                     </button>
                     <button class="topbar-icon-btn" style="width:38px;height:38px;border-radius:8px;border:1px solid #E5EAF2;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                        <i data-lucide="settings" style="width:18px;height:18px;color:#555;"></i>
+                        <i data-lucide="settings" style="width:var(--icon-md);height:var(--icon-md);color:#555;"></i>
                     </button>
                     <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,<?= $roleColor ?>,<?= $roleColor ?>99);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:13px;flex-shrink:0;">
                         <?= htmlspecialchars($userInitials) ?>

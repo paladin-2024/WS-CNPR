@@ -34,7 +34,7 @@ function formatDate($date) {
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -87,13 +87,13 @@ function formatDate($date) {
     .parking-title {
         font-size: 18px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0 0 4px 0;
     }
 
     .parking-location {
         font-size: 13px;
-        color: #64748B;
+        color: var(--admin-slate);
         display: flex;
         align-items: center;
         gap: 6px;
@@ -125,12 +125,12 @@ function formatDate($date) {
     .parking-stat-value {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     .parking-stat-label {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .parking-type {
@@ -144,7 +144,7 @@ function formatDate($date) {
 
     .parking-contact {
         font-size: 13px;
-        color: #64748B;
+        color: var(--admin-slate);
         margin-top: 12px;
     }
 
@@ -188,20 +188,20 @@ function formatDate($date) {
 
     .action-btn-edit {
         background: white;
-        color: #3B82F6;
+        color: var(--admin-accent-blue);
         border: 1px solid #E2E8F0;
     }
 
     .action-btn-edit:hover {
         background: #EFF6FF;
-        border-color: #3B82F6;
+        border-color: var(--admin-accent-blue);
     }
 
     /* Empty state */
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .empty-state svg {
@@ -213,7 +213,7 @@ function formatDate($date) {
 
     .empty-state h3 {
         margin: 0 0 8px 0;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .empty-state p {

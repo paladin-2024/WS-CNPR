@@ -22,7 +22,7 @@ $isFound = $conducteur !== null;
 .verif-root {
     min-height: 100vh;
     background: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%);
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-primary);
     padding: 20px;
 }
 
@@ -49,11 +49,11 @@ $isFound = $conducteur !== null;
 }
 
 .verif-header h1 {
-    font-size: 20px; font-weight: 700; color: #1A2744; margin: 0 0 4px 0;
+    font-size: 20px; font-weight: 700; color: var(--admin-navy); margin: 0 0 4px 0;
 }
 
 .verif-header p {
-    font-size: 13px; color: #64748B; margin: 0;
+    font-size: 13px; color: var(--admin-slate); margin: 0;
 }
 
 /* Drapeau */
@@ -80,13 +80,13 @@ $isFound = $conducteur !== null;
 .status-banner svg { width: 32px; height: 32px; flex-shrink: 0; }
 
 .status-banner.authentic {
-    background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+    background: linear-gradient(135deg, var(--status-success-bg), #D1FAE5);
     border: 2px solid #10B981;
     color: #065F46;
 }
 
 .status-banner.not-found {
-    background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+    background: linear-gradient(135deg, var(--status-danger-bg), #FEE2E2);
     border: 2px solid #EF4444;
     color: #991B1B;
 }
@@ -134,12 +134,12 @@ $isFound = $conducteur !== null;
     flex-shrink: 0;
 }
 
-.verif-name { font-size: 20px; font-weight: 700; color: #1A2744; margin: 0 0 4px 0; }
+.verif-name { font-size: 20px; font-weight: 700; color: var(--admin-navy); margin: 0 0 4px 0; }
 
 .verif-permis {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 12px;
-    background: #EFF6FF; color: #3B82F6;
+    background: #EFF6FF; color: var(--admin-accent-blue);
     border-radius: 20px; font-size: 12px; font-weight: 600;
 }
 
@@ -153,12 +153,12 @@ $isFound = $conducteur !== null;
 
 .verif-field {}
 .verif-field-label {
-    font-size: 11px; font-weight: 600; color: #94A3B8;
+    font-size: 11px; font-weight: 600; color: var(--admin-slate-light);
     text-transform: uppercase; letter-spacing: 0.5px;
     margin-bottom: 4px;
 }
 .verif-field-value {
-    font-size: 14px; font-weight: 500; color: #1A2744;
+    font-size: 14px; font-weight: 500; color: var(--admin-navy);
 }
 
 .verif-badge {
@@ -166,10 +166,10 @@ $isFound = $conducteur !== null;
     padding: 4px 10px; border-radius: 20px;
     font-size: 12px; font-weight: 600;
 }
-.verif-badge.actif { background: #ECFDF5; color: #059669; }
-.verif-badge.suspendu { background: #FEF2F2; color: #DC2626; }
+.verif-badge.actif { background: var(--status-success-bg); color: var(--status-success); }
+.verif-badge.suspendu { background: var(--status-danger-bg); color: var(--status-danger); }
 .verif-badge.expire { background: #FFFBEB; color: #D97706; }
-.verif-badge.imprime { background: #ECFDF5; color: #10B981; }
+.verif-badge.imprime { background: var(--status-success-bg); color: #10B981; }
 .verif-badge.en_cours { background: #FFFBEB; color: #F59E0B; }
 .verif-badge.nouveau { background: #EEF2FF; color: #6366F1; }
 
@@ -184,18 +184,18 @@ $isFound = $conducteur !== null;
 
 .fraud-header {
     padding: 16px 24px;
-    background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+    background: linear-gradient(135deg, var(--status-danger-bg), #FEE2E2);
     border-bottom: 1px solid #FECACA;
     display: flex; align-items: center; gap: 10px;
     cursor: pointer;
     user-select: none;
 }
 
-.fraud-header svg { width: 20px; height: 20px; color: #DC2626; flex-shrink: 0; }
+.fraud-header svg { width: 20px; height: 20px; color: var(--status-danger); flex-shrink: 0; }
 .fraud-header h3 { margin: 0; font-size: 15px; font-weight: 600; color: #991B1B; flex: 1; }
 
 .fraud-header .chevron {
-    width: 18px; height: 18px; color: #DC2626;
+    width: 18px; height: 18px; color: var(--status-danger);
     transition: transform 0.3s;
 }
 .fraud-header.open .chevron { transform: rotate(180deg); }
@@ -221,7 +221,7 @@ $isFound = $conducteur !== null;
     outline: none; transition: border-color 0.2s;
 }
 .fraud-group input:focus,
-.fraud-group textarea:focus { border-color: #DC2626; }
+.fraud-group textarea:focus { border-color: var(--status-danger); }
 .fraud-group textarea { resize: vertical; min-height: 80px; }
 
 .fraud-photo-area {
@@ -233,10 +233,10 @@ $isFound = $conducteur !== null;
     transition: border-color 0.2s, background 0.2s;
     position: relative;
 }
-.fraud-photo-area:hover { border-color: #DC2626; background: #FEF2F2; }
-.fraud-photo-area svg { width: 32px; height: 32px; color: #94A3B8; margin-bottom: 8px; }
-.fraud-photo-area p { margin: 0; font-size: 13px; color: #64748B; }
-.fraud-photo-area small { color: #94A3B8; font-size: 11px; }
+.fraud-photo-area:hover { border-color: var(--status-danger); background: var(--status-danger-bg); }
+.fraud-photo-area svg { width: 32px; height: 32px; color: var(--admin-slate-light); margin-bottom: 8px; }
+.fraud-photo-area p { margin: 0; font-size: 13px; color: var(--admin-slate); }
+.fraud-photo-area small { color: var(--admin-slate-light); font-size: 11px; }
 .fraud-photo-area input { display: none; }
 
 .fraud-preview {
@@ -256,13 +256,13 @@ $isFound = $conducteur !== null;
     font-size: 13px;
     display: none;
 }
-.fraud-msg.error { background: #FEF2F2; color: #DC2626; }
-.fraud-msg.success { background: #ECFDF5; color: #059669; }
+.fraud-msg.error { background: var(--status-danger-bg); color: var(--status-danger); }
+.fraud-msg.success { background: var(--status-success-bg); color: var(--status-success); }
 
 .btn-fraud {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 8px; padding: 12px 20px;
-    background: #DC2626; color: white;
+    background: var(--status-danger); color: white;
     border: none; border-radius: 10px;
     font-size: 14px; font-weight: 600; font-family: inherit;
     cursor: pointer; transition: background 0.2s;
@@ -276,7 +276,7 @@ $isFound = $conducteur !== null;
     text-align: center;
     padding: 16px;
     font-size: 11px;
-    color: #94A3B8;
+    color: var(--admin-slate-light);
 }
 
 @media (max-width: 500px) {
@@ -405,7 +405,7 @@ $isFound = $conducteur !== null;
                     <div>
                         <h2 class="verif-name"><?= htmlspecialchars(($conducteur['prenom'] ?? '') . ' ' . ($conducteur['nom'] ?? '')) ?></h2>
                         <span class="verif-permis">
-                            <i data-lucide="credit-card" style="width:14px;height:14px;"></i>
+                            <i data-lucide="credit-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                             <?= htmlspecialchars($conducteur['numero_permis'] ?? '-') ?> — Cat. <?= htmlspecialchars($conducteur['categorie_permis'] ?? '-') ?>
                         </span>
                     </div>
@@ -423,7 +423,7 @@ $isFound = $conducteur !== null;
                                 $expPermis = $conducteur['date_expiration_permis'] ?? null;
                                 if ($expPermis) {
                                     $isExpired = strtotime($expPermis) < time();
-                                    echo '<span style="color:' . ($isExpired ? '#DC2626' : '#059669') . ';font-weight:600;">' . date('d/m/Y', strtotime($expPermis)) . '</span>';
+                                    echo '<span style="color:' . ($isExpired ? 'var(--status-danger)' : 'var(--status-success)') . ';font-weight:600;">' . date('d/m/Y', strtotime($expPermis)) . '</span>';
                                 } else {
                                     echo '-';
                                 }
@@ -537,7 +537,7 @@ if (fraudForm) {
         const msg = document.getElementById('fraudMsg');
 
         btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="refresh-cw" style="width:18px;height:18px;animation:spin 1s linear infinite;"></i> Envoi en cours...';
+        btn.innerHTML = '<i data-lucide="refresh-cw" style="width:var(--icon-md);height:var(--icon-md);animation:spin 1s linear infinite;"></i> Envoi en cours...';
         if (window.lucide) lucide.createIcons();
 
         try {
@@ -560,7 +560,7 @@ if (fraudForm) {
                 msg.textContent = result.error || 'Erreur lors de l\'envoi';
                 msg.style.display = 'block';
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="circle-alert" style="width:18px;height:18px;"></i> Envoyer le signalement';
+                btn.innerHTML = '<i data-lucide="circle-alert" style="width:var(--icon-md);height:var(--icon-md);"></i> Envoyer le signalement';
                 if (window.lucide) lucide.createIcons();
             }
         } catch (error) {
@@ -568,7 +568,7 @@ if (fraudForm) {
             msg.textContent = 'Erreur de connexion';
             msg.style.display = 'block';
             btn.disabled = false;
-            btn.innerHTML = '<i data-lucide="circle-alert" style="width:18px;height:18px;"></i> Envoyer le signalement';
+            btn.innerHTML = '<i data-lucide="circle-alert" style="width:var(--icon-md);height:var(--icon-md);"></i> Envoyer le signalement';
             if (window.lucide) lucide.createIcons();
         }
     });

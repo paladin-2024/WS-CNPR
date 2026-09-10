@@ -31,11 +31,11 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     }
 
     .toast-success {
-        background: linear-gradient(135deg, #10B981, #059669);
+        background: linear-gradient(135deg, #10B981, var(--status-success));
     }
 
     .toast-error {
-        background: linear-gradient(135deg, #EF4444, #DC2626);
+        background: linear-gradient(135deg, #EF4444, var(--status-danger));
     }
 
     .toast-warning {
@@ -95,7 +95,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
         align-items: center;
         justify-content: center;
         height: 100%;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
     }
 
     .file-preview-item .placeholder svg {
@@ -144,7 +144,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -173,7 +173,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     }
 
     .btn-primary {
-        background: #3B82F6;
+        background: var(--admin-accent-blue);
         color: white;
     }
 
@@ -195,7 +195,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     .form-section-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0 0 16px 0;
         padding-bottom: 8px;
         border-bottom: 1px solid #E2E8F0;
@@ -224,7 +224,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     }
 
     .form-group label .required {
-        color: #DC2626;
+        color: var(--status-danger);
     }
 
     .form-group input,
@@ -241,17 +241,17 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
 
     .form-group input:focus,
     .form-group select:focus {
-        border-color: #3B82F6;
+        border-color: var(--admin-accent-blue);
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .form-group input::placeholder {
-        color: #94A3B8;
+        color: var(--admin-slate-light);
     }
 
     .form-group .help-text {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
         margin-top: 4px;
     }
 
@@ -265,7 +265,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     }
 
     .form-group.file-input:hover {
-        border-color: #3B82F6;
+        border-color: var(--admin-accent-blue);
         background: #F8FAFC;
     }
 
@@ -276,14 +276,14 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     .form-group.file-input svg {
         width: 40px;
         height: 40px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
         margin-bottom: 8px;
     }
 
     .form-group.file-input p {
         margin: 0;
         font-size: 14px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .form-actions {
@@ -300,14 +300,14 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     }
 
     .alert-error {
-        background: #FEF2F2;
-        color: #DC2626;
+        background: var(--status-danger-bg);
+        color: var(--status-danger);
         border: 1px solid #FECACA;
     }
 
     .alert-success {
-        background: #ECFDF5;
-        color: #059669;
+        background: var(--status-success-bg);
+        color: var(--status-success);
         border: 1px solid #A7F3D0;
     }
 
@@ -335,7 +335,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
     <div class="page-header">
         <h1 class="page-title"><?= $isEdit ? 'Modifier' : 'Nouveau' ?> Conducteur</h1>
         <a href="<?= BASE_PATH ?>/admin/conducteurs" class="btn btn-secondary">
-            <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+            <i data-lucide="arrow-left" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Retour à la liste
         </a>
     </div>
@@ -393,9 +393,9 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                     <div class="form-group">
                         <label>Identifiant</label>
                         <?php if (!empty($conducteur['numero_permis'])): ?>
-                            <input type="text" value="<?= htmlspecialchars($conducteur['numero_permis']) ?>" readonly disabled style="background:#F1F5F9; color:#64748B;">
+                            <input type="text" value="<?= htmlspecialchars($conducteur['numero_permis']) ?>" readonly disabled style="background:#F1F5F9; color:var(--admin-slate);">
                         <?php else: ?>
-                            <input type="text" value="Généré automatiquement à la création" readonly disabled style="background:#F1F5F9; color:#94A3B8; font-style:italic;">
+                            <input type="text" value="Généré automatiquement à la création" readonly disabled style="background:#F1F5F9; color:var(--admin-slate-light); font-style:italic;">
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
@@ -446,7 +446,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                                 </div>
                                 <img src="" alt="Preview" style="display:none">
                                 <button type="button" class="remove-btn" onclick="event.stopPropagation(); removeFile('preview_photo_url')">
-                                    <i data-lucide="x" style="width:12px;height:12px;"></i>
+                                    <i data-lucide="x" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                 </button>
                             </div>
                         </div>
@@ -463,7 +463,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                                 </div>
                                 <img src="" alt="Preview" style="display:none">
                                 <button type="button" class="remove-btn" onclick="event.stopPropagation(); removeFile('preview_photo_piece_identite')">
-                                    <i data-lucide="x" style="width:12px;height:12px;"></i>
+                                    <i data-lucide="x" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                 </button>
                             </div>
                         </div>
@@ -492,7 +492,7 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
             <div class="form-actions">
                 <a href="<?= BASE_PATH ?>/admin/conducteurs" class="btn btn-secondary">Annuler</a>
                 <button type="submit" class="btn btn-primary">
-                    <i data-lucide="check" style="width:18px;height:18px;"></i>
+                    <i data-lucide="check" style="width:var(--icon-md);height:var(--icon-md);"></i>
                     <?= $isEdit ? 'Mettre à jour' : 'Enregistrer' ?>
                 </button>
             </div>

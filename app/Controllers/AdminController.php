@@ -555,6 +555,30 @@ class AdminController extends Controller
             exit;
         }
 
+        // Guard against accidental duplicates (a plain double-click/
+        // double-submit, or staff trying to "fix" a typo'd reference by
+        // resubmitting instead of realizing this always inserts a new row
+        // rather than editing the last one - both reproduced live in
+        // production). Checked fresh against the database on every
+        // request, so it still catches a stale/reopened form even if the
+        // page's own client-side state is out of date - only the explicit
+        // confirm_duplicate flag (set after the user confirms the warning
+        // shown in the modal) lets a second payment for the same
+        // conducteur through.
+        $confirmDuplicate = ($_POST['confirm_duplicate'] ?? '0') === '1';
+        if (!$confirmDuplicate) {
+            $existing = $db->fetchOne(
+                "SELECT reference_paiement, date_paiement FROM paiements_brevets WHERE conducteur_id = ? ORDER BY id DESC LIMIT 1",
+                [$conducteur_id]
+            );
+            if ($existing) {
+                header('Location: ' . BASE_PATH . '/admin/paiement?error=' . urlencode(
+                    'Ce conducteur a déjà un paiement enregistré (réf: ' . $existing['reference_paiement'] . ', le ' . $existing['date_paiement'] . '). Rouvrez le formulaire pour confirmer si vous voulez vraiment en ajouter un nouveau.'
+                ));
+                exit;
+            }
+        }
+
         try {
             // Always record a new row - a driver's second/renewal payment
             // used to UPDATE the one existing row here, silently destroying

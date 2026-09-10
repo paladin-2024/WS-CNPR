@@ -912,6 +912,26 @@ class AdminController extends Controller
         if (empty($prenom)) $errors[] = 'Le prénom est obligatoire';
         if (empty($date_naissance)) $errors[] = 'La date de naissance est obligatoire';
 
+        // Identifiant (ROC-<letter(s)><3 digits>) - manually assigned by
+        // staff at creation, not auto-generated (per client direction,
+        // same design as e-taxe-kisangani's PST- identifiant): the "ROC-"
+        // prefix is fixed, staff type the rest. Only relevant at creation -
+        // immutable afterward, same as before.
+        $numero_permis = null;
+        if (empty($id)) {
+            $numeroPermisSuffix = strtoupper(trim($_POST['numero_permis_suffix'] ?? ''));
+            if ($numeroPermisSuffix === '') {
+                $errors[] = 'L\'identifiant (ROC-) est obligatoire';
+            } elseif (!preg_match('/^[A-Z]+\d{3}$/', $numeroPermisSuffix)) {
+                $errors[] = 'L\'identifiant doit être une ou plusieurs lettres suivies de 3 chiffres (ex: A001, B045)';
+            } else {
+                $numero_permis = 'ROC-' . $numeroPermisSuffix;
+                if ($db->fetchOne("SELECT id FROM conducteurs WHERE numero_permis = ?", [$numero_permis])) {
+                    $errors[] = 'Un conducteur avec cet identifiant existe déjà : ' . htmlspecialchars($numero_permis);
+                }
+            }
+        }
+
         if (!empty($errors)) {
             $this->render('admin/conducteur-form', [
                 'pageTitle' => $id ? 'Modifier Conducteur' : 'Nouveau Conducteur',
@@ -921,12 +941,12 @@ class AdminController extends Controller
             ], 'admin');
             return;
         }
-        
+
         try {
             if ($id) {
-                // Mise à jour - numero_permis (l'identifiant) is system-generated
-                // once at creation and never editable here, so it's simply
-                // absent from this UPDATE rather than re-derived or re-checked.
+                // Mise à jour - numero_permis (l'identifiant) is set once at
+                // creation and never editable here, so it's simply absent
+                // from this UPDATE rather than re-derived or re-checked.
                 $db->query(
                     "UPDATE conducteurs SET nom=?, prenom=?, date_naissance=?, lieu_naissance=?, adresse=?, telephone=?, categorie_permis=?, date_expiration_permis=?, photo_url=?, photo_piece_identite=?, association=?, syndicat=?, statut=? WHERE id=?",
                     [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat, $statut, $id]
@@ -934,7 +954,6 @@ class AdminController extends Controller
                 $message = 'Conducteur mis à jour avec succès!';
             } else {
                 // Création
-                $numero_permis = $this->genererIdentifiantConducteur($db);
                 $db->query(
                     "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut, statut_brevet)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif', 'imprime')",

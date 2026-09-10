@@ -391,11 +391,15 @@ $isEdit = !empty($conducteur) && isset($conducteur['id']);
                 <h3 class="form-section-title">Permis de conduire</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Identifiant</label>
+                        <label>Identifiant<?= $isEdit ? '' : ' <span class="required">*</span>' ?></label>
                         <?php if (!empty($conducteur['numero_permis'])): ?>
                             <input type="text" value="<?= htmlspecialchars($conducteur['numero_permis']) ?>" readonly disabled style="background:#F1F5F9; color:var(--admin-slate);">
                         <?php else: ?>
-                            <input type="text" value="Généré automatiquement à la création" readonly disabled style="background:#F1F5F9; color:var(--admin-slate-light); font-style:italic;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="padding:10px 12px; background:#F1F5F9; border:1px solid #E2E8F0; border-radius:6px; font-weight:600; color:var(--admin-slate); white-space:nowrap;">ROC-</span>
+                                <input type="text" name="numero_permis_suffix" id="numero_permis_suffix" required maxlength="6" pattern="[A-Za-z]+\d{3}" placeholder="A001" style="flex:1; text-transform:uppercase;" value="<?= htmlspecialchars($conducteur['numero_permis_suffix'] ?? '') ?>">
+                            </div>
+                            <small class="help-text">Lettre(s) + 3 chiffres attribués à ce conducteur, ex: A001, B045.</small>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">

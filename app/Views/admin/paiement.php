@@ -285,7 +285,7 @@ function formatCurrency($amount) {
                                 <td>
                                     <button class="btn btn-success btn-sm" onclick="openPaiementModal(<?= $c['id'] ?>, '<?= htmlspecialchars(($c['prenom'] ?? '') . ' ' . ($c['nom'] ?? '')) ?>', '<?= htmlspecialchars($c['numero_permis'] ?? '') ?>', '<?= $aPaiement ? $c['paiement_montant'] : '' ?>', '<?= $aPaiement ? $c['paiement_reference'] : '' ?>')">
                                         <i data-lucide="plus"></i>
-                                        <?= $aPaiement ? 'Modifier' : 'Enregistrer' ?>
+                                        <?= $aPaiement ? 'Nouveau paiement' : 'Enregistrer' ?>
                                     </button>
                                 </td>
                             </tr>
@@ -380,9 +380,14 @@ function formatCurrency($amount) {
                     <span class="paiement-details-value" id="modalPermis">-</span>
                 </div>
             </div>
+            <div id="modalPaiementExistant" style="display:none; background:#FFFBEB; border:1px solid #FDE68A; border-radius:6px; padding:10px 12px; margin-bottom:16px; font-size:13px; color:#92400E;">
+                <strong>Ce conducteur a déjà un paiement enregistré</strong> (<span id="modalPaiementExistantDetails"></span>).
+                Ce formulaire enregistre un <strong>nouveau</strong> paiement en plus de celui-ci - il ne le modifie pas.
+            </div>
             <form id="paiementForm" method="POST" action="<?= BASE_PATH ?>/admin/paiement/valider">
                 <?= \App\Core\Csrf::field() ?>
                 <input type="hidden" name="conducteur_id" id="modalConducteurId">
+                <input type="hidden" name="confirm_duplicate" id="modalConfirmDuplicate" value="0">
                 <div class="form-group">
                     <label for="montant">Montant (USD)</label>
                     <input type="number" name="montant" id="modalMontant" required min="0" step="0.01" placeholder="Ex: 25.00">
@@ -423,8 +428,23 @@ function openPaiementModal(id, nom, permis, montant, reference) {
     document.getElementById('modalConducteurId').value = id;
     document.getElementById('modalConducteur').textContent = nom;
     document.getElementById('modalPermis').textContent = permis;
-    document.getElementById('modalMontant').value = montant || '';
-    document.getElementById('modalReference').value = reference || '';
+    // Never pre-fill from an existing payment - this form always inserts a
+    // NEW row (validerPaiement() deliberately never updates one in place,
+    // to keep payment history intact), so pre-filling the old values here
+    // invited staff to edit a "typo" and re-save, silently creating a
+    // duplicate row instead of fixing the original.
+    document.getElementById('modalMontant').value = '';
+    document.getElementById('modalReference').value = '';
+    document.getElementById('modalConfirmDuplicate').value = '0';
+
+    const warning = document.getElementById('modalPaiementExistant');
+    if (montant) {
+        document.getElementById('modalPaiementExistantDetails').textContent = reference + ', ' + montant + ' USD';
+        warning.style.display = 'block';
+    } else {
+        warning.style.display = 'none';
+    }
+
     document.getElementById('paiementModal').classList.add('active');
 }
 
@@ -441,7 +461,7 @@ function closeModalOnOverlay(event) {
 function submitPaiement() {
     const montant = document.getElementById('modalMontant').value;
     const reference = document.getElementById('modalReference').value;
-    
+
     if (!montant || montant <= 0) {
         showToast('Veuillez entrer un montant valide', 'error');
         return;
@@ -449,6 +469,13 @@ function submitPaiement() {
     if (!reference || reference.trim() === '') {
         showToast('Veuillez entrer une référence de paiement', 'error');
         return;
+    }
+
+    const hasExisting = document.getElementById('modalPaiementExistant').style.display !== 'none';
+    if (hasExisting) {
+        const ok = confirm('Ce conducteur a déjà un paiement enregistré. Voulez-vous vraiment en ajouter un nouveau ?');
+        if (!ok) return;
+        document.getElementById('modalConfirmDuplicate').value = '1';
     }
 
     document.getElementById('paiementForm').submit();

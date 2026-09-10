@@ -25,6 +25,18 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             docker compose up -d --build
+
+            # nginx doesn't hot-reload its config file when it changes on
+            # disk, and "up -d --build" only recreates containers whose own
+            # image/config changed - nginx's doesn't, on a normal app-only
+            # deploy. Two problems that fixes: (1) any nginx/conf.d change
+            # in this same deploy would otherwise sit unused until nginx
+            # happened to restart for some other reason; (2) nginx caches
+            # the "app" hostname's resolved IP for the life of its worker
+            # process, so leaving it running across an app-container
+            # recreation (a new IP) means fastcgi_pass silently points at a
+            # dead address - reproduced live once already as a 502.
+            docker compose restart nginx
             docker image prune -f
 
       - name: Health check

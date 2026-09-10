@@ -41,7 +41,7 @@ function formatDate($date) {
         color: white;
         font-size: 14px;
         font-weight: 500;
-        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-family: var(--font-secondary);
         box-shadow: 0 10px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1);
         animation: toastSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         display: flex;
@@ -54,12 +54,12 @@ function formatDate($date) {
     }
 
     .toast-success { 
-        background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
+        background: linear-gradient(135deg, #10B981 0%, var(--status-success) 50%, #047857 100%);
         border: 1px solid rgba(16, 185, 129, 0.3);
     }
     
     .toast-error { 
-        background: linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%);
+        background: linear-gradient(135deg, #EF4444 0%, var(--status-danger) 50%, #B91C1C 100%);
         border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
@@ -127,7 +127,7 @@ function formatDate($date) {
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -145,7 +145,7 @@ function formatDate($date) {
     }
 
     .btn-primary {
-        background: #3B82F6;
+        background: var(--admin-accent-blue);
         color: white;
     }
 
@@ -183,7 +183,7 @@ function formatDate($date) {
     }
 
     .search-box input:focus {
-        border-color: #3B82F6;
+        border-color: var(--admin-accent-blue);
     }
 
     .search-box svg {
@@ -193,7 +193,7 @@ function formatDate($date) {
         transform: translateY(-50%);
         width: 18px;
         height: 18px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
     }
 
     .filter-select {
@@ -225,7 +225,7 @@ function formatDate($date) {
         padding: 14px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #64748B;
+        color: var(--admin-slate);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         background: #F8FAFC;
@@ -235,7 +235,7 @@ function formatDate($date) {
     .data-table td {
         padding: 14px 16px;
         font-size: 14px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -253,7 +253,7 @@ function formatDate($date) {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        background: linear-gradient(135deg, var(--admin-accent-blue), #8B5CF6);
         color: white;
         display: flex;
         align-items: center;
@@ -264,12 +264,12 @@ function formatDate($date) {
 
     .conducteur-name {
         font-weight: 500;
-        color: #1A2744;
+        color: var(--admin-navy);
     }
 
     .conducteur-contact {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .badge {
@@ -309,7 +309,7 @@ function formatDate($date) {
 
     .action-btn-edit {
         background: #EFF6FF;
-        color: #3B82F6;
+        color: var(--admin-accent-blue);
     }
 
     .action-btn-edit:hover {
@@ -317,8 +317,8 @@ function formatDate($date) {
     }
 
     .action-btn-delete {
-        background: #FEF2F2;
-        color: #DC2626;
+        background: var(--status-danger-bg);
+        color: var(--status-danger);
     }
 
     .action-btn-delete:hover {
@@ -338,7 +338,7 @@ function formatDate($date) {
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .empty-state svg {
@@ -350,7 +350,7 @@ function formatDate($date) {
 
     .empty-state h3 {
         margin: 0 0 8px 0;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .empty-state p {
@@ -422,7 +422,7 @@ function formatDate($date) {
 
     .form-group input:focus,
     .form-group select:focus {
-        border-color: #3B82F6;
+        border-color: var(--admin-accent-blue);
     }
 
     .form-message {
@@ -435,14 +435,14 @@ function formatDate($date) {
 
     .form-message.success {
         display: block;
-        background: #ECFDF5;
-        color: #059669;
+        background: var(--status-success-bg);
+        color: var(--status-success);
     }
 
     .form-message.error {
         display: block;
-        background: #FEF2F2;
-        color: #DC2626;
+        background: var(--status-danger-bg);
+        color: var(--status-danger);
     }
 
     .form-actions {
@@ -590,9 +590,9 @@ function formatDate($date) {
 <div id="driverDetailModal" class="modal-backdrop" style="display:none;">
     <div class="modal-content" style="max-width:600px;">
         <div style="padding:20px 24px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
-            <h2 style="margin:0;font-size:18px;font-weight:600;color:#1A2744;">Détails du conducteur</h2>
-            <button onclick="closeDriverModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
-                <i data-lucide="x" style="width:20px;height:20px;"></i>
+            <h2 style="margin:0;font-size:18px;font-weight:600;color:var(--admin-navy);">Détails du conducteur</h2>
+            <button onclick="closeDriverModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--admin-slate);">
+                <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </button>
         </div>
         <div id="driverDetailBody" style="padding:24px;max-height:70vh;overflow-y:auto;">
@@ -604,9 +604,9 @@ function formatDate($date) {
 <div id="conducteurModal" class="modal-backdrop">
     <div class="modal-content">
         <div style="padding:20px 24px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
-            <h2 id="modalTitle" style="margin:0;font-size:18px;font-weight:600;color:#1A2744;">Nouveau conducteur</h2>
-            <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:#64748B;">
-                <i data-lucide="x" style="width:20px;height:20px;"></i>
+            <h2 id="modalTitle" style="margin:0;font-size:18px;font-weight:600;color:var(--admin-navy);">Nouveau conducteur</h2>
+            <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--admin-slate);">
+                <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </button>
         </div>
         <form id="conducteurForm" style="padding:24px;">
@@ -639,7 +639,7 @@ function formatDate($date) {
                 </div>
                 <div class="form-group">
                     <label>Identifiant</label>
-                    <input type="text" id="numero_permis" readonly disabled placeholder="Généré automatiquement à la création" style="background:#F1F5F9; color:#64748B;">
+                    <input type="text" id="numero_permis" readonly disabled placeholder="Généré automatiquement à la création" style="background:#F1F5F9; color:var(--admin-slate);">
                 </div>
                 <div class="form-group">
                     <label>Catégorie permis *</label>
@@ -800,7 +800,7 @@ async function deleteConducteur(id) {
         text: "Cette action supprimera définitivement ce conducteur. Cette action est irréversible.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#DC2626',
+        confirmButtonColor: 'var(--status-danger)',
         cancelButtonColor: '#6B7280',
         confirmButtonText: 'Oui, supprimer',
         cancelButtonText: 'Annuler',
@@ -824,7 +824,7 @@ async function deleteConducteur(id) {
                     title: 'Supprimé!',
                     text: 'Le conducteur a été supprimé avec succès.',
                     icon: 'success',
-                    confirmButtonColor: '#059669'
+                    confirmButtonColor: 'var(--status-success)'
                 });
                 window.location.reload();
             } else {
@@ -832,7 +832,7 @@ async function deleteConducteur(id) {
                     title: 'Erreur',
                     text: data.error || 'Erreur lors de la suppression',
                     icon: 'error',
-                    confirmButtonColor: '#DC2626'
+                    confirmButtonColor: 'var(--status-danger)'
                 });
             }
         } catch (error) {
@@ -840,7 +840,7 @@ async function deleteConducteur(id) {
                 title: 'Erreur',
                 text: 'Erreur de connexion',
                 icon: 'error',
-                confirmButtonColor: '#DC2626'
+                confirmButtonColor: 'var(--status-danger)'
             });
         }
     }

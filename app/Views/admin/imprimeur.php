@@ -21,7 +21,7 @@ function formatDateBrevet($date) {
         padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .imp-toolbar-title {
-        font-size: 18px; font-weight: 700; color: #1A2744; margin: 0;
+        font-size: 18px; font-weight: 700; color: var(--admin-navy); margin: 0;
         white-space: nowrap;
     }
     .imp-toolbar-sep {
@@ -31,22 +31,22 @@ function formatDateBrevet($date) {
         padding: 7px 10px; border: 1px solid #E2E8F0; border-radius: 6px;
         font-size: 13px; outline: none; width: 140px;
     }
-    .imp-toolbar input[type="date"]:focus { border-color: #3B82F6; }
+    .imp-toolbar input[type="date"]:focus { border-color: var(--admin-accent-blue); }
     .imp-search {
         position: relative; flex: 1; min-width: 180px; max-width: 320px;
     }
     .imp-search svg {
         position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-        width: 16px; height: 16px; color: #94A3B8;
+        width: 16px; height: 16px; color: var(--admin-slate-light);
     }
     .imp-search input {
         width: 100%; padding: 7px 12px 7px 34px; border: 1px solid #E2E8F0;
         border-radius: 6px; font-size: 13px; outline: none;
     }
-    .imp-search input:focus { border-color: #3B82F6; }
+    .imp-search input:focus { border-color: var(--admin-accent-blue); }
     .imp-badge-count {
         display: inline-flex; align-items: center; gap: 6px;
-        background: #EFF6FF; color: #3B82F6; padding: 5px 12px;
+        background: #EFF6FF; color: var(--admin-accent-blue); padding: 5px 12px;
         border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap;
     }
 
@@ -58,20 +58,20 @@ function formatDateBrevet($date) {
     }
     .imp-tab {
         flex: 1; padding: 12px 20px; text-align: center; cursor: pointer;
-        font-size: 14px; font-weight: 500; color: #64748B;
+        font-size: 14px; font-weight: 500; color: var(--admin-slate);
         border-bottom: 3px solid transparent; transition: all 0.2s;
         display: flex; align-items: center; justify-content: center; gap: 8px;
         background: none; border: none; border-bottom: 3px solid transparent;
     }
-    .imp-tab:hover { color: #334155; background: #F8FAFC; }
-    .imp-tab.active { color: #3B82F6; border-bottom-color: #3B82F6; font-weight: 600; }
+    .imp-tab:hover { color: var(--admin-slate-dark); background: #F8FAFC; }
+    .imp-tab.active { color: var(--admin-accent-blue); border-bottom-color: var(--admin-accent-blue); font-weight: 600; }
     .imp-tab .tab-count {
         display: inline-flex; align-items: center; justify-content: center;
         min-width: 22px; height: 22px; padding: 0 6px; border-radius: 12px;
         font-size: 12px; font-weight: 600;
     }
-    .imp-tab.active .tab-count { background: #3B82F6; color: white; }
-    .imp-tab:not(.active) .tab-count { background: #E2E8F0; color: #64748B; }
+    .imp-tab.active .tab-count { background: var(--admin-accent-blue); color: white; }
+    .imp-tab:not(.active) .tab-count { background: #E2E8F0; color: var(--admin-slate); }
 
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -88,9 +88,9 @@ function formatDateBrevet($date) {
         text-decoration: none;
     }
     .btn svg { width: 16px; height: 16px; }
-    .btn-primary { background: #3B82F6; color: white; }
+    .btn-primary { background: var(--admin-accent-blue); color: white; }
     .btn-primary:hover { background: #2563EB; }
-    .btn-success { background: #059669; color: white; }
+    .btn-success { background: var(--status-success); color: white; }
     .btn-success:hover { background: #047857; }
     .btn-warning { background: #D97706; color: white; }
     .btn-warning:hover { background: #B45309; }
@@ -109,12 +109,12 @@ function formatDateBrevet($date) {
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th {
         text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600;
-        color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;
+        color: var(--admin-slate); text-transform: uppercase; letter-spacing: 0.5px;
         background: #F8FAFC; border-bottom: 1px solid #E2E8F0;
         position: sticky; top: 0; z-index: 1;
     }
     .data-table td {
-        padding: 8px 12px; font-size: 13px; color: #334155;
+        padding: 8px 12px; font-size: 13px; color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
     .data-table tr:hover td { background: #F8FAFC; }
@@ -122,27 +122,27 @@ function formatDateBrevet($date) {
     .conducteur-info { display: flex; align-items: center; gap: 8px; }
     .conducteur-avatar {
         width: 30px; height: 30px; border-radius: 50%;
-        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        background: linear-gradient(135deg, var(--admin-accent-blue), #8B5CF6);
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 600; font-size: 11px; flex-shrink: 0;
     }
     .conducteur-avatar.orange { background: linear-gradient(135deg, #D97706, #F59E0B); }
-    .conducteur-name { font-weight: 500; color: #1A2744; font-size: 13px; }
+    .conducteur-name { font-weight: 500; color: var(--admin-navy); font-size: 13px; }
 
     .badge {
         display: inline-flex; align-items: center; padding: 2px 8px;
         border-radius: 20px; font-size: 11px; font-weight: 500;
     }
-    .badge-nouveau { background: #EFF6FF; color: #3B82F6; }
+    .badge-nouveau { background: #EFF6FF; color: var(--admin-accent-blue); }
     .badge-encours { background: #FFFBEB; color: #D97706; }
-    .badge-imprime { background: #ECFDF5; color: #059669; }
-    .conducteur-avatar.green { background: linear-gradient(135deg, #059669, #10B981); }
+    .badge-imprime { background: var(--status-success-bg); color: var(--status-success); }
+    .conducteur-avatar.green { background: linear-gradient(135deg, var(--status-success), #10B981); }
 
     .empty-state {
-        text-align: center; padding: 40px 20px; color: #64748B;
+        text-align: center; padding: 40px 20px; color: var(--admin-slate);
     }
     .empty-state svg { width: 48px; height: 48px; color: #CBD5E1; margin-bottom: 12px; }
-    .empty-state h3 { margin: 0 0 4px 0; color: #334155; font-size: 15px; }
+    .empty-state h3 { margin: 0 0 4px 0; color: var(--admin-slate-dark); font-size: 15px; }
     .empty-state p { margin: 0; font-size: 13px; }
 
     /* ── Toast ── */
@@ -157,8 +157,8 @@ function formatDateBrevet($date) {
         display: flex; align-items: center; gap: 10px; min-width: 280px;
         pointer-events: auto;
     }
-    .toast-success { background: linear-gradient(135deg, #10B981, #059669); }
-    .toast-error { background: linear-gradient(135deg, #EF4444, #DC2626); }
+    .toast-success { background: linear-gradient(135deg, #10B981, var(--status-success)); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, var(--status-danger)); }
     .toast svg { width: 20px; height: 20px; flex-shrink: 0; }
     @keyframes toastIn {
         0% { transform: translateX(120%); opacity: 0; }
@@ -196,7 +196,7 @@ function formatDateBrevet($date) {
             <input type="text" id="searchInput" placeholder="Rechercher nom, identifiant...">
         </div>
         <span class="imp-badge-count">
-            <i data-lucide="printer" style="width:14px;height:14px;"></i>
+            <i data-lucide="printer" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
             <span id="totalCount"><?= count($conducteurs) ?></span> à imprimer
         </span>
     </div>
@@ -204,17 +204,17 @@ function formatDateBrevet($date) {
     <!-- Onglets -->
     <div class="imp-tabs">
         <button class="imp-tab active" onclick="switchTab('nouveau')" id="tabNouveau">
-            <i data-lucide="printer" style="width:16px;height:16px;"></i>
+            <i data-lucide="printer" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Nouveaux brevets
             <span class="tab-count" id="countNouveau"><?= count($conducteurs) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('encours')" id="tabEncours">
-            <i data-lucide="clock" style="width:16px;height:16px;"></i>
+            <i data-lucide="clock" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Brevets en cours
             <span class="tab-count" id="countEncours"><?= count($conducteursEnCours) ?></span>
         </button>
         <button class="imp-tab" onclick="switchTab('imprimes')" id="tabImprimes">
-            <i data-lucide="circle-check-big" style="width:16px;height:16px;"></i>
+            <i data-lucide="circle-check-big" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Déjà imprimés
             <span class="tab-count" id="countImprimes"><?= count($conducteursImprimes) ?></span>
         </button>
@@ -282,27 +282,27 @@ function formatDateBrevet($date) {
                             </td>
                             <td><?= htmlspecialchars($c['telephone'] ?? '-') ?></td>
                             <td><?= htmlspecialchars($c['numero_permis'] ?? '-') ?></td>
-                            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
+                            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
                             <td><?= formatDateBrevet($c['date_enregistrement'] ?? null) ?></td>
                             <td>
                                 <?php if (!empty($c['photo_url'])): ?>
-                                    <span class="badge" style="background:#ECFDF5;color:#059669;">✓</span>
+                                    <span class="badge" style="background:var(--status-success-bg);color:var(--status-success);">✓</span>
                                 <?php else: ?>
-                                    <span class="badge" style="background:#FEF2F2;color:#DC2626;">✗</span>
+                                    <span class="badge" style="background:var(--status-danger-bg);color:var(--status-danger);">✗</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="id-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="image" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="qr-code" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                 </div>
                             </td>
@@ -358,21 +358,21 @@ function formatDateBrevet($date) {
                             </td>
                             <td><?= htmlspecialchars($c['telephone'] ?? '-') ?></td>
                             <td><?= htmlspecialchars($c['numero_permis'] ?? '-') ?></td>
-                            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
+                            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
                             <td><?= formatDateBrevet($c['date_enregistrement'] ?? null) ?></td>
                              <td><span class="badge badge-encours">En cours d'impression</span></td>
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="id-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="image" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="qr-code" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                 </div>
                             </td>
@@ -420,21 +420,21 @@ function formatDateBrevet($date) {
                             </td>
                             <td><?= htmlspecialchars($c['telephone'] ?? '-') ?></td>
                             <td><?= htmlspecialchars($c['numero_permis'] ?? '-') ?></td>
-                            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
+                            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
                             <td><?= formatDateBrevet($c['date_enregistrement'] ?? null) ?></td>
                             <td><span class="badge badge-imprime">Imprimé ✓</span></td>
                             <td>
                                 <div style="display:flex;gap:4px;">
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/carte/<?= $c['id'] ?>" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;">
-                                        <i data-lucide="id-card" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="id-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php if (!empty($c['photo_url'])): ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-photo/<?= $c['id'] ?>" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;">
-                                        <i data-lucide="image" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="image" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                     <?php endif; ?>
                                     <a href="<?= BASE_PATH ?>/admin/imprimeur/download-qrcode/<?= $c['id'] ?>" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;">
-                                        <i data-lucide="qr-code" style="width:12px;height:12px;"></i>
+                                        <i data-lucide="qr-code" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     </a>
                                 </div>
                             </td>
@@ -451,21 +451,21 @@ function formatDateBrevet($date) {
     <div style="background:white; border-radius:10px; width:90%; max-width:480px;">
         <div style="padding:16px 20px; border-bottom:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between;">
             <div>
-                <h2 style="margin:0; font-size:16px; font-weight:600; color:#1A2744;">Télécharger Excel</h2>
-                <p style="margin:2px 0 0 0; font-size:12px; color:#64748B;">Chemins des dossiers photos et QR codes</p>
+                <h2 style="margin:0; font-size:16px; font-weight:600; color:var(--admin-navy);">Télécharger Excel</h2>
+                <p style="margin:2px 0 0 0; font-size:12px; color:var(--admin-slate);">Chemins des dossiers photos et QR codes</p>
             </div>
-            <button onclick="document.getElementById('excelModal').style.display='none'" style="background:none; border:none; cursor:pointer; padding:4px; color:#64748B;">
-                <i data-lucide="x" style="width:18px;height:18px;"></i>
+            <button onclick="document.getElementById('excelModal').style.display='none'" style="background:none; border:none; cursor:pointer; padding:4px; color:var(--admin-slate);">
+                <i data-lucide="x" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </button>
         </div>
         <div style="padding:16px 20px;">
             <div style="margin-bottom:12px;">
                 <label style="display:block; font-size:12px; font-weight:500; color:#374151; margin-bottom:4px;">Chemin dossier Photos</label>
-                <input type="text" id="cheminPhotos" placeholder="Ex: C:\Impression\Photos" style="width:100%; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E2E8F0'">
+                <input type="text" id="cheminPhotos" placeholder="Ex: C:\Impression\Photos" style="width:100%; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='var(--admin-accent-blue)'" onblur="this.style.borderColor='#E2E8F0'">
             </div>
             <div style="margin-bottom:16px;">
                 <label style="display:block; font-size:12px; font-weight:500; color:#374151; margin-bottom:4px;">Chemin dossier QR Codes</label>
-                <input type="text" id="cheminQrcodes" placeholder="Ex: C:\Impression\QRCodes" style="width:100%; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E2E8F0'">
+                <input type="text" id="cheminQrcodes" placeholder="Ex: C:\Impression\QRCodes" style="width:100%; padding:8px 10px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='var(--admin-accent-blue)'" onblur="this.style.borderColor='#E2E8F0'">
             </div>
             <div style="display:flex; gap:10px; justify-content:flex-end;">
                 <button onclick="document.getElementById('excelModal').style.display='none'" class="btn btn-outline">Annuler</button>
@@ -568,13 +568,13 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
     tbody.innerHTML = conducteurs.map(c => {
         const initials = ((c.prenom||'').charAt(0) + (c.nom||'').charAt(0)).toUpperCase();
         const dateEnr = c.date_enregistrement ? new Date(c.date_enregistrement).toLocaleDateString('fr-FR') : '-';
-        const hasPhoto = c.photo_url ? '<span class="badge" style="background:#ECFDF5;color:#059669;">✓</span>' : '<span class="badge" style="background:#FEF2F2;color:#DC2626;">✗</span>';
+        const hasPhoto = c.photo_url ? '<span class="badge" style="background:var(--status-success-bg);color:var(--status-success);">✓</span>' : '<span class="badge" style="background:var(--status-danger-bg);color:var(--status-danger);">✗</span>';
         return `<tr>
             <td><strong>${c.id}</strong></td>
             <td><div class="conducteur-info"><div class="conducteur-avatar">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
             <td>${escapeHtml(c.telephone || '-')}</td>
             <td>${escapeHtml(c.numero_permis || '-')}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
+            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td>${hasPhoto}</td>
             <td>${renderRowActions(c)}</td>
@@ -588,11 +588,11 @@ function renderNouveaux(conducteurs, dateDebut, dateFin) {
 // page load instead of dropping buttons after a date-filter refresh.
 function renderRowActions(c) {
     let html = `<div style="display:flex;gap:4px;">`;
-    html += `<a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;"><i data-lucide="id-card" style="width:12px;height:12px;"></i></a>`;
+    html += `<a href="${BASE_PATH}/admin/imprimeur/carte/${c.id}" target="_blank" class="btn btn-sm btn-warning" title="Voir la carte brevet" style="padding:4px 8px;"><i data-lucide="id-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i></a>`;
     if (c.photo_url) {
-        html += `<a href="${BASE_PATH}/admin/imprimeur/download-photo/${c.id}" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;"><i data-lucide="image" style="width:12px;height:12px;"></i></a>`;
+        html += `<a href="${BASE_PATH}/admin/imprimeur/download-photo/${c.id}" class="btn btn-sm btn-primary" title="Télécharger photo" style="padding:4px 8px;"><i data-lucide="image" style="width:var(--icon-sm);height:var(--icon-sm);"></i></a>`;
     }
-    html += `<a href="${BASE_PATH}/admin/imprimeur/download-qrcode/${c.id}" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;"><i data-lucide="qr-code" style="width:12px;height:12px;"></i></a>`;
+    html += `<a href="${BASE_PATH}/admin/imprimeur/download-qrcode/${c.id}" class="btn btn-sm btn-purple" title="Télécharger QR code" style="padding:4px 8px;"><i data-lucide="qr-code" style="width:var(--icon-sm);height:var(--icon-sm);"></i></a>`;
     html += `</div>`;
     return html;
 }
@@ -622,7 +622,7 @@ function renderEncours(conducteurs) {
             <td><div class="conducteur-info"><div class="conducteur-avatar orange">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
             <td>${escapeHtml(c.telephone || '-')}</td>
             <td>${escapeHtml(c.numero_permis || '-')}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
+            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-encours">En cours d'impression</span></td>
             <td>${renderRowActions(c)}</td>
@@ -653,7 +653,7 @@ function renderImprimes(conducteurs) {
             <td><div class="conducteur-info"><div class="conducteur-avatar green">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
             <td>${escapeHtml(c.telephone || '-')}</td>
             <td>${escapeHtml(c.numero_permis || '-')}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
+            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-imprime">Imprimé ✓</span></td>
             <td>${renderRowActions(c)}</td>
@@ -685,11 +685,11 @@ function confirmerMarquerImpression(total) {
     Swal.fire({
         title: 'Confirmer le changement',
         html: `<p style="font-size:14px;">Marquer <strong>${total} conducteur(s)</strong> en <span style="color:#D97706;font-weight:600;">cours d'impression</span> ?</p>
-               <p style="font-size:12px;color:#64748B;margin-top:6px;">Les brevets ne seront plus disponibles au téléchargement.</p>`,
+               <p style="font-size:12px;color:var(--admin-slate);margin-top:6px;">Les brevets ne seront plus disponibles au téléchargement.</p>`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#D97706',
-        cancelButtonColor: '#64748B',
+        cancelButtonColor: 'var(--admin-slate)',
         confirmButtonText: 'Oui, marquer',
         cancelButtonText: 'Annuler',
         reverseButtons: true
@@ -706,11 +706,11 @@ function confirmerMarquerImprime() {
     Swal.fire({
         title: 'Confirmer le changement',
         html: `<p style="font-size:14px;">Marquer <strong>${total} conducteur(s)</strong> comme <span style="color:#10B981;font-weight:600;">imprimé(s)</span> ?</p>
-               <p style="font-size:12px;color:#64748B;margin-top:6px;">Les brevets seront transférés vers l'onglet "Déjà imprimés".</p>`,
+               <p style="font-size:12px;color:var(--admin-slate);margin-top:6px;">Les brevets seront transférés vers l'onglet "Déjà imprimés".</p>`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#10B981',
-        cancelButtonColor: '#64748B',
+        cancelButtonColor: 'var(--admin-slate)',
         confirmButtonText: 'Oui, marquer',
         cancelButtonText: 'Annuler',
         reverseButtons: true

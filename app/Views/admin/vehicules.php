@@ -45,7 +45,7 @@ function formatDate($date) {
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -111,7 +111,7 @@ function formatDate($date) {
         transform: translateY(-50%);
         width: 18px;
         height: 18px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
     }
 
     .filter-select {
@@ -143,7 +143,7 @@ function formatDate($date) {
         padding: 14px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #64748B;
+        color: var(--admin-slate);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         background: #F8FAFC;
@@ -153,7 +153,7 @@ function formatDate($date) {
     .data-table td {
         padding: 14px 16px;
         font-size: 14px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -169,14 +169,14 @@ function formatDate($date) {
 
     .vehicule-plaque {
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         font-family: monospace;
         font-size: 15px;
     }
 
     .vehicule-marque {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .badge {
@@ -216,7 +216,7 @@ function formatDate($date) {
 
     .action-btn-edit {
         background: #EFF6FF;
-        color: #3B82F6;
+        color: var(--admin-accent-blue);
     }
 
     .action-btn-edit:hover {
@@ -224,8 +224,8 @@ function formatDate($date) {
     }
 
     .action-btn-delete {
-        background: #FEF2F2;
-        color: #DC2626;
+        background: var(--status-danger-bg);
+        color: var(--status-danger);
     }
 
     .action-btn-delete:hover {
@@ -236,7 +236,7 @@ function formatDate($date) {
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .empty-state svg {
@@ -248,7 +248,7 @@ function formatDate($date) {
 
     .empty-state h3 {
         margin: 0 0 8px 0;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .empty-state p {
@@ -303,8 +303,8 @@ function formatDate($date) {
         position: relative;
     }
 
-    .toast-success { background: linear-gradient(135deg, #10B981, #059669, #047857); }
-    .toast-error { background: linear-gradient(135deg, #EF4444, #DC2626, #B91C1C); }
+    .toast-success { background: linear-gradient(135deg, #10B981, var(--status-success), #047857); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, var(--status-danger), #B91C1C); }
     .toast svg { width: 22px; height: 22px; flex-shrink: 0; }
     .toast-progress {
         position: absolute;
@@ -361,14 +361,14 @@ function formatDate($date) {
         border-bottom: 1px solid #E2E8F0;
     }
 
-    .modal-header h2 { margin: 0; font-size: 18px; color: #1A2744; }
+    .modal-header h2 { margin: 0; font-size: 18px; color: var(--admin-navy); }
 
     .modal-close {
         width: 32px; height: 32px;
         border: none; background: #F1F5F9;
         border-radius: 8px; cursor: pointer;
         display: flex; align-items: center; justify-content: center;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .modal-close:hover { background: #E2E8F0; }
@@ -412,8 +412,8 @@ function formatDate($date) {
         display: none;
     }
 
-    .form-message.error { background: #FEF2F2; color: #DC2626; }
-    .form-message.success { background: #ECFDF5; color: #059669; }
+    .form-message.error { background: var(--status-danger-bg); color: var(--status-danger); }
+    .form-message.success { background: var(--status-success-bg); color: var(--status-success); }
 
     .modal-footer {
         display: flex;

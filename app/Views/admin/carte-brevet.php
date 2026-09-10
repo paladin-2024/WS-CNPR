@@ -57,7 +57,7 @@ $categories = ['A' => 'Moto', 'B' => 'Voiture', 'C' => 'Bus', 'D' => 'Mini-Camio
 }
 
 body {
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: var(--font-secondary);
     background: #CBD5E1;
     min-height: 100vh;
     display: flex;
@@ -77,7 +77,7 @@ body {
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 .toolbar-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 14px; font-weight: 700; color: white; flex: 1;
     display: flex; align-items: center; gap: 8px;
 }
@@ -86,16 +86,16 @@ body {
 .tbtn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 13px; border-radius: 7px; font-size: 12px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-weight: 600; cursor: pointer; border: none;
     text-decoration: none; transition: all 0.15s; white-space: nowrap;
 }
 .tbtn svg { width: 14px; height: 14px; }
 .tbtn-back  { background: rgba(255,255,255,0.1); color: #CBD5E1; }
 .tbtn-back:hover { background: rgba(255,255,255,0.2); }
-.tbtn-print { background: #3B82F6; color: white; }
+.tbtn-print { background: var(--admin-accent-blue); color: white; }
 .tbtn-print:hover { background: #2563EB; }
-.tbtn-dl-r  { background: #059669; color: white; }
+.tbtn-dl-r  { background: var(--status-success); color: white; }
 .tbtn-dl-r:hover { background: #047857; }
 .tbtn-dl-v  { background: #7C3AED; color: white; }
 .tbtn-dl-v:hover { background: #6D28D9; }
@@ -106,7 +106,7 @@ body {
    LABEL DE FACE
 ═══════════════════════════════════ */
 .face-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 11px; font-weight: 800; color: #475569;
     letter-spacing: 2px; text-transform: uppercase;
     align-self: flex-start; margin-bottom: 8px; padding-left: 4px;
@@ -202,17 +202,17 @@ body {
     line-height: 1.25; text-align: center;
 }
 .r-rdc {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 5px; font-weight: 900; color: var(--dark);
     text-transform: uppercase; letter-spacing: 0.15px;
 }
 .r-province {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 4.5px; font-weight: 800; color: var(--blue);
     text-transform: uppercase; letter-spacing: 0.15px;
 }
 .r-direction {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 4.2px; color: #334155; font-weight: 700;
 }
 .r-sep {
@@ -221,7 +221,7 @@ body {
     margin: 0.6mm auto;
 }
 .r-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 5.5px; font-weight: 900; color: var(--red);
     text-transform: uppercase; letter-spacing: 0.3px;
     line-height: 1.2;
@@ -249,12 +249,12 @@ body {
     margin-top: 0.3mm;
 }
 .r-card-id-label {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.5px; color: white;
     text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700;
 }
 .r-card-id-num {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 6px; font-weight: 900; color: white;
     letter-spacing: 0.5px; line-height: 1;
 }
@@ -281,7 +281,7 @@ body {
     flex: 1; display: flex; flex-direction: column; gap: 0.6mm; min-width: 0;
 }
 .r-sec-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 4.5px; font-weight: 900; color: var(--blue);
     text-transform: uppercase; letter-spacing: 0.4px;
     border-bottom: 0.3mm solid var(--blue);
@@ -293,17 +293,17 @@ body {
     align-items: baseline;
 }
 .r-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 4.2px; color: var(--grey); font-weight: 800;
     white-space: nowrap; min-width: 12mm; flex-shrink: 0;
 }
 .r-val {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 5px; color: var(--dark); font-weight: 700;
     overflow: hidden; min-width: 0;
 }
 .r-val.strong {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 5.5px; font-weight: 900; color: var(--dark);
 }
 
@@ -319,7 +319,7 @@ body {
 }
 .r-qr-box img { width: 100%; height: 100%; display: block; }
 .r-qr-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3px; color: #94A3B8; font-style: italic;
 }
 
@@ -331,15 +331,15 @@ body {
 }
 .r-footer-left { display: flex; flex-direction: column; gap: 0.25mm; margin-top: auto; }
 .r-date {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.8px; color: var(--grey);
 }
 .r-date b {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     color: var(--dark); font-weight: 700;
 }
 .r-sign {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 5px; color: var(--grey); font-weight: 700;
     min-width: 22mm; text-align: center; margin-top: 0.5mm;
 }
@@ -359,11 +359,11 @@ body {
     background: #FAFAFA;
 }
 .r-cat-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.3px; color: var(--grey); text-transform: uppercase;
 }
 .r-cat-val {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 8px; font-weight: 900; color: var(--red);
 }
 
@@ -387,12 +387,12 @@ body {
 /* En-tête verso */
 .v-header { margin-bottom: 1mm; text-align: center; }
 .v-rdc {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 4.5px; font-weight: 900; color: var(--dark);
     text-transform: uppercase; text-align: center;
 }
 .v-province {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 4.2px; font-weight: 800; color: var(--blue);
     text-transform: uppercase; text-align: center;
     margin-top: 0.1mm;
@@ -421,7 +421,7 @@ body {
 }
 .v-qr-box img { width: 100%; height: 100%; display: block; }
 .v-qr-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3px; color: #94A3B8; font-style: italic;
 }
 
@@ -431,38 +431,38 @@ body {
     gap: 1.2mm;
 }
 .v-lieu-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.2px; color: var(--grey);
     text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;
 }
 .v-lieu-ville {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 6.5px; font-weight: 900; color: var(--dark); text-transform: uppercase;
     line-height: 1;
 }
 .v-lieu-date {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 5px; font-weight: 700; color: var(--red);
 }
 .v-micro-sep { height: 0.2mm; background: #E2E8F0; margin: 0.5mm 0; }
 
 .v-permis-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.2px; color: var(--grey); text-transform: uppercase;
     font-weight: 600; letter-spacing: 0.2px;
 }
 .v-permis-val {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 5px; font-weight: 800; color: var(--dark); letter-spacing: 0.3px;
 }
 .v-remarques { margin-top: auto; padding-top: 1mm; border-top: 0.2mm solid #E2E8F0; }
 .v-rem-lbl {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.2px; color: var(--grey); text-transform: uppercase;
     font-weight: 700; letter-spacing: 0.3px;
 }
 .v-rem-val {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 4px; color: var(--dark); font-weight: 700; text-transform: uppercase;
 }
 
@@ -478,13 +478,13 @@ body {
 }
 .v-cat-row.active { border-color: var(--red); background: #FFF1F2; }
 .v-cat-letter {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     font-size: 5.5px; font-weight: 900; color: #94A3B8;
     min-width: 3.5mm; text-align: center;
 }
 .v-cat-row.active .v-cat-letter { color: var(--red); }
 .v-cat-name {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 3.6px; color: var(--grey);
 }
 .v-cat-row.active .v-cat-name { color: var(--dark); font-weight: 700; }
@@ -495,7 +495,7 @@ body {
     color: #C8102E;
     font-size: 3.2px;
     font-weight: 700;
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-secondary);
     text-transform: uppercase;
     line-height: 1.3;
     padding: 0.3mm 1mm;
@@ -555,7 +555,7 @@ body {
     animation: spin 0.75s linear infinite;
 }
 .dl-msg {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-primary);
     color: white; font-size: 14px; font-weight: 600;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -642,7 +642,7 @@ body {
                         <img src="<?= $photoBase64 ?>" alt="Photo conducteur">
                     <?php else: ?>
                         <span class="r-photo-ph">
-                            <i data-lucide="user" style="width:18px;height:18px;color:#94A3B8;"></i>
+                            <i data-lucide="user" style="width:var(--icon-md);height:var(--icon-md);color:#94A3B8;"></i>
                         </span>
                     <?php endif; ?>
                 </div>

@@ -45,7 +45,7 @@ function formatDateTime($date) {
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -91,7 +91,7 @@ function formatDateTime($date) {
     .section-title {
         font-size: 18px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -112,25 +112,25 @@ function formatDateTime($date) {
     .tax-type {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin-bottom: 8px;
     }
 
     .tax-description {
         font-size: 13px;
-        color: #64748B;
+        color: var(--admin-slate);
         margin-bottom: 12px;
     }
 
     .tax-amount {
         font-size: 24px;
         font-weight: 700;
-        color: #059669;
+        color: var(--status-success);
     }
 
     .tax-period {
         font-size: 12px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
         margin-top: 4px;
     }
 
@@ -153,7 +153,7 @@ function formatDateTime($date) {
         padding: 14px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #64748B;
+        color: var(--admin-slate);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         background: #F8FAFC;
@@ -163,7 +163,7 @@ function formatDateTime($date) {
     .data-table td {
         padding: 14px 16px;
         font-size: 14px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -188,13 +188,13 @@ function formatDateTime($date) {
 
     .paiement-ref {
         font-weight: 500;
-        color: #1A2744;
+        color: var(--admin-navy);
         font-family: monospace;
     }
 
     .paiement-type {
         font-size: 12px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .action-btns {
@@ -221,7 +221,7 @@ function formatDateTime($date) {
 
     .action-btn-view {
         background: #EFF6FF;
-        color: #3B82F6;
+        color: var(--admin-accent-blue);
     }
 
     .action-btn-view:hover {
@@ -229,8 +229,8 @@ function formatDateTime($date) {
     }
 
     .action-btn-verify {
-        background: #ECFDF5;
-        color: #059669;
+        background: var(--status-success-bg);
+        color: var(--status-success);
     }
 
     .action-btn-verify:hover {
@@ -241,7 +241,7 @@ function formatDateTime($date) {
     .empty-state {
         text-align: center;
         padding: 40px 20px;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .empty-state svg {
@@ -253,7 +253,7 @@ function formatDateTime($date) {
 
     .empty-state h4 {
         margin: 0 0 4px 0;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .empty-state p {

@@ -20,7 +20,7 @@ function formatDateRecep($date) {
         padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .recep-toolbar-title {
-        font-size: 18px; font-weight: 700; color: #1A2744; margin: 0;
+        font-size: 18px; font-weight: 700; color: var(--admin-navy); margin: 0;
         white-space: nowrap;
     }
     .recep-toolbar-sep {
@@ -30,19 +30,19 @@ function formatDateRecep($date) {
         padding: 7px 10px; border: 1px solid #E2E8F0; border-radius: 6px;
         font-size: 13px; outline: none; width: 140px;
     }
-    .recep-toolbar input[type="date"]:focus { border-color: #3B82F6; }
+    .recep-toolbar input[type="date"]:focus { border-color: var(--admin-accent-blue); }
     .recep-search {
         position: relative; flex: 1; min-width: 180px; max-width: 320px;
     }
     .recep-search svg {
         position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-        width: 16px; height: 16px; color: #94A3B8;
+        width: 16px; height: 16px; color: var(--admin-slate-light);
     }
     .recep-search input {
         width: 100%; padding: 7px 12px 7px 34px; border: 1px solid #E2E8F0;
         border-radius: 6px; font-size: 13px; outline: none;
     }
-    .recep-search input:focus { border-color: #3B82F6; }
+    .recep-search input:focus { border-color: var(--admin-accent-blue); }
     .recep-badge-count {
         display: inline-flex; align-items: center; gap: 6px;
         background: #FFFBEB; color: #D97706; padding: 5px 12px;
@@ -57,22 +57,22 @@ function formatDateRecep($date) {
     }
     .recep-tab {
         flex: 1; padding: 12px 20px; text-align: center; cursor: pointer;
-        font-size: 14px; font-weight: 500; color: #64748B;
+        font-size: 14px; font-weight: 500; color: var(--admin-slate);
         display: flex; align-items: center; justify-content: center; gap: 8px;
         background: none; border: none; border-bottom: 3px solid transparent;
         transition: all 0.2s;
     }
-    .recep-tab:hover { color: #334155; background: #F8FAFC; }
+    .recep-tab:hover { color: var(--admin-slate-dark); background: #F8FAFC; }
     .recep-tab.active { color: #D97706; border-bottom-color: #D97706; font-weight: 600; }
-    .recep-tab.active-green { color: #059669; border-bottom-color: #059669; font-weight: 600; }
+    .recep-tab.active-green { color: var(--status-success); border-bottom-color: var(--status-success); font-weight: 600; }
     .recep-tab .tab-count {
         display: inline-flex; align-items: center; justify-content: center;
         min-width: 22px; height: 22px; padding: 0 6px; border-radius: 12px;
         font-size: 12px; font-weight: 600;
     }
     .recep-tab.active .tab-count { background: #D97706; color: white; }
-    .recep-tab.active-green .tab-count { background: #059669; color: white; }
-    .recep-tab:not(.active):not(.active-green) .tab-count { background: #E2E8F0; color: #64748B; }
+    .recep-tab.active-green .tab-count { background: var(--status-success); color: white; }
+    .recep-tab:not(.active):not(.active-green) .tab-count { background: #E2E8F0; color: var(--admin-slate); }
 
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -89,9 +89,9 @@ function formatDateRecep($date) {
         text-decoration: none;
     }
     .btn svg { width: 16px; height: 16px; }
-    .btn-primary { background: #3B82F6; color: white; }
+    .btn-primary { background: var(--admin-accent-blue); color: white; }
     .btn-primary:hover { background: #2563EB; }
-    .btn-success { background: #059669; color: white; }
+    .btn-success { background: var(--status-success); color: white; }
     .btn-success:hover { background: #047857; }
     .btn-sm { padding: 5px 10px; font-size: 12px; }
     .btn-sm svg { width: 14px; height: 14px; }
@@ -104,12 +104,12 @@ function formatDateRecep($date) {
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th {
         text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600;
-        color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;
+        color: var(--admin-slate); text-transform: uppercase; letter-spacing: 0.5px;
         background: #F8FAFC; border-bottom: 1px solid #E2E8F0;
         position: sticky; top: 0; z-index: 1;
     }
     .data-table td {
-        padding: 8px 12px; font-size: 13px; color: #334155;
+        padding: 8px 12px; font-size: 13px; color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
     .data-table tr:hover td { background: #F8FAFC; }
@@ -121,24 +121,24 @@ function formatDateRecep($date) {
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 600; font-size: 11px; flex-shrink: 0;
     }
-    .conducteur-avatar.green { background: linear-gradient(135deg, #059669, #10B981); }
-    .conducteur-name { font-weight: 500; color: #1A2744; font-size: 13px; }
+    .conducteur-avatar.green { background: linear-gradient(135deg, var(--status-success), #10B981); }
+    .conducteur-name { font-weight: 500; color: var(--admin-navy); font-size: 13px; }
 
     .badge {
         display: inline-flex; align-items: center; padding: 2px 8px;
         border-radius: 20px; font-size: 11px; font-weight: 500;
     }
     .badge-pending { background: #FFFBEB; color: #D97706; }
-    .badge-confirmed { background: #ECFDF5; color: #059669; }
+    .badge-confirmed { background: var(--status-success-bg); color: var(--status-success); }
 
     .empty-state {
-        text-align: center; padding: 40px 20px; color: #64748B;
+        text-align: center; padding: 40px 20px; color: var(--admin-slate);
     }
     .empty-state svg { width: 48px; height: 48px; color: #CBD5E1; margin-bottom: 12px; }
-    .empty-state h3 { margin: 0 0 4px 0; color: #334155; font-size: 15px; }
+    .empty-state h3 { margin: 0 0 4px 0; color: var(--admin-slate-dark); font-size: 15px; }
     .empty-state p { margin: 0; font-size: 13px; }
 
-    .sel-count { font-size: 13px; color: #64748B; white-space: nowrap; }
+    .sel-count { font-size: 13px; color: var(--admin-slate); white-space: nowrap; }
 
     /* ── Toast ── */
     .toast-container {
@@ -152,8 +152,8 @@ function formatDateRecep($date) {
         display: flex; align-items: center; gap: 10px; min-width: 280px;
         pointer-events: auto;
     }
-    .toast-success { background: linear-gradient(135deg, #10B981, #059669); }
-    .toast-error { background: linear-gradient(135deg, #EF4444, #DC2626); }
+    .toast-success { background: linear-gradient(135deg, #10B981, var(--status-success)); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, var(--status-danger)); }
     .toast svg { width: 20px; height: 20px; flex-shrink: 0; }
     @keyframes toastIn {
         0% { transform: translateX(120%); opacity: 0; }
@@ -191,7 +191,7 @@ function formatDateRecep($date) {
             <input type="text" id="searchInput" placeholder="Rechercher nom, identifiant...">
         </div>
         <span class="recep-badge-count" id="badgeCount">
-            <i data-lucide="clock" style="width:14px;height:14px;"></i>
+            <i data-lucide="clock" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
             <span id="totalCount"><?= count($conducteurs) ?></span> en attente
         </span>
     </div>
@@ -199,12 +199,12 @@ function formatDateRecep($date) {
     <!-- Onglets -->
     <div class="recep-tabs">
         <button class="recep-tab active" onclick="switchTab('attente')" id="tabAttente">
-            <i data-lucide="clock" style="width:16px;height:16px;"></i>
+            <i data-lucide="clock" style="width:var(--icon-md);height:var(--icon-md);"></i>
             En attente de réception
             <span class="tab-count" id="countAttente"><?= count($conducteurs) ?></span>
         </button>
         <button class="recep-tab" onclick="switchTab('recus')" id="tabRecus">
-            <i data-lucide="circle-check-big" style="width:16px;height:16px;"></i>
+            <i data-lucide="circle-check-big" style="width:var(--icon-md);height:var(--icon-md);"></i>
             Déjà réceptionnés
             <span class="tab-count" id="countRecus"><?= count($conducteursImprimes) ?></span>
         </button>
@@ -260,7 +260,7 @@ function formatDateRecep($date) {
                                 </div>
                             </td>
                             <td><?= htmlspecialchars($c['numero_permis'] ?? '-') ?></td>
-                            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
+                            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
                             <td><?= formatDateRecep($c['date_enregistrement'] ?? null) ?></td>
                             <td><span class="badge badge-pending" id="badge-<?= $c['id'] ?>">En cours</span></td>
                             <td>
@@ -310,7 +310,7 @@ function formatDateRecep($date) {
                                 </div>
                             </td>
                             <td><?= htmlspecialchars($c['numero_permis'] ?? '-') ?></td>
-                            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
+                            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;"><?= htmlspecialchars($c['categorie_permis'] ?? '-') ?></span></td>
                             <td><?= formatDateRecep($c['date_enregistrement'] ?? null) ?></td>
                             <td><span class="badge badge-confirmed">Réceptionné ✓</span></td>
                         </tr>
@@ -417,7 +417,7 @@ function renderAttente(conducteurs) {
             <td><strong>${c.id}</strong></td>
             <td><div class="conducteur-info"><div class="conducteur-avatar">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
             <td>${escapeHtml(c.numero_permis || '-')}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
+            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-pending" id="badge-${c.id}">En cours</span></td>
             <td><button class="btn btn-success btn-sm" id="btn-${c.id}" onclick="confirmerUn(${c.id})"><i data-lucide="check"></i> OK</button></td>
@@ -450,7 +450,7 @@ function renderRecus(conducteurs) {
             <td><strong>${c.id}</strong></td>
             <td><div class="conducteur-info"><div class="conducteur-avatar green">${escapeHtml(initials)}</div><span class="conducteur-name">${escapeHtml((c.prenom||'') + ' ' + (c.nom||''))}</span></div></td>
             <td>${escapeHtml(c.numero_permis || '-')}</td>
-            <td><span class="badge" style="background:#3B82F620;color:#3B82F6;font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
+            <td><span class="badge" style="background:#3B82F620;color:var(--admin-accent-blue);font-weight:600;">${escapeHtml(c.categorie_permis || '-')}</span></td>
             <td>${dateEnr}</td>
             <td><span class="badge badge-confirmed">Réceptionné ✓</span></td>
         </tr>`;

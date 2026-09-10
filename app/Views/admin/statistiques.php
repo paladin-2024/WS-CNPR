@@ -108,8 +108,8 @@ $statistiquesChartData = [
 <style>
     .statistiques-page { padding: 24px; }
     .page-header { margin-bottom: 24px; }
-    .page-title { font-size: 24px; font-weight: 700; color: #1A2744; margin: 0 0 4px 0; }
-    .page-subtitle { font-size: 14px; color: #64748B; margin: 0; }
+    .page-title { font-size: 24px; font-weight: 700; color: var(--admin-navy); margin: 0 0 4px 0; }
+    .page-subtitle { font-size: 14px; color: var(--admin-slate); margin: 0; }
 
     /* Stats Grid */
     .stats-grid {
@@ -138,14 +138,14 @@ $statistiquesChartData = [
     }
 
     .stat-icon svg { width: 24px; height: 24px; }
-    .stat-value { font-size: 28px; font-weight: 700; color: #1A2744; margin-bottom: 4px; }
-    .stat-label { font-size: 13px; color: #64748B; }
+    .stat-value { font-size: 28px; font-weight: 700; color: var(--admin-navy); margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: var(--admin-slate); }
 
     /* Section title */
     .section-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0 0 16px 0;
         display: flex;
         align-items: center;
@@ -194,8 +194,8 @@ $statistiquesChartData = [
     .brevet-stat-icon svg { width: 26px; height: 26px; }
 
     .brevet-stat-info { flex: 1; }
-    .brevet-stat-label { font-size: 13px; color: #64748B; margin-bottom: 4px; }
-    .brevet-stat-value { font-size: 28px; font-weight: 700; color: #1A2744; }
+    .brevet-stat-label { font-size: 13px; color: var(--admin-slate); margin-bottom: 4px; }
+    .brevet-stat-value { font-size: 28px; font-weight: 700; color: var(--admin-navy); }
 
     /* Charts Grid */
     .charts-grid {
@@ -212,7 +212,7 @@ $statistiquesChartData = [
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    .chart-title { font-size: 16px; font-weight: 600; color: #1A2744; margin: 0 0 20px 0; }
+    .chart-title { font-size: 16px; font-weight: 600; color: var(--admin-navy); margin: 0 0 20px 0; }
 
     /* Chart.js canvas container */
     .chart-canvas-wrap {
@@ -227,7 +227,7 @@ $statistiquesChartData = [
     }
 
     .chart-empty-state {
-        color: #64748B;
+        color: var(--admin-slate);
         text-align: center;
         padding: 20px;
         font-size: 14px;
@@ -243,7 +243,7 @@ $statistiquesChartData = [
         align-items: center;
         gap: 8px;
         font-size: 13px;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
@@ -266,11 +266,11 @@ $statistiquesChartData = [
         align-items: center;
         gap: 6px;
         font-size: 13px;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .chart-value-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-    .chart-value-legend-count { font-weight: 700; color: #1A2744; }
+    .chart-value-legend-count { font-weight: 700; color: var(--admin-navy); }
 
     /* Brevet Progress */
     .brevet-progress-card {
@@ -312,7 +312,7 @@ $statistiquesChartData = [
         align-items: center;
         gap: 8px;
         font-size: 13px;
-        color: #334155;
+        color: var(--admin-slate-dark);
     }
 
     .progress-legend-dot {
@@ -334,7 +334,7 @@ $statistiquesChartData = [
     .table-title {
         font-size: 16px;
         font-weight: 600;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0 0 16px 0;
         padding: 20px 20px 0 20px;
     }
@@ -346,7 +346,7 @@ $statistiquesChartData = [
         padding: 12px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #64748B;
+        color: var(--admin-slate);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         background: #F8FAFC;
@@ -356,7 +356,7 @@ $statistiquesChartData = [
     .data-table td {
         padding: 12px 16px;
         font-size: 14px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -388,7 +388,7 @@ $statistiquesChartData = [
     <!-- Stats Grid -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon" style="background: #EFF6FF; color: #3B82F6;">
+            <div class="stat-icon" style="background: #EFF6FF; color: var(--admin-accent-blue);">
                 <i data-lucide="circle-check-big"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalConducteurs) ?></div>
@@ -402,7 +402,7 @@ $statistiquesChartData = [
             <div class="stat-label">Véhicules</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background: #ECFDF5; color: #059669;">
+            <div class="stat-icon" style="background: var(--status-success-bg); color: var(--status-success);">
                 <i data-lucide="credit-card"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalCartes) ?></div>
@@ -423,7 +423,7 @@ $statistiquesChartData = [
             <div class="stat-label">Utilisateurs</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background: #FEF2F2; color: #EF4444;">
+            <div class="stat-icon" style="background: var(--status-danger-bg); color: #EF4444;">
                 <i data-lucide="building-2"></i>
             </div>
             <div class="stat-value"><?= formatNumber($totalParkings) ?></div>
@@ -457,7 +457,7 @@ $statistiquesChartData = [
             </div>
         </a>
         <a href="<?= BASE_PATH ?>/admin/receptionnaire" class="brevet-stat-card" style="border-left-color: #10B981;">
-            <div class="brevet-stat-icon" style="background: #ECFDF5; color: #10B981;">
+            <div class="brevet-stat-icon" style="background: var(--status-success-bg); color: #10B981;">
                 <i data-lucide="circle-check-big"></i>
             </div>
             <div class="brevet-stat-info">
@@ -500,7 +500,7 @@ $statistiquesChartData = [
                     <div class="progress-legend-dot" style="background: #10B981;"></div>
                     Imprimés <span class="progress-legend-count"><?= formatNumber($brevetsImprimes) ?></span>
                 </div>
-                <div class="progress-legend-item" style="margin-left: auto; font-weight: 600; color: #1A2744;">
+                <div class="progress-legend-item" style="margin-left: auto; font-weight: 600; color: var(--admin-navy);">
                     Total: <?= formatNumber($totalBrevets) ?>
                 </div>
             </div>
@@ -551,7 +551,7 @@ $statistiquesChartData = [
                             </div>
                         <?php endforeach; ?>
                         <div class="legend-item" style="border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 2px;">
-                            <span style="font-weight: 600; color: #1A2744;">Total</span>
+                            <span style="font-weight: 600; color: var(--admin-navy);">Total</span>
                             <span class="legend-value"><?= formatNumber($total) ?></span>
                         </div>
                     </div>
@@ -581,7 +581,7 @@ $statistiquesChartData = [
                             </div>
                         <?php endforeach; ?>
                         <div class="legend-item" style="border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 2px;">
-                            <span style="font-weight: 600; color: #1A2744;">Total</span>
+                            <span style="font-weight: 600; color: var(--admin-navy);">Total</span>
                             <span class="legend-value"><?= formatNumber($totalBrevets) ?></span>
                         </div>
                     </div>
@@ -646,10 +646,10 @@ $statistiquesChartData = [
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.font = '700 20px sans-serif';
-            ctx.fillStyle = '#1A2744';
+            ctx.fillStyle = 'var(--admin-navy)';
             ctx.fillText(opts.text, cx, cy - 9);
             ctx.font = '12px sans-serif';
-            ctx.fillStyle = '#64748B';
+            ctx.fillStyle = 'var(--admin-slate)';
             ctx.fillText(opts.subtext || '', cx, cy + 12);
             ctx.restore();
         }

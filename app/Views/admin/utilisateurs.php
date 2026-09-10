@@ -82,8 +82,8 @@ function formatDateTime($date) {
         position: relative;
     }
 
-    .toast-success { background: linear-gradient(135deg, #10B981, #059669, #047857); }
-    .toast-error { background: linear-gradient(135deg, #EF4444, #DC2626, #B91C1C); }
+    .toast-success { background: linear-gradient(135deg, #10B981, var(--status-success), #047857); }
+    .toast-error { background: linear-gradient(135deg, #EF4444, var(--status-danger), #B91C1C); }
     .toast svg { width: 22px; height: 22px; flex-shrink: 0; }
     .toast-progress {
         position: absolute;
@@ -122,7 +122,7 @@ function formatDateTime($date) {
     .page-title {
         font-size: 24px;
         font-weight: 700;
-        color: #1A2744;
+        color: var(--admin-navy);
         margin: 0;
     }
 
@@ -139,7 +139,7 @@ function formatDateTime($date) {
         transition: all 0.2s;
     }
 
-    .btn-primary { background: #059669; color: white; }
+    .btn-primary { background: var(--status-success); color: white; }
     .btn-primary:hover { background: #047857; }
     .btn svg { width: 18px; height: 18px; }
 
@@ -166,7 +166,7 @@ function formatDateTime($date) {
         outline: none;
     }
 
-    .search-box input:focus { border-color: #059669; }
+    .search-box input:focus { border-color: var(--status-success); }
 
     .search-box svg {
         position: absolute;
@@ -175,7 +175,7 @@ function formatDateTime($date) {
         transform: translateY(-50%);
         width: 18px;
         height: 18px;
-        color: #94A3B8;
+        color: var(--admin-slate-light);
     }
 
     .filter-select {
@@ -206,7 +206,7 @@ function formatDateTime($date) {
         padding: 14px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #64748B;
+        color: var(--admin-slate);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         background: #F8FAFC;
@@ -216,7 +216,7 @@ function formatDateTime($date) {
     .data-table td {
         padding: 14px 16px;
         font-size: 14px;
-        color: #334155;
+        color: var(--admin-slate-dark);
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -228,7 +228,7 @@ function formatDateTime($date) {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #059669, #10B981);
+        background: linear-gradient(135deg, var(--status-success), #10B981);
         color: white;
         display: flex;
         align-items: center;
@@ -237,8 +237,8 @@ function formatDateTime($date) {
         font-size: 14px;
     }
 
-    .user-name { font-weight: 500; color: #1A2744; }
-    .user-email { font-size: 12px; color: #64748B; }
+    .user-name { font-weight: 500; color: var(--admin-navy); }
+    .user-email { font-size: 12px; color: var(--admin-slate); }
 
     .badge {
         display: inline-flex;
@@ -264,14 +264,14 @@ function formatDateTime($date) {
     }
 
     .action-btn svg { width: 16px; height: 16px; }
-    .action-btn-edit { background: #EFF6FF; color: #3B82F6; }
+    .action-btn-edit { background: #EFF6FF; color: var(--admin-accent-blue); }
     .action-btn-edit:hover { background: #DBEAFE; }
-    .action-btn-delete { background: #FEF2F2; color: #DC2626; }
+    .action-btn-delete { background: var(--status-danger-bg); color: var(--status-danger); }
     .action-btn-delete:hover { background: #FEE2E2; }
 
-    .empty-state { text-align: center; padding: 60px 20px; color: #64748B; }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--admin-slate); }
     .empty-state svg { width: 64px; height: 64px; color: #CBD5E1; margin-bottom: 16px; }
-    .empty-state h3 { margin: 0 0 8px 0; color: #334155; }
+    .empty-state h3 { margin: 0 0 8px 0; color: var(--admin-slate-dark); }
     .empty-state p { margin: 0; }
 
     /* Modal */
@@ -306,14 +306,14 @@ function formatDateTime($date) {
         border-bottom: 1px solid #E2E8F0;
     }
 
-    .modal-header h2 { margin: 0; font-size: 18px; color: #1A2744; }
+    .modal-header h2 { margin: 0; font-size: 18px; color: var(--admin-navy); }
 
     .modal-close {
         width: 32px; height: 32px;
         border: none; background: #F1F5F9;
         border-radius: 8px; cursor: pointer;
         display: flex; align-items: center; justify-content: center;
-        color: #64748B;
+        color: var(--admin-slate);
     }
 
     .modal-close:hover { background: #E2E8F0; }
@@ -347,7 +347,7 @@ function formatDateTime($date) {
     }
 
     .form-group input:focus,
-    .form-group select:focus { border-color: #059669; }
+    .form-group select:focus { border-color: var(--status-success); }
 
     .form-message {
         padding: 10px 14px;
@@ -357,8 +357,8 @@ function formatDateTime($date) {
         display: none;
     }
 
-    .form-message.error { background: #FEF2F2; color: #DC2626; }
-    .form-message.success { background: #ECFDF5; color: #059669; }
+    .form-message.error { background: var(--status-danger-bg); color: var(--status-danger); }
+    .form-message.success { background: var(--status-success-bg); color: var(--status-success); }
 
     .modal-footer {
         display: flex;

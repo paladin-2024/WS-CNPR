@@ -221,7 +221,7 @@ $appLogo = ConfigController::get('app_logo', '');
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
-  font-family: Poppins, sans-serif;
+  font-family: var(--font-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -255,11 +255,11 @@ $appLogo = ConfigController::get('app_logo', '');
       <?php if (!empty($appLogo)): ?>
         <img src="<?= BASE_PATH ?>/public/<?= htmlspecialchars($appLogo) ?>" alt="Logo" style="width:56px;height:56px;object-fit:contain;margin-bottom:40px;">
       <?php else: ?>
-        <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:white;font-family:Poppins,sans-serif;margin-bottom:40px;border:1px solid rgba(255,255,255,0.25)">
+        <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:white;font-family:var(--font-primary);margin-bottom:40px;border:1px solid rgba(255,255,255,0.25)">
           <?= htmlspecialchars(substr($appName, 0, 2)) ?>
         </div>
       <?php endif; ?>
-      <h2 style="color:white;font-size:clamp(22px,3vw,32px);font-family:Poppins,sans-serif;margin-bottom:12px;line-height:1.3">
+      <h2 style="color:white;font-size:clamp(22px,3vw,32px);font-family:var(--font-primary);margin-bottom:12px;line-height:1.3">
         Rejoignez <?= htmlspecialchars($appSlogan) ?>
       </h2>
       <p style="color:rgba(255,255,255,0.7);font-size:15px;margin-bottom:40px;line-height:1.6">
@@ -270,19 +270,19 @@ $appLogo = ConfigController::get('app_logo', '');
       <div style="display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i data-lucide="user-plus" style="width:18px;height:18px;color:white;"></i>
+            <i data-lucide="user-plus" style="width:var(--icon-md);height:var(--icon-md);color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Création de compte en quelques minutes</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i data-lucide="shield-check" style="width:18px;height:18px;color:white;"></i>
+            <i data-lucide="shield-check" style="width:var(--icon-md);height:var(--icon-md);color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Données protégées et confidentielles</span>
         </div>
         <div style="display:flex;align-items:center;gap:14px">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i data-lucide="zap" style="width:18px;height:18px;color:white;"></i>
+            <i data-lucide="zap" style="width:var(--icon-md);height:var(--icon-md);color:white;"></i>
           </div>
           <span style="color:rgba(255,255,255,0.85);font-size:14px">Accès immédiat à vos services</span>
         </div>
@@ -303,7 +303,7 @@ $appLogo = ConfigController::get('app_logo', '');
     <div class="auth-right-inner">
       <!-- Retour au portail -->
       <a href="<?= BASE_PATH ?>/" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#888;margin-bottom:28px;text-decoration:none;transition:color 0.2s">
-        <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+        <i data-lucide="arrow-left" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
         Retour au portail
       </a>
 
@@ -311,14 +311,14 @@ $appLogo = ConfigController::get('app_logo', '');
       <?php if (!empty($flash)): ?>
         <div style="padding:12px 16px;margin-bottom:18px;border-radius:8px;font-size:13px;
           <?= strpos($flash, 'succès') !== false || strpos($flash, 'réussie') !== false
-            ? 'background:#ECFDF5;color:#059669;border:1px solid #A7F3D0'
-            : 'background:#FEF2F2;color:#DC2626;border:1px solid #FECACA' ?>">
+            ? 'background:var(--status-success-bg);color:var(--status-success);border:1px solid #A7F3D0'
+            : 'background:var(--status-danger-bg);color:var(--status-danger);border:1px solid #FECACA' ?>">
           <?= htmlspecialchars($flash) ?>
         </div>
       <?php endif; ?>
 
       <div style="margin-bottom:28px">
-        <h1 style="font-size:28px;font-family:Poppins,sans-serif;color:#1A1A2E;margin-bottom:8px">Créer un compte</h1>
+        <h1 style="font-size:28px;font-family:var(--font-primary);color:#1A1A2E;margin-bottom:8px">Créer un compte</h1>
         <p style="color:#888;font-size:15px">Rejoignez le portail en quelques étapes</p>
       </div>
 
@@ -327,7 +327,7 @@ $appLogo = ConfigController::get('app_logo', '');
         <?php foreach ($steps as $i => $step): ?>
           <div class="register-step">
             <div class="register-step-icon">
-              <i data-lucide="<?= htmlspecialchars($step['icon']) ?>" style="width:18px;height:18px;"></i>
+              <i data-lucide="<?= htmlspecialchars($step['icon']) ?>" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </div>
             <div class="register-step-label"><?= htmlspecialchars($step['label']) ?></div>
             <div class="register-step-desc"><?= htmlspecialchars($step['description']) ?></div>
@@ -342,14 +342,14 @@ $appLogo = ConfigController::get('app_logo', '');
         <div class="form-row">
           <div class="float-input-wrap">
             <span class="input-icon">
-              <i data-lucide="user" style="width:16px;height:16px;"></i>
+              <i data-lucide="user" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </span>
             <input type="text" name="prenom" id="register-prenom" placeholder=" " required autocomplete="given-name">
             <label for="register-prenom">Prénom</label>
           </div>
           <div class="float-input-wrap">
             <span class="input-icon">
-              <i data-lucide="user" style="width:16px;height:16px;"></i>
+              <i data-lucide="user" style="width:var(--icon-md);height:var(--icon-md);"></i>
             </span>
             <input type="text" name="nom" id="register-nom" placeholder=" " required autocomplete="family-name">
             <label for="register-nom">Nom</label>
@@ -359,7 +359,7 @@ $appLogo = ConfigController::get('app_logo', '');
         <!-- Étape 2 : Contact -->
         <div class="float-input-wrap">
           <span class="input-icon">
-            <i data-lucide="mail" style="width:16px;height:16px;"></i>
+            <i data-lucide="mail" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </span>
           <input type="email" name="email" id="register-email" placeholder=" " required autocomplete="email">
           <label for="register-email">Adresse email</label>
@@ -367,7 +367,7 @@ $appLogo = ConfigController::get('app_logo', '');
 
         <div class="float-input-wrap">
           <span class="input-icon">
-            <i data-lucide="phone" style="width:16px;height:16px;"></i>
+            <i data-lucide="phone" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </span>
           <input type="tel" name="telephone" id="register-telephone" placeholder=" " required autocomplete="tel">
           <label for="register-telephone">Téléphone</label>
@@ -396,31 +396,31 @@ $appLogo = ConfigController::get('app_logo', '');
         <!-- Étape 3 : Sécurité -->
         <div class="float-input-wrap">
           <span class="input-icon">
-            <i data-lucide="lock" style="width:16px;height:16px;"></i>
+            <i data-lucide="lock" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </span>
           <input type="password" name="password" id="register-password" placeholder=" " required minlength="6" autocomplete="new-password">
           <label for="register-password">Mot de passe</label>
           <button type="button" class="eye-toggle" onclick="toggleRegisterPassword('register-password', this)">
-            <i data-lucide="eye" style="width:16px;height:16px;"></i>
+            <i data-lucide="eye" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </button>
         </div>
         <div class="field-hint">Au moins 6 caractères</div>
 
         <div class="float-input-wrap">
           <span class="input-icon">
-            <i data-lucide="lock" style="width:16px;height:16px;"></i>
+            <i data-lucide="lock" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </span>
           <input type="password" name="confirmPassword" id="register-confirm-password" placeholder=" " required minlength="6" autocomplete="new-password">
           <label for="register-confirm-password">Confirmer le mot de passe</label>
           <button type="button" class="eye-toggle" onclick="toggleRegisterPassword('register-confirm-password', this)">
-            <i data-lucide="eye" style="width:16px;height:16px;"></i>
+            <i data-lucide="eye" style="width:var(--icon-md);height:var(--icon-md);"></i>
           </button>
         </div>
         <div class="field-hint" id="register-password-match-hint"></div>
 
         <!-- Étape 4 : Révision / soumission -->
         <button type="submit" class="login-btn">
-          <i data-lucide="user-plus" style="width:18px;height:18px;"></i>
+          <i data-lucide="user-plus" style="width:var(--icon-md);height:var(--icon-md);"></i>
           Créer mon compte
         </button>
 
@@ -461,10 +461,10 @@ function toggleRegisterPassword(inputId, btn) {
     }
     if (pwd.value === confirm.value) {
       hint.textContent = 'Les mots de passe correspondent.';
-      hint.style.color = '#059669';
+      hint.style.color = 'var(--status-success)';
     } else {
       hint.textContent = 'Les mots de passe ne correspondent pas.';
-      hint.style.color = '#DC2626';
+      hint.style.color = 'var(--status-danger)';
     }
   }
 

@@ -34,18 +34,18 @@
     <!-- Content -->
     <div style="max-width:1200px;margin:0 auto;padding:0 32px;width:100%;position:relative;z-index:2;">
         <div style="max-width:680px;" id="hero-content">
-            <div id="hero-badge" style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;margin-bottom:24px;animation:fadeInUp 0.5s ease;">
-                <i data-lucide="id-card" style="width:14px;height:14px;"></i>
+            <div id="hero-badge" style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;font-family:var(--font-primary);margin-bottom:24px;animation:fadeInUp 0.5s ease;">
+                <i data-lucide="id-card" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                 <span id="hero-badge-text"></span>
             </div>
-            <h1 id="hero-title" style="color:white;font-size:clamp(32px,5.5vw,64px);font-family:Poppins,sans-serif;font-weight:700;line-height:1.15;margin-bottom:20px;white-space:pre-line;animation:fadeInUp 0.55s 0.1s both ease;"></h1>
+            <h1 id="hero-title" style="color:white;font-size:clamp(32px,5.5vw,64px);font-family:var(--font-primary);font-weight:700;line-height:1.15;margin-bottom:20px;white-space:pre-line;animation:fadeInUp 0.55s 0.1s both ease;"></h1>
             <p id="hero-subtitle" style="color:rgba(255,255,255,0.75);font-size:clamp(15px,2vw,19px);line-height:1.7;margin-bottom:36px;max-width:560px;animation:fadeInUp 0.6s 0.2s both ease;"></p>
             <div id="hero-cta" style="display:flex;gap:14px;flex-wrap:wrap;animation:fadeInUp 0.65s 0.3s both ease;">
-                <a id="hero-cta-primary" href="#" style="display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:10px;font-weight:700;font-family:Poppins,sans-serif;font-size:15px;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;">
+                <a id="hero-cta-primary" href="#" style="display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:10px;font-weight:700;font-family:var(--font-primary);font-size:15px;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;">
                     <span id="hero-cta-primary-label"></span>
-                    <i data-lucide="chevron-right" style="width:16px;height:16px;stroke-width:2.5;"></i>
+                    <i data-lucide="chevron-right" style="width:var(--icon-md);height:var(--icon-md);stroke-width:2.5;"></i>
                 </a>
-                <a id="hero-cta-secondary" href="#" style="display:inline-flex;align-items:center;gap:8px;padding:14px 26px;background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);color:white;border:1px solid rgba(255,255,255,0.25);border-radius:10px;font-weight:500;font-family:Poppins,sans-serif;font-size:15px;text-decoration:none;transition:background 0.2s;">
+                <a id="hero-cta-secondary" href="#" style="display:inline-flex;align-items:center;gap:8px;padding:14px 26px;background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);color:white;border:1px solid rgba(255,255,255,0.25);border-radius:10px;font-weight:500;font-family:var(--font-primary);font-size:15px;text-decoration:none;transition:background 0.2s;">
                     <span id="hero-cta-secondary-label"></span>
                 </a>
             </div>
@@ -54,17 +54,17 @@
 
     <!-- Navigation arrows -->
     <button id="hero-prev" aria-label="Slide précédent" style="position:absolute;left:24px;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;">
-        <i data-lucide="chevron-left" style="width:22px;height:22px;"></i>
+        <i data-lucide="chevron-left" style="width:var(--icon-lg);height:var(--icon-lg);"></i>
     </button>
     <button id="hero-next" aria-label="Slide suivant" style="position:absolute;right:24px;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;">
-        <i data-lucide="chevron-right" style="width:22px;height:22px;"></i>
+        <i data-lucide="chevron-right" style="width:var(--icon-lg);height:var(--icon-lg);"></i>
     </button>
 
     <!-- Dots -->
     <div id="hero-dots" style="position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10;"></div>
 
     <!-- Counter -->
-    <div id="hero-counter" style="position:absolute;bottom:36px;right:32px;color:rgba(255,255,255,0.4);font-size:13px;font-family:Poppins,sans-serif;z-index:10;"></div>
+    <div id="hero-counter" style="position:absolute;bottom:36px;right:32px;color:rgba(255,255,255,0.4);font-size:13px;font-family:var(--font-primary);z-index:10;"></div>
 
     <!-- Flag band bottom -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:4px;display:flex;">
@@ -254,7 +254,7 @@
             <div class="scroll-reveal" data-delay="<?= $i * 100 ?>">
                 <div class="card" style="text-align:center;padding:32px 24px;border-top-color:<?= $color ?>;">
                     <div style="display:inline-flex;align-items:center;justify-content:center;width:68px;height:68px;background:<?= $color ?>18;border-radius:50%;margin-bottom:20px;">
-                        <i data-lucide="<?= $icon ?>" style="width:32px;height:32px;color:<?= $color ?>;stroke-width:1.5;"></i>
+                        <i data-lucide="<?= $icon ?>" style="width:var(--icon-lg);height:var(--icon-lg);color:<?= $color ?>;stroke-width:1.5;"></i>
                     </div>
                     <h3 style="font-size:17px;margin-bottom:12px;"><?= htmlspecialchars($service['title']) ?></h3>
                     <p style="color:#666;margin-bottom:20px;font-size:14px;line-height:1.6;"><?= htmlspecialchars($service['description']) ?></p>
@@ -283,7 +283,7 @@
             <div class="scroll-reveal" data-delay="<?= $i * 80 ?>">
                 <div style="color:white;">
                     <div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;background-color:rgba(255,255,255,0.15);border-radius:50%;margin-bottom:12px;">
-                        <i data-lucide="<?= $icon ?>" style="width:24px;height:24px;color:white;stroke-width:1.5;"></i>
+                        <i data-lucide="<?= $icon ?>" style="width:var(--icon-lg);height:var(--icon-lg);color:white;stroke-width:1.5;"></i>
                     </div>
                     <div class="count-up" data-target="<?= htmlspecialchars($stat['value']) ?>" style="font-size:36px;font-weight:bold;color:#FCD116;line-height:1;">
                         <?= htmlspecialchars($stat['value']) ?>
@@ -328,18 +328,18 @@
                         <div class="card" style="padding:28px;height:100%;">
                             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
                                 <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;background-color:<?= $tagColor ?>18;color:<?= $tagColor ?>;padding:3px 10px;border-radius:20px;border:1px solid <?= $tagColor ?>40;">
-                                    <i data-lucide="<?= $tagIcon ?>" style="width:11px;height:11px;"></i>
+                                    <i data-lucide="<?= $tagIcon ?>" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     <?= htmlspecialchars($actu['tag']) ?>
                                 </span>
                                 <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#aaa;">
-                                    <i data-lucide="calendar-days" style="width:12px;height:12px;"></i>
+                                    <i data-lucide="calendar-days" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                                     <?= htmlspecialchars($actu['date']) ?>
                                 </span>
                             </div>
                             <h3 style="font-size:17px;margin-bottom:10px;line-height:1.4;"><?= htmlspecialchars($actu['titre']) ?></h3>
                             <p style="color:#666;margin-bottom:18px;font-size:14px;line-height:1.6;"><?= htmlspecialchars($actu['resume']) ?></p>
                             <a href="#" style="color:#007FFF;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:4px;text-decoration:none;">
-                                Lire la suite <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
+                                Lire la suite <i data-lucide="chevron-right" style="width:var(--icon-sm);height:var(--icon-sm);"></i>
                             </a>
                         </div>
                     </div>
@@ -350,11 +350,11 @@
             <!-- Controls -->
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:24px;">
                 <button id="actu-prev" class="carousel-btn" aria-label="Précédent">
-                    <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                    <i data-lucide="chevron-left" style="width:var(--icon-md);height:var(--icon-md);"></i>
                 </button>
                 <div id="actu-dots" style="display:flex;gap:8px;align-items:center;"></div>
                 <button id="actu-next" class="carousel-btn" aria-label="Suivant">
-                    <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                    <i data-lucide="chevron-right" style="width:var(--icon-md);height:var(--icon-md);"></i>
                 </button>
             </div>
         </div>
@@ -425,7 +425,7 @@
     <div class="container">
         <div class="scroll-reveal">
             <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background-color:rgba(255,255,255,0.15);border-radius:50%;margin-bottom:20px;">
-                <i data-lucide="phone-call" style="width:30px;height:30px;color:white;stroke-width:1.5;"></i>
+                <i data-lucide="phone-call" style="width:var(--icon-lg);height:var(--icon-lg);color:white;stroke-width:1.5;"></i>
             </div>
             <h2 style="color:white;margin-bottom:16px;font-size:clamp(22px,4vw,36px);">
                 Vous avez besoin d'aide ?

@@ -936,8 +936,8 @@ class AdminController extends Controller
                 // Création
                 $numero_permis = $this->genererIdentifiantConducteur($db);
                 $db->query(
-                    "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
+                    "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, photo_url, photo_piece_identite, association, syndicat, date_enregistrement, date_expiration, statut, statut_brevet)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif', 'imprime')",
                     [$nom, $prenom, $date_naissance, $lieu_naissance, $adresse, $telephone, $numero_permis, $categorie_permis, $date_expiration_permis, $photo_url, $photo_piece_identite, $association, $syndicat]
                 );
                 $message = 'Conducteur créé avec succès!';
@@ -1079,8 +1079,8 @@ class AdminController extends Controller
                         $dateExpirationPermis = null;
                     }
                     $db->query(
-                        "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicat, date_enregistrement, date_expiration, statut)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif')",
+                        "INSERT INTO conducteurs (nom, prenom, date_naissance, lieu_naissance, adresse, telephone, numero_permis, categorie_permis, date_expiration_permis, association, syndicat, date_enregistrement, date_expiration, statut, statut_brevet)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', 'actif', 'imprime')",
                         [
                             $data['nom'] ?? '', $data['prenom'] ?? '', $dateNaissance,
                             $data['lieu_naissance'] ?? '', $data['adresse'] ?? '', $data['telephone'] ?? '',

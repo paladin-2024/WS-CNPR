@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS conducteurs (
     date_enregistrement DATE NOT NULL,
     date_expiration DATE,
     statut VARCHAR(20) DEFAULT 'actif' CHECK (statut IN ('actif', 'suspendu', 'expire')),
-    statut_brevet VARCHAR(30) NOT NULL DEFAULT 'nouveau' CHECK (statut_brevet IN ('nouveau', 'en_cours_impression', 'imprime')),
+    statut_brevet VARCHAR(30) NOT NULL DEFAULT 'imprime' CHECK (statut_brevet IN ('nouveau', 'en_cours_impression', 'imprime')),
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE SET NULL

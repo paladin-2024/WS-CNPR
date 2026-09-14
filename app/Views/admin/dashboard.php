@@ -37,16 +37,25 @@ $dashboardChartData = [
 
 // Fonction helper pour formater les nombres
 function formatNumber($num, $isCurrency = false) {
-    $suffix = $isCurrency ? ' USD' : '';
-    if ($num >= 1000000000) {
-        return round($num / 1000000000, 1) . ' Md' . $suffix;
-    } elseif ($num >= 1000000) {
-        return round($num / 1000000, 1) . ' M' . $suffix;
-    } elseif ($num >= 1000) {
-        return round($num / 1000, 1) . ' K' . $suffix;
-    }
+    // Currency amounts are never abbreviated to "K" (per client direction -
+    // a revenue figure like 1300 USD should read as "1 300,00 USD", not
+    // "1.3 K USD") - only M/Md kick in, and only once actually in the
+    // millions/billions. Plain (non-currency) counts keep the existing K
+    // abbreviation - only the revenue display was flagged, not counts.
     if ($isCurrency) {
+        if ($num >= 1000000000) {
+            return round($num / 1000000000, 1) . ' Md USD';
+        } elseif ($num >= 1000000) {
+            return round($num / 1000000, 1) . ' M USD';
+        }
         return number_format($num, 2, ',', ' ') . ' USD';
+    }
+    if ($num >= 1000000000) {
+        return round($num / 1000000000, 1) . ' Md';
+    } elseif ($num >= 1000000) {
+        return round($num / 1000000, 1) . ' M';
+    } elseif ($num >= 1000) {
+        return round($num / 1000, 1) . ' K';
     }
     return number_format($num, 0, ',', ' ');
 }

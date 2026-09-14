@@ -459,7 +459,7 @@ $isFound = $conducteur !== null;
             <div class="fraud-section">
                 <div class="fraud-header" onclick="toggleFraud()">
                     <i data-lucide="circle-alert"></i>
-                    <h3>Ce brevet n'est pas authentique ?</h3>
+                    <h3>Signaler un problème avec ce brevet</h3>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="fraud-body" id="fraudBody">
